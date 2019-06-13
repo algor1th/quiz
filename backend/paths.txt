@@ -1,0 +1,16 @@
+UserServer:
+	GET /api/users
+	GET /api/users/?sortBy=id
+	GET /api/users/?sortBy=name
+	GET /api/users/?sortBy=score
+	GET /api/users/[ID]
+	POST /api/users	{name, score}
+	PUT /api/users/id {name, score}
+	DELETE /api/users/id 
+	
+GameServer:
+	GET /api/questions
+	GET /api/questions/[ID]
+	POST /api/questions	{text}
+	PUT /api/questions/id {text}
+	DELETE /api/questions/id
