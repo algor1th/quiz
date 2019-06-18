@@ -50,15 +50,13 @@
         What does XSS mean?
     </span>
     <div class="answer-buttons">
-        <ul>
-            <li each={answer in state.items}> <button class="answer-button">{ answer }</button></li>
-        </ul>
+         <button class="answer-button" each={ answer in state.answers } >{ answer }</button>
     </div>
 </div>
 <script>
     export default {
         state: {
-            answers: ["test"]
+            answers: ["test", "cross site scripting", "xml scheme scanner", "asdf"]
         }
     }
 </script>
