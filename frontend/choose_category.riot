@@ -1,0 +1,59 @@
+<choose-category>
+<style>
+    :host {
+        margin: 0;
+        padding: 0;
+        font-size: 1.2em;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* background-color: #211973; */
+    }
+
+    .choose-category {
+        width: 30vw;
+        margin: 0 auto;
+        display: block;
+    }
+    .choose-category button {
+        background-color: white;
+        width: 30vw;
+        border-radius: 10px;
+        padding: 30px;
+        border: 3px #211973 solid;
+        margin: 10px 0;
+        transition: ease 0.5s;
+    }
+    .choose-category button:hover {
+        border: 3px #ff7a00 solid;
+    }
+    h1 {
+        color: #211973;
+        padding: 30px;
+        margin: 50px auto;
+        width: 30vw;
+        background-color: white;
+        border-radius: 10px;
+        border: 3px #211973 solid;
+    }
+</style>
+
+<h1>Kategorie wählen</h1>
+<div class="choose-category">
+    <button each={ category in state.categories } onclick={go}>
+        { category }
+    </button>
+</div>
+
+<script>
+    export default {
+        state: {
+            categories : ["Web security", "Phishing", "Assembler"]
+        },
+        go: function(e) {
+            e.preventDefault();
+            window.location.assign("question#cat=" + e.target)
+        }
+    }
+    
+</script>
+
+</choose-category>
