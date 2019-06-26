@@ -13,9 +13,11 @@ UserServer:
 	
 GameServer:
 	GET /api/questions
+	GET /api/questions/?containAnswers=true
 	GET /api/questions/[ID]
+	GET /api/questions/[ID]/?containAnswers=true
 	POST /api/questions {text}
-	PUT /api/questions/id {text}
+	PUT /api/questions/[ID] {text}
 	DELETE /api/questions/[ID]
 
 	GET /api/answers
@@ -24,3 +26,9 @@ GameServer:
 	POST /api/answers {text, questionID, isCorrect}
 	PUT /api/answers/id {text, questionID, isCorrect}
 	DELETE /api/answers/[ID]
+
+"GameTable fertig"
+"Tag system, proficency hirachy, difficulty"
+
+authentication
+matchmaking & scoring

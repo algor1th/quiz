@@ -12,17 +12,38 @@ module.exports = function(app){
     //get all questions
     app.get('/api/questions', async (req, res) => {
         var questions = await maria.query('SELECT * FROM questions');
-        res.send(questions);   
+        var response = [];
+
+        if(req.query.containAnswers && req.query.containAnswers == "true"){
+            for (var i = 0; i < questions.length; i++) { 
+                var answers = await maria.query('SELECT * FROM answers WHERE questionID = ?',[questions[i]["id"]]);
+                response.push([questions[i],answers]);
+            }
+        }else{
+            response = questions;
+        }
+
+        res.send(response);    
     });
 
     //get specific question
     app.get('/api/questions/:id', async (req, res) => {
         const question = await maria.query('SELECT * FROM questions WHERE id = ?', req.params.id);
+        var response;
+
         if(question.length === 0){
             res.status(404).send(`question with id ${req.params.id} not found`);
             return;
         }
-        res.send(question);    
+        
+        if(req.query.containAnswers && req.query.containAnswers == "true"){
+            var answers = await maria.query('SELECT * FROM answers WHERE questionID = ?',[req.params.id]);
+            response = [question[0],answers];
+        }else{
+            response = question;
+        }
+        
+        res.send(response);    
     });
 
     //add question
