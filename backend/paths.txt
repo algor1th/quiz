@@ -27,8 +27,20 @@ GameServer:
 	PUT /api/answers/id {text, questionID, isCorrect}
 	DELETE /api/answers/[ID]
 
+	GET /api/games/[ID]
+	POST /api/games {userID}		-> new game for userID
+	
+	POST /api/rounds	{userID, gameID}	-> new round for gameID
+	PUT /api/rounds/[roundID] {userID, answerID}	-> give answer for round
+
 "GameTable fertig"
 "Tag system, proficency hirachy, difficulty"
 
 authentication
 matchmaking & scoring
+
+
+UserID:42
+UserID:1337
+GameID:24
+RoundID:18

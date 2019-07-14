@@ -1,3 +1,30 @@
 users	id:int name:string(100) score:int
+
 questions id:int text:string(1024)
 answers id:int text:string(512) questionID:int isCorrect:bool
+
+games	id:int	userID_1:int	userID_2:int	isFinished:bool
+rounds	id:int	gameID:int	category:string(256)	questionID_1:int	questionID_2:int	questionID_3:int	answerID_1_1:int	answerID_1_2:int	answerID_1_3:int	answerID_2_1:int	answerID_2_2:int	answerID_2_3:int
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+CREATE TABLE rounds(id int NOT NULL AUTO_INCREMENT PRIMARY KEY, gameID int NOT NULL, category varchar(256), isFinished bool NOT NULL)
+
+
+
+
