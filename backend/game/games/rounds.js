@@ -41,7 +41,7 @@ module.exports = function(app){
 
         if(openRound){
             //opened round exist
-            res.send(openRound);
+            res.send(serializeRound(openRound));
             return
         }
         
@@ -61,7 +61,7 @@ module.exports = function(app){
 
         const firstQuery = await maria.query('INSERT INTO rounds (gameID, questionID_1, questionID_2, questionID_3) VALUES (?, ?, ?, ?); SELECT LAST_INSERT_ID();', [req.body.gameID, questions[0]['id'], questions[1]['id'], questions[2]['id']]);
         const newRound = await maria.query('SELECT * FROM rounds WHERE id = ?', firstQuery[1][0]["LAST_INSERT_ID()"]);
-        res.send(newRound);
+        res.send(serializeRound(newRound));
         return;
     });  
 
@@ -87,27 +87,32 @@ module.exports = function(app){
         for(var i = 1; i<=3; i++){
             if(game['userID_1'] == req.body.userID){
                 if(openRound['answerID_1_'+i] === null){
-                    const questions = await maria.query('SELECT * FROM answers WHERE id = ? AND questionID = ?', [openRound['questionID_'+i], req.body.answerID]);
+                    const questions = await maria.query('SELECT * FROM answers WHERE id = ? AND questionID = ?', [req.body.answerID, openRound['questionID_'+i],]);
                     if(questions.length === 0){
                         res.status(404).send(`invalid answer with id ${req.body.answerID} for question with id ${openRound['questionID_'+i]}`);
                         return;
                     }
                     const firstQuery = await maria.query('UPDATE rounds SET answerID_1_'+i+' = ? WHERE id = ?', [req.body.answerID, req.params.id]);
                     const updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
-                    res.send(updatedRound);
+                    res.send(serializeRound(updatedRound));
                     return;
                 }
             }else{
-                if(openRound['answerID_2_'+i] === null){
-                    const questions = await maria.query('SELECT * FROM answers WHERE id = ? AND questionID = ?', [openRound['questionID_'+i], req.body.answerID]);
-                    if(questions.length === 0){
-                        res.status(404).send(`invalid answer with id ${req.body.answerID} for question with id ${openRound['questionID_'+i]}`);
+                if(game['userID_2'] == req.body.userID){
+                    if(openRound['answerID_2_'+i] === null){
+                        const questions = await maria.query('SELECT * FROM answers WHERE id = ? AND questionID = ?', [req.body.answerID, openRound['questionID_'+i]]);
+                        if(questions.length === 0){
+                            res.status(404).send(`invalid answer with id ${req.body.answerID} for question with id ${openRound['questionID_'+i]}`);
+                            return;
+                        }
+                        const firstQuery = await maria.query('UPDATE rounds SET answerID_2_'+i+' = ? WHERE id = ?', [req.body.answerID, req.params.id]);
+                        const updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
+                        res.send(serializeRound(updatedRound));
+    
                         return;
                     }
-                    const firstQuery = await maria.query('UPDATE rounds SET answerID_2_'+i+' = ? WHERE id = ?', [req.body.answerID, req.params.id]);
-                    const updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
-                    res.send(updatedRound);
-  
+                }else{
+                    res.status(404).send(`the round with id ${req.params.id} has no user ${ req.body.userID}`);
                     return;
                 }
             }
@@ -115,3 +120,30 @@ module.exports = function(app){
         res.status(404).send('The question you are attempting to answer is closed. Waiting for other player to finish round.');
     });  
 }  
+
+function serializeRound(round) {
+    var newRound = {};
+    newRound["id"] = round["id"];
+    newRound["gameID"] = round["gameID"];
+    newRound["category"] = round["category"];
+
+    var q1 = {};
+    q1["questionID"] = round["questionID_1"];
+    q1["answerID_1"] = round["answerID_1_1"];
+    q1["answerID_2"] = round["answerID_2_1"];
+    newRound["question_1"] = q1;
+
+    var q1 = {};
+    q1["questionID"] = round["questionID_2"];
+    q1["answerID_1"] = round["answerID_1_2"];
+    q1["answerID_2"] = round["answerID_2_2"];
+    newRound["question_2"] = q1;
+
+    var q1 = {};
+    q1["questionID"] = round["questionID_3"];
+    q1["answerID_1"] = round["answerID_1_3"];
+    q1["answerID_2"] = round["answerID_2_3"];
+    newRound["question_3"] = q1;
+    
+    return newRound;
+}

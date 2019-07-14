@@ -27,12 +27,12 @@ module.exports = function(app){
         var openedGame;
         if(openedGames.length === 0){
             const firstQuery = await maria.query('INSERT INTO games (userID_1) VALUES (?); SELECT LAST_INSERT_ID();', [req.body.userID]);
-            openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [firstQuery[1][0]["LAST_INSERT_ID()"]]);    
+            openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [firstQuery[1][0]["LAST_INSERT_ID()"]]);     
         }else{
             await maria.query('UPDATE games SET userID_2 = ? WHERE id = ?',[req.body.userID, openedGames[0]['id']]);
             openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [openedGames[0]['id']]); 
         }
-        res.send(openedGame);    
+        res.send(openedGame[0]);    
     });
 
     //get specific game
