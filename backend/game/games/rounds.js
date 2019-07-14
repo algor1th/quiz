@@ -119,6 +119,17 @@ module.exports = function(app){
         }
         res.status(404).send('The question you are attempting to answer is closed. Waiting for other player to finish round.');
     });  
+
+    
+    //get specific game
+    app.get('/api/rounds/:id', async (req, res) => {
+        const rounds = await maria.query('SELECT * FROM rounds WHERE id = ?', req.params.id);
+        if(rounds.length === 0){
+            res.status(404).send(`round with id ${req.params.id} not found`);
+            return;
+        }
+        res.send(rounds[0]);    
+    });
 }  
 
 function serializeRound(round) {

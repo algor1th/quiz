@@ -30,6 +30,7 @@ GameServer:
 	GET /api/games/[ID]
 	POST /api/games {userID}		-> new game for userID
 	
+	GET /api/rounds/[ID]	
 	POST /api/rounds	{userID, gameID}	-> new round for gameID
 	PUT /api/rounds/[roundID] {userID, answerID}	-> give answer for round
 
