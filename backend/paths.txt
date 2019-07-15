@@ -13,6 +13,7 @@ UserServer:
 	
 	POST /api/authentication {userID}
 	DELETE /api/authentication/[userID]
+	GET /api/authentication/[token]
 
 GameServer:
 	GET /api/questions

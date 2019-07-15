@@ -50,6 +50,10 @@ module.exports = function(app){
         const firstQuery = await maria.query('UPDATE users SET token = null WHERE id = ?', [req.params.id]);
         const updatedUser = await maria.query('SELECT * FROM users WHERE id = ?', [req.params.id]);
 
+        //TODO REVOKE IN OTHER API
+        
         res.send(updatedUser[0]);
     });
+
+    //TODO ADD GET FOR GET USER BY TOKEN
 }  
