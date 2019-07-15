@@ -44,7 +44,7 @@ module.exports = function(app){
         }
     
         if(req.query.containsFullHistory && req.query.containsFullHistory == "true"){
-            var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[games[0]["id"]]);
+            var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ? ORDER BY id ASC',[games[0]["id"]]);
             var serializedRounds = []
             for(var i=0; i< rounds.length; i++){
                 serializedRounds[i] = await serializeRound(rounds[i]);
@@ -65,16 +65,17 @@ async function serializeRound(round) {
     newRound["id"] = round["id"];
     newRound["category"] = round["category"];
 
+    var q = [];
     for(var i=1; i<=3; i++){
-        var q = {};
-        q["answerID_1"] = round["answerID_1_"+i];
-        q["answerID_2"] = round["answerID_2_"+i];
+        q[i-1] = {};
+        q[i-1]["answerID_1"] = round["answerID_1_"+i];
+        q[i-1]["answerID_2"] = round["answerID_2_"+i];
         var questions = await maria.query('SELECT * FROM questions WHERE id = ?',[round["questionID_"+i]]);
         var answers = await maria.query('SELECT * FROM answers WHERE questionID = ?',[round["questionID_"+i]]);
         questions[0]["answers"] = answers;
-        q["question"] = questions[0];
-        newRound["question_"+i] = q;
+        q[i-1]["question"] = questions[0];
     }
+    newRound["questions"] = q;
        
     return newRound;
 }

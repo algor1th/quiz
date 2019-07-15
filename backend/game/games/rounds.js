@@ -141,7 +141,7 @@ module.exports = function(app){
             res.status(404).send(`round with id ${req.params.id} not found`);
             return;
         }
-        res.send(rounds[0]);    
+        res.send(serializeRound(rounds[0]));    
     });
 }  
 
@@ -151,23 +151,15 @@ function serializeRound(round) {
     newRound["gameID"] = round["gameID"];
     newRound["category"] = round["category"];
 
-    var q1 = {};
-    q1["questionID"] = round["questionID_1"];
-    q1["answerID_1"] = round["answerID_1_1"];
-    q1["answerID_2"] = round["answerID_2_1"];
-    newRound["question_1"] = q1;
+    var q = [];
 
-    var q1 = {};
-    q1["questionID"] = round["questionID_2"];
-    q1["answerID_1"] = round["answerID_1_2"];
-    q1["answerID_2"] = round["answerID_2_2"];
-    newRound["question_2"] = q1;
-
-    var q1 = {};
-    q1["questionID"] = round["questionID_3"];
-    q1["answerID_1"] = round["answerID_1_3"];
-    q1["answerID_2"] = round["answerID_2_3"];
-    newRound["question_3"] = q1;
-    
+    for(var i=1; i<=3; i++){
+        q[i-1] = {};
+        q[i-1]["questionID"] = round["questionID_"+i];
+        q[i-1]["answerID_1"] = round["answerID_1_"+i];
+        q[i-1]["answerID_2"] = round["answerID_2_"+i];
+    }
+    newRound["questions"] = q;
+    console.log(q)
     return newRound;
 }
