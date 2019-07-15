@@ -94,6 +94,13 @@ module.exports = function(app){
                     }
                     const firstQuery = await maria.query('UPDATE rounds SET answerID_1_'+i+' = ? WHERE id = ?', [req.body.answerID, req.params.id]);
                     const updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
+
+                    if(updatedRound['answerID_1_3'] !== null && updatedRound['answerID_2_3'] !== null){
+                        var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[game["id"]]);
+                        if(rounds.length === 6){
+                            const firstQuery = await maria.query('UPDATE games SET isFinished = 1 WHERE id = ?', [game["id"]]);
+                        }
+                    }
                     res.send(serializeRound(updatedRound));
                     return;
                 }
@@ -107,6 +114,12 @@ module.exports = function(app){
                         }
                         const firstQuery = await maria.query('UPDATE rounds SET answerID_2_'+i+' = ? WHERE id = ?', [req.body.answerID, req.params.id]);
                         const updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
+                        if(updatedRound['answerID_1_3'] !== null && updatedRound['answerID_2_3'] !== null){
+                            var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[game["id"]]);
+                            if(rounds.length === 6){
+                                const firstQuery = await maria.query('UPDATE games SET isFinished = 1 WHERE id = ?', [game["id"]]);
+                            }
+                        }
                         res.send(serializeRound(updatedRound));
     
                         return;

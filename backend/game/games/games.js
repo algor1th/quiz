@@ -37,11 +37,44 @@ module.exports = function(app){
 
     //get specific game
     app.get('/api/games/:id', async (req, res) => {
-        const games = await maria.query('SELECT * FROM games WHERE id = ?', req.params.id);
+        var games = await maria.query('SELECT * FROM games WHERE id = ?', req.params.id);
         if(games.length === 0){
             res.status(404).send(`game with id ${req.params.id} not found`);
             return;
         }
+    
+        if(req.query.containsFullHistory && req.query.containsFullHistory == "true"){
+            var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[games[0]["id"]]);
+            var serializedRounds = []
+            for(var i=0; i< rounds.length; i++){
+                serializedRounds[i] = await serializeRound(rounds[i]);
+            }
+
+            games = games[0];
+            games["rounds"] = serializedRounds;
+        }else{
+            games = games[0];
+        }
+        
         res.send(games);    
     });
 }  
+
+async function serializeRound(round) {
+    var newRound = {};
+    newRound["id"] = round["id"];
+    newRound["category"] = round["category"];
+
+    for(var i=1; i<=3; i++){
+        var q = {};
+        q["answerID_1"] = round["answerID_1_"+i];
+        q["answerID_2"] = round["answerID_2_"+i];
+        var questions = await maria.query('SELECT * FROM questions WHERE id = ?',[round["questionID_"+i]]);
+        var answers = await maria.query('SELECT * FROM answers WHERE questionID = ?',[round["questionID_"+i]]);
+        questions[0]["answers"] = answers;
+        q["question"] = questions[0];
+        newRound["question_"+i] = q;
+    }
+       
+    return newRound;
+}
