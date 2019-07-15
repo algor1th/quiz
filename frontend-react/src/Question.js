@@ -1,7 +1,9 @@
 import React from 'react';
 import './App.css';
+import api from './api';
 
 function Question({ match }) {
+  let question = api.getQuestion(match.params.qId)
   return (
     <div className="question">
       <span className="question-medium">
