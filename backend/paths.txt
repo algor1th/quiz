@@ -11,6 +11,9 @@ UserServer:
 	PUT /api/users/id {name, score}
 	DELETE /api/users/[ID]
 	
+	POST /api/authentication {userID}
+	DELETE /api/authentication/[userID]
+
 GameServer:
 	GET /api/questions
 	GET /api/questions/?containAnswers=true

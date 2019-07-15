@@ -1,4 +1,4 @@
-users	id:int name:string(100) score:int
+users	id:int name:string(100) score:int token:string(100)
 
 questions id:int text:string(1024)
 answers id:int text:string(512) questionID:int isCorrect:bool
