@@ -40,7 +40,7 @@ module.exports = function(app){
             var answers = await maria.query('SELECT * FROM answers WHERE questionID = ?',[req.params.id]);
             response = [question[0],answers];
         }else{
-            response = question;
+            response = question[0];
         }
         
         res.send(response);    
