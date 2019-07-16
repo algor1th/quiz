@@ -6,7 +6,7 @@ const userServerURL = process.env.USERSERVER;
 
 module.exports = {
     checkUsername: async function(token, name){
-        if(authenticatedUsers[token] !== null){
+        if(token in authenticatedUsers){
             if(authenticatedUsers[token]["name"] === name){
                 return true;
             }else{
@@ -15,13 +15,13 @@ module.exports = {
             }
         }else{
             await refreshToken(token);
-            if(authenticatedUsers[token] === null)
+            if(token in authenticatedUsers)
                 return false;
             return authenticatedUsers[token]["name"] === name;
         }        
     },
     checkUserID: async function(token, id){
-        if(authenticatedUsers[token] !== null){
+        if(token in authenticatedUsers){
             if(authenticatedUsers[token]["userID"] === id){
                 return true;
             }else{
@@ -30,53 +30,53 @@ module.exports = {
             }
         }else{
             await refreshToken(token);
-            if(authenticatedUsers[token] === null)
+            if(token in authenticatedUsers)
                 return false;
             return authenticatedUsers[token]["userID"] === id;
         }        
     },
     getUserName: async function(token){
-        if(authenticatedUsers[token] !== null){
+        if(token in authenticatedUsers){
            return authenticatedUsers[token]["name"];
         }else{
             await refreshToken(token);
-            if(authenticatedUsers[token] === null)
-                return null;
-            return authenticatedUsers[token]["name"];
+            if(token in authenticatedUsers)
+                return authenticatedUsers[token]["name"];
+            return null;
         }      
     },
     getUserID: async function(token){
-        if(authenticatedUsers[token] !== null){
+        if(token in authenticatedUsers){
            return authenticatedUsers[token]["userID"];
         }else{
             await refreshToken(token);
-            if(authenticatedUsers[token] === null)
-                return null;
-            return authenticatedUsers[token]["userID"];
+            if(token in authenticatedUsers)
+                return authenticatedUsers[token]["userID"];
+            return null;
         }      
-    }
+    },
+    isAuthenticated: async function(token){
+        if(token in authenticatedUsers){
+           return true;
+        }else{
+            await refreshToken(token);
+            return token in authenticatedUsers;
+        }      
+    },
+    authenticatedUsers: authenticatedUsers,
 }
 
-async function refreshToken(token){
-    /*
-    request('userServerURL/api/users', { json: true }, (err, res, body) => {
-    if (err) { return console.log(err); }
-    console.log(body.url);
-    console.log(body.explanation);
-  });
-    app.post('/api/authenticate', async (req, res) => {
-
-        const sanitizeResult = joi.validate(req.body, schemaAuthenticate);
-        if(sanitizeResult.error){
-            res.status(400).send(sanitizeResult.error.details[0].message);
-            return;
-        }
-        entry = {}
-        entry["userID"] = req.body.userID;
-        entry["name"] = req.body.name;
-        authentication.authenticatedUsers[req.body.token] = entry;
-
-        res.send("Added user successfully");    
-    }),*/
-    //TODO CALL GET OF OTHER API TO GET USER AND STORE IT 
+function refreshToken(token){
+    return new Promise(function (resolve, reject) {
+        request(userServerURL + '/api/authentication/'+token, { json: true }, (err, res, body) => {
+            console.log(token);
+            if(res.statusCode !== 404){
+                var newUser = {};
+                newUser["name"] = body.name;
+                newUser["userID"] = body.id;
+                authenticatedUsers[token] = newUser; 
+            }                
+            resolve();
+        });
+    });
 }

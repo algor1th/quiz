@@ -12,7 +12,6 @@ module.exports = function(app){
     
     //get users
     app.get('/api/users', async (req, res) => {
-
         var users;
         if(req.query.sortBy){
             switch(req.query.sortBy){

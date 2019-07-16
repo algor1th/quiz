@@ -1,13 +1,16 @@
 'use strict';
 
+const request = require('request');
 const maria = require('../maria.js');
 const joi = require('@hapi/joi');
-
 const rand = require('csprng');
 
 const schemaUserID = {
     userID: joi.number().required()
 }
+
+const gameServerURL = process.env.GAMESERVER;
+
 
 module.exports = function(app){
     
@@ -25,7 +28,6 @@ module.exports = function(app){
             res.status(404).send(`user with id ${req.body.userID} not found`);
             return;
         }
-        console.log(user[0]["token"])
         if(user[0]["token"] !== null){
             res.status(404).send(`user with id ${req.body.userID} already authenticated`);
             return;
@@ -50,10 +52,19 @@ module.exports = function(app){
         const firstQuery = await maria.query('UPDATE users SET token = null WHERE id = ?', [req.params.id]);
         const updatedUser = await maria.query('SELECT * FROM users WHERE id = ?', [req.params.id]);
 
-        //TODO REVOKE IN OTHER API
-        
+        request.delete(gameServerURL + '/api/authentication/'+user["token"], { json: true }, (err, res, body) => {});
+
         res.send(updatedUser[0]);
     });
 
-    //TODO ADD GET FOR GET USER BY TOKEN
+    //get user with specific token
+    app.get('/api/authentication/:token', async (req, res) => {
+        const user = await maria.query('SELECT * FROM users WHERE token = ?', [req.params.token]);
+        if(user.length === 0){
+            res.status(404).send(`user with token ${req.params.token} not found`);
+            return;
+        }
+       
+        res.send(user[0]);
+    });
 }  

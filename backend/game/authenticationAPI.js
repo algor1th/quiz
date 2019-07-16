@@ -10,13 +10,24 @@ const schemaAuthenticate = {
 }
 
 module.exports = function(app){
-    app.delete('/api/authenticate/:token', async (req, res) => {
-
-        if(authentication.authenticatedUsers[req.params.token] === null){
-            res.status(400).send(`user with token ${req.params.token} not cached`);
+    app.delete('/api/authentication/:token', async (req, res) => {
+        if(req.params.token in authentication.authenticatedUsers){
+            delete authentication.authenticatedUsers[req.params.token];                        
+            res.send(`revoked token ${req.params.token} successfull`);    
+            return; 
         }
 
-        delete authentication.authenticatedUsers[req.params.token];                        
-        res.send("Revoked cached token successfully");    
-    });
+        res.status(400).send(`user with token ${req.params.token} not cached`);        
+    }),
+
+    app.get('/api/authentication', async (req, res) => {
+        const token = req.get("authentication");
+        var isAuthorized = await authentication.isAuthenticated(token);
+        if(isAuthorized){
+            var name = await authentication.getUserName(token);
+            res.send(`This request is authenticated. Welcome ${name}!`);  
+        }else{
+            res.send("this request is not authenticated!");     
+        }    
+    })
 }

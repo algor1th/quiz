@@ -39,7 +39,8 @@ GameServer:
 	POST /api/rounds	{userID, gameID}	-> new round for gameID
 	PUT /api/rounds/[roundID] {userID, answerID}	-> give answer for round
 
-
+	GET /api/authentication
+	DELETE /api/authentication/[token]
 
 game 30
 
