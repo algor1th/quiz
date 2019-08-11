@@ -17,7 +17,7 @@ module.exports = function(app){
             return; 
         }
 
-        res.status(400).send(`user with token ${req.params.token} not cached`);        
+        res.status(404).send(`user with token ${req.params.token} not cached`);        
     }),
 
     app.get('/api/authentication', async (req, res) => {

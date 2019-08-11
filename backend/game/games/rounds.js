@@ -1,36 +1,38 @@
 'use strict';
 
+const authentication = require('../authentication.js');
 const maria = require('../maria.js');
 const joi = require('@hapi/joi');
 
-const schemaRequest = {
-    userID: joi.number().required(),
-    gameID: joi.number().required()
-}
 const schemaAnswer = {
-    userID: joi.number().required(),
     answerID: joi.number().required()
 }
 
 module.exports = function(app){
 
     //get current round for existing game
-    app.post('/api/rounds', async (req, res) => {
+    app.get('/api/rounds', async (req, res) => {
 
-        const sanitizeResult = joi.validate(req.body, schemaRequest);
-        if(sanitizeResult.error){
-            res.status(400).send(sanitizeResult.error.details[0].message);
-            return;
+        if(!req.query.forGame){
+            res.status(400).send(`You cant query api/games without giving an additional parameter`);
         }
 
-        var game = await maria.query('SELECT * FROM games WHERE id = ?',[req.body.gameID]);
+        var game = await maria.query('SELECT * FROM games WHERE id = ?',[req.query.forGame]);
         if(game.length === 0){
-            res.status(404).send(`game with id ${req.body.gameID} not found`);
+            res.status(404).send(`game with id ${req.query.forGame} not found`);
             return;
         }
         game = game[0]
 
-        var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?', [req.body.gameID]);
+        const token = req.get("authentication");
+        var userID = await authentication.getUserID(token);
+        var isAuthorized = game["userID_1"] === userID || game["userID_2"] === userID;
+        if(!isAuthorized){
+            res.status(401).send("Your provided token is not valid for a user of the game.")
+            return;
+        }
+
+        var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?', [req.query.forGame]);
         var openRound;
         for (var i = 0; i < rounds.length; i++) {
             if(!rounds[i]['answerID_1_3'] || !rounds[i]['answerID_2_3']){
@@ -47,11 +49,10 @@ module.exports = function(app){
         
         //no opened round exist
         if(rounds.length === 6){
-            res.status(404).send(`game with id ${req.body.gameID} is over but not marked as over. Something went rong internally`);
+            res.status(404).send(`game with id ${req.query.forGame} is over but not marked as over. Something went wrong internally`);
             return;
         }
-        console.log(game['userID_1']);
-        if(((game['userID_1'] == req.body.userID) && ((rounds.length % 2) === 0)) || ((game['userID_2'] == req.body.userID) && ((rounds.length % 2) === 1)) ){
+        if(((game['userID_1'] == userID) && ((rounds.length % 2) === 0)) || ((game['userID_2'] == userID) && ((rounds.length % 2) === 1)) ){
             res.status(404).send(`waiting for other play to create a new round`);
             return;
         }
@@ -59,9 +60,9 @@ module.exports = function(app){
         //create new round
         const questions = await maria.query('SELECT * FROM questions ORDER BY RAND() LIMIT 3');
 
-        const firstQuery = await maria.query('INSERT INTO rounds (gameID, questionID_1, questionID_2, questionID_3) VALUES (?, ?, ?, ?); SELECT LAST_INSERT_ID();', [req.body.gameID, questions[0]['id'], questions[1]['id'], questions[2]['id']]);
+        const firstQuery = await maria.query('INSERT INTO rounds (gameID, questionID_1, questionID_2, questionID_3) VALUES (?, ?, ?, ?); SELECT LAST_INSERT_ID();', [req.query.forGame, questions[0]['id'], questions[1]['id'], questions[2]['id']]);
         const newRound = await maria.query('SELECT * FROM rounds WHERE id = ?', firstQuery[1][0]["LAST_INSERT_ID()"]);
-        res.send(serializeRound(newRound));
+        res.send(serializeRound(newRound[0]));
         return;
     });  
 
@@ -76,16 +77,24 @@ module.exports = function(app){
 
         var rounds = await maria.query('SELECT * FROM rounds WHERE id = ?',[req.params.id]);
         if(rounds.length === 0){
-            res.status(404).send(`round with id ${req.params.id} not found`);
-            return;
+            res.status(401).send("Something went wrong with verifying your token. The round you ask may not exist or you have no valid token for the round.")
+            return;            
         }
 
         var openRound = rounds[0]
         var game = await maria.query('SELECT * FROM games WHERE id = ?',[openRound['gameID']]);
         game = game[0];
 
+        const token = req.get("authentication");
+        var userID = await authentication.getUserID(token);
+        var isAuthorized = game["userID_1"] === userID || game["userID_2"] === userID;
+        if(!isAuthorized){
+            res.status(401).send("Something went wrong with verifying your token. The round you ask may not exist or you have no valid token for the round.")
+            return;
+        }
+
         for(var i = 1; i<=3; i++){
-            if(game['userID_1'] == req.body.userID){
+            if(game['userID_1'] == userID){
                 if(openRound['answerID_1_'+i] === null){
                     const questions = await maria.query('SELECT * FROM answers WHERE id = ? AND questionID = ?', [req.body.answerID, openRound['questionID_'+i],]);
                     if(questions.length === 0){
@@ -93,7 +102,8 @@ module.exports = function(app){
                         return;
                     }
                     const firstQuery = await maria.query('UPDATE rounds SET answerID_1_'+i+' = ? WHERE id = ?', [req.body.answerID, req.params.id]);
-                    const updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
+                    var updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
+                    updatedRound = updatedRound[0];
 
                     if(updatedRound['answerID_1_3'] !== null && updatedRound['answerID_2_3'] !== null){
                         var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[game["id"]]);
@@ -105,7 +115,7 @@ module.exports = function(app){
                     return;
                 }
             }else{
-                if(game['userID_2'] == req.body.userID){
+                if(game['userID_2'] == userID){
                     if(openRound['answerID_2_'+i] === null){
                         const questions = await maria.query('SELECT * FROM answers WHERE id = ? AND questionID = ?', [req.body.answerID, openRound['questionID_'+i]]);
                         if(questions.length === 0){
@@ -113,7 +123,9 @@ module.exports = function(app){
                             return;
                         }
                         const firstQuery = await maria.query('UPDATE rounds SET answerID_2_'+i+' = ? WHERE id = ?', [req.body.answerID, req.params.id]);
-                        const updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
+                        var updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
+                        updatedRound = updatedRound[0];
+
                         if(updatedRound['answerID_1_3'] !== null && updatedRound['answerID_2_3'] !== null){
                             var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[game["id"]]);
                             if(rounds.length === 6){
@@ -125,7 +137,7 @@ module.exports = function(app){
                         return;
                     }
                 }else{
-                    res.status(404).send(`the round with id ${req.params.id} has no user ${ req.body.userID}`);
+                    res.status(404).send(`the round with id ${req.params.id} has no user ${userID}`);
                     return;
                 }
             }
@@ -136,11 +148,28 @@ module.exports = function(app){
     
     //get specific game
     app.get('/api/rounds/:id', async (req, res) => {
+        const token = req.get("authentication");
+        var isAdmin = await authentication.isAdmin(token);
+        var userID = await authentication.getUserID(token);
+
         const rounds = await maria.query('SELECT * FROM rounds WHERE id = ?', req.params.id);
         if(rounds.length === 0){
+            if(!isAdmin){
+                res.status(401).send("You did not provide an authorized admin token or a token of a user of this round, with your request")
+                return;
+            }
             res.status(404).send(`round with id ${req.params.id} not found`);
             return;
         }
+
+        var games = await maria.query('SELECT * FROM games WHERE id = ?', rounds[0]["gameID"]);
+
+        var isAuthorized = isAdmin || (games.length > 0 && (games[0]["userID_1"] === userID || games[0]["userID_1"] === userID))
+        if(!isAuthorized){
+            res.status(401).send("You did not provide an authorized admin token or a token of a user of this game, with your request")
+            return;
+        }
+
         res.send(serializeRound(rounds[0]));    
     });
 }  
@@ -160,6 +189,6 @@ function serializeRound(round) {
         q[i-1]["answerID_2"] = round["answerID_2_"+i];
     }
     newRound["questions"] = q;
-    console.log(q)
+    console.log(round)
     return newRound;
 }

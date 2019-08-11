@@ -57,11 +57,16 @@ module.exports = {
     },
     isAuthenticated: async function(token){
         if(token in authenticatedUsers){
-           return true;
+            console.log(authenticatedUsers)
+            return true;
         }else{
             await refreshToken(token);
             return token in authenticatedUsers;
         }      
+    },
+    isAdmin: async function(token){
+        const userID = await module.exports.getUserID(token);
+        return userID ==  process.env.ADMINUSER;
     },
     authenticatedUsers: authenticatedUsers,
 }
@@ -69,8 +74,7 @@ module.exports = {
 function refreshToken(token){
     return new Promise(function (resolve, reject) {
         request(userServerURL + '/api/authentication/'+token, { json: true }, (err, res, body) => {
-            console.log(token);
-            if(res.statusCode !== 404){
+            if(res.statusCode !== 401){
                 var newUser = {};
                 newUser["name"] = body.name;
                 newUser["userID"] = body.id;
