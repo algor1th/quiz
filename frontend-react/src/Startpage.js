@@ -15,22 +15,19 @@ function Startpage() {
         "userID_2": null,
         "isFinished": 0
     }];
-    let buttonstyle = {
-        // "display": "grid" TODO
-    }
     return (
         <>
             <h1>Quiz</h1>
             <div>
                 <Link to='/category'><button>Start game</button></Link>
             </div>
-            <div>
+            <div className='choose-category'>
                 <h2>active games</h2>
                 {games.map((game) => {
                     let opponent = game.userID_1 === user.id ? game.userID_2 : game.userID_1;
                     return (
                         <Link to={'/game/' + game.id} key={game.id}>
-                            <button style={buttonstyle}>
+                            <button>
                                 Game against {opponent} <b>{game.isFinished ? "DONE" : "ACTIVE"}</b>
                             </button>
                         </Link>

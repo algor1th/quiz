@@ -10,32 +10,54 @@ function Game({ match }) {
             {game.rounds.map((round) => {
                 return (
                     <div key={round.id}>
+                        <table style={
+                                    {
+                                        margin: '20px auto',
+                                        border: '1px solid black',
+                                        borderRadius: '5px'
+                                    }
+                                } key={round.id} >
+                                    <tr>
+                                        <td>
+                                            Question
+                                        </td>
+                                        <td>
+                                            Player 1
+                                        </td>
+                                        <td>
+                                            Player 2
+                                        </td>
+                                    </tr>
                         {round.questions.map((question) => {
                             let answer1;
                             if (question.question.answers[0])
-                                answer1 = question.question.answers[0].text;
+                                answer1 = question.question.answers[0].isCorrect? '✅':'❌';
                             else
-                                answer1 = 'NOT YET';
+                                answer1 = '⌛';
                             let answer2;
                             if (question.question.answers[1])
-                                answer2 = question.question.answers[1].text;
+                                answer2 = question.question.answers[1].isCorrect? '✅': '❌';
                             else
-                                answer2 = 'NOT YET'
+                                answer2 = '⌛'
                             return (
-                                <div key={question.id} >
-                                    <h2>question 1</h2>
-                                    <p>
-                                        Question: {question.question.text}
-                                    </p>
-                                    <p>
-                                        Player 1 answered {answer1}
-                                    </p>
-                                    <p>
-                                        Player 2 answered {answer2}
-                                    </p>
-                                </div>
+                                
+                                    <tr style={{
+                                        margin: '100px'
+                                    }}>
+                                    {/* <td><h2>question 1</h2></td> */}
+                                    <td>
+                                        {question.question.text}
+                                    </td>
+                                    <td>
+                                        {answer1}
+                                    </td>
+                                    <td>
+                                        {answer2}
+                                    </td>
+                                    </tr>
                             )
                         })}
+                        </table>
                     </div>
                 )
             })}
