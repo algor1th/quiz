@@ -1,0 +1,17 @@
+Userserver:
+	PORT		//Port for the server
+	GAMESERVER	//full address of the Gameserver, include http:// and port. eg. http://localhost:3001
+	DBNAME		//name of the database
+	DBUSER		//user of the database
+	DBHOST		//host of the database
+	DBPASSWORD	//password of the database
+	ADMINUSER	//ID of the Adminuser (commands have unlimmited access) if == 0 everybody is adminuser
+ 
+Gameserver:
+	PORT		//Port for the server
+	USERSERVER	//full address of the Gameserver, include http:// and port. eg. http://localhost:3001
+	DBNAME		//name of the database
+	DBUSER		//user of the database
+	DBHOST		//host of the database
+	DBPASSWORD	//password of the database
+	ADMINUSER	//ID of the Adminuser of the Gameserver, could be different then adminuser (commands have unlimmited access) if == 0 nobody is adminuser

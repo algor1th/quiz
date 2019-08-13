@@ -1,52 +1,92 @@
 [xyz] = replace xyz with parameter
 {xyz, abc} = body coded in json with keys xyz, abc
 
+Doku v 1.1(aktuell):
 UserServer:
-	GET /api/users
+	GET /api/users					// Liste der user [{"id","name","score"}] <- Jedes valide token	
 	GET /api/users/?sortBy=id
 	GET /api/users/?sortBy=name
 	GET /api/users/?sortBy=score
-	GET /api/users/[ID]
-	POST /api/users	{name, score}
-	PUT /api/users/id {name, score}
-	DELETE /api/users/[ID]
+	GET /api/users/[ID]				// user mit ID {"id","name","score"} 	<- Jedes valide token
+	POST /api/users	{name, score}			// fügt user hinzu, ID wird vergeben 	<- Adminuser, falls ADMINUSER==0 -> Jeder
+	PUT /api/users/id {name, score}			// ändert Werte für einen User 		<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
+	DELETE /api/users/[ID]				// löscht einen User 			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
 	
+	(POST /api/authentication {userID}		// PLATZHALTER FÜR LOGIN!!! generiert/gibt einen authentifizierungstoken für einen user {"id","name","score","token"}	<- Jeder)
+	DELETE /api/authentication/[userID]		// löscht den token für einen User			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
+	GET /api/authentication/[token]			// Validiert einen Token und gibt den user dazu 	<- Jedes validierte token
+
 GameServer:
-	GET /api/questions
+	GET /api/questions				// gibt alle Fragen an		<- Adminuser
 	GET /api/questions/?containAnswers=true
-	GET /api/questions/[ID]
+	GET /api/questions/[ID]				// gibt eine expliziete Frage	<- Jedes valide token
 	GET /api/questions/[ID]/?containAnswers=true
-	POST /api/questions {text}
-	PUT /api/questions/[ID] {text}
-	DELETE /api/questions/[ID]
+	POST /api/questions {text}			// fügt eine neue Frage hinzu	<- Adminuser
+	PUT /api/questions/[ID] {text}			// editiert eine Frage 		<- Adminuser
+	DELETE /api/questions/[ID]			// löscht eine Frage 		<- Adminuser
 
-	GET /api/answers
-	GET /api/answers/?forQuestion=[questionID]
-	GET /api/answers/[ID]
-	POST /api/answers {text, questionID, isCorrect}
-	PUT /api/answers/id {text, questionID, isCorrect}
-	DELETE /api/answers/[ID]
+	GET /api/answers				// gibt alle antworten 		<- Adminuser
+	GET /api/answers/?forQuestion=[questionID]	// gibt alle Antworten auf eine expliziete Frage	<- Jedes valide token
+	GET /api/answers/[ID]				// gibt eine expliziete Antworten	<- Jedes valide token
+	POST /api/answers {text, questionID, isCorrect}		// fügt eine neue Antwort hinzu	<- Adminuser
+	PUT /api/answers/id {text, questionID, isCorrect}	// editiert eine Antwort 	<- Adminuser
+	DELETE /api/answers/[ID]				// löscht eine Antwort 		<- Adminuser
 
-	GET /api/games/[ID]
+	GET /api/games					//gibt alle offenen Spiele. 	<- Adminuser
+	GET /api/games/[ID]				//gibt ein explizietes Spiel. 	<- Adminuser oder wenn User im Spiel
 	GET /api/games/[ID]/?containsFullHistory=true
-	POST /api/games {userID}			-> new game for userID
+	GET /api/games/current				//gibt das aktuelle Spiel indem sich der authentifizierte Nutzer befindet. Existiert keins wird eins erstellt und gegeben <- jeder valide token
 	
-	GET /api/rounds/[ID]	
-	POST /api/rounds	{userID, gameID}	-> new round for gameID
-	PUT /api/rounds/[roundID] {userID, answerID}	-> give answer for round
+	GET /api/rounds/[ID]				//gibt eine expliziete Runde. 	<- Adminuser oder wenn User in Runde
+->	GET /api/rounds/?forGame=gameID			//gibt die aktuelle Runde inder sich der Nutzer befindet, in dem jeweiligen Spiel. 
+							//Ist die letzte Runde beendet und der richtige Nutzer an der Reihe wirdein neues Spiel erstellt und gesendet. Valider token, der im Spiel ist
+	
+	PUT /api/rounds/[roundID] {answerID}		//gibt eine Antwort zu der gegebenen Runde <- Token der sich in der Runde befindet
+
+	(DELETE /api/authentication/[token]		//entwertet ein Token eines Nutzers im cache. Wird auschließlich intern verwendet und nicht extern gecallt! <- Jeder)
 
 
+Doku v 1.2(nächste Version):
+UserServer:
+	GET /api/users					// Liste der user [{"id","name","score"}] <- Jedes valide token	
+	GET /api/users/?sortBy=id
+	GET /api/users/?sortBy=name
+	GET /api/users/?sortBy=score
+	GET /api/users/[ID]				// user mit ID {"id","name","score"} 	<- Jedes valide token
+	POST /api/users	{name, score}			// fügt user hinzu, ID wird vergeben 	<- Adminuser, falls ADMINUSER==0 -> Jeder
+	PUT /api/users/id {name, score}			// ändert Werte für einen User 		<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
+	DELETE /api/users/[ID]				// löscht einen User 			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
+	
+	(POST /api/authentication {userID}		// PLATZHALTER FÜR LOGIN!!! generiert/gibt einen authentifizierungstoken für einen user {"id","name","score","token"}	<- Jeder)
+	DELETE /api/authentication/[userID]		// löscht den token für einen User			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
+	GET /api/authentication/[token]			// Validiert einen Token und gibt den user dazu 	<- Jedes validierte token
 
-game 30
+GameServer:
+	GET /api/questions				// gibt alle Fragen an		<- Adminuser
+	GET /api/questions/?containAnswers=true
+	GET /api/questions/[ID]				// gibt eine expliziete Frage	<- Jedes valide token
+	GET /api/questions/[ID]/?containAnswers=true
+	POST /api/questions {text}			// fügt eine neue Frage hinzu	<- Adminuser
+	PUT /api/questions/[ID] {text}			// editiert eine Frage 		<- Adminuser
+	DELETE /api/questions/[ID]			// löscht eine Frage 		<- Adminuser
 
-"GameTable fertig"
-"Tag system, proficency hirachy, difficulty"
+	GET /api/answers				// gibt alle antworten 		<- Adminuser
+	GET /api/answers/?forQuestion=[questionID]	// gibt alle Antworten auf eine expliziete Frage	<- Jedes valide token
+	GET /api/answers/[ID]				// gibt eine expliziete Antworten	<- Jedes valide token
+	POST /api/answers {text, questionID, isCorrect}		// fügt eine neue Antwort hinzu	<- Adminuser
+	PUT /api/answers/id {text, questionID, isCorrect}	// editiert eine Antwort 	<- Adminuser
+	DELETE /api/answers/[ID]				// löscht eine Antwort 		<- Adminuser
 
-authentication
-matchmaking & scoring
+	GET /api/games					//gibt alle offenen Spiele. 	<- Adminuser
+	GET /api/games/[ID]				//gibt ein explizietes Spiel. 	<- Adminuser oder wenn User im Spiel
+	GET /api/games/[ID]/?containsFullHistory=true
+	GET /api/games/current				//gibt das aktuelle Spiel indem sich der authentifizierte Nutzer befindet. Existiert keins wird eins erstellt und gegeben <- jeder valide token
+	
+	GET /api/rounds/[ID]				//gibt eine expliziete Runde. 	<- Adminuser oder wenn User in Runde	
+	GET /api/rounds/?forGame=gameID			//gibt die aktuelle Runde inder sich der Nutzer befindet, in dem jeweiligen Spiel. 
+							//Ist die letzte Runde beendet und der richtige Nutzer an der Reihe wird eine Auswahl über die 3 Kategorien gesendet. Valider token, der im Spiel ist
+	
+	PUT /api/rounds/[roundID] {answerID}		//gibt eine Antwort zu der gegebenen Runde <- Token der sich in der Runde befindet
+	PUT /api/rounds/[roundID] {categoryID}		//wählt die Kategorie aus und bekommt ein neues Spiel mit Fragen zurück <- Token der sich in der Runde befindet
 
-
-UserID:42
-UserID:1337
-GameID:24
-RoundID:18
+	(DELETE /api/authentication/[token]		//entwertet ein Token eines Nutzers im cache. Wird auschließlich intern verwendet und nicht extern gecallt! <- Jeder)

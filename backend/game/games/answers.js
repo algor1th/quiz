@@ -1,5 +1,6 @@
 'use strict';
 
+const authentication = require('../authentication.js');
 const maria = require('../maria.js');
 const joi = require('@hapi/joi');
 
@@ -15,8 +16,20 @@ module.exports = function(app){
     app.get('/api/answers', async (req, res) => {
         var answers;
         if(req.query.forQuestion){
+            const token = req.get("authentication");
+            var isAuthorized = await authentication.isAuthenticated(token);
+            if(!isAuthorized){
+                res.status(401).send("You did not provide an authorized token with your request")
+                return;
+            }
             var answers = await maria.query('SELECT * FROM answers WHERE questionID = ?',[req.query.forQuestion]);
         }else{
+            const token = req.get("authentication");
+            var isAuthorized = await authentication.isAdmin(token);
+            if(!isAuthorized){
+                res.status(401).send("You did not provide an authorized admin token with your request")
+                return;
+            }    
             var answers = await maria.query('SELECT * FROM answers');
         }
         res.send(answers);   
@@ -24,6 +37,13 @@ module.exports = function(app){
 
     //get specific answer
     app.get('/api/answers/:id', async (req, res) => {
+        const token = req.get("authentication");
+        var isAuthorized = await authentication.isAuthenticated(token);
+        if(!isAuthorized){
+            res.status(401).send("You did not provide an authorized token with your request")
+            return;
+        }
+
         const answer = await maria.query('SELECT * FROM answers WHERE id = ?', req.params.id);
         if(answer.length === 0){
             res.status(404).send(`answer with id ${req.params.id} not found`);
@@ -33,8 +53,14 @@ module.exports = function(app){
     });
 
     //add answer
-    app.post('/api/answers', async (req, res) => {
-      
+    app.post('/api/answers', async (req, res) => {      
+        const token = req.get("authentication");
+        var isAuthorized = await authentication.isAdmin(token);
+        if(!isAuthorized){
+            res.status(401).send("You did not provide an authorized admin token with your request")
+            return;
+        }
+
         const sanitizeResult = joi.validate(req.body, schemaAnswer);
         if(sanitizeResult.error){
             res.status(400).send(sanitizeResult.error.details[0].message);
@@ -48,6 +74,13 @@ module.exports = function(app){
 
     //update answer
     app.put('/api/answers/:id', async (req, res) => {
+        const token = req.get("authentication");
+        var isAuthorized = await authentication.isAdmin(token);
+        if(!isAuthorized){
+            res.status(401).send("You did not provide an authorized admin token with your request")
+            return;
+        }
+
         const answer = await maria.query('SELECT * FROM answers WHERE id = ?', req.params.id);
         if(answer.length === 0){
             res.status(404).send(`answer with id ${req.params.id} not found`);
@@ -68,6 +101,13 @@ module.exports = function(app){
 
     //delete answer
     app.delete('/api/answers/:id', async (req, res) => {
+        const token = req.get("authentication");
+        var isAuthorized = await authentication.isAdmin(token);
+        if(!isAuthorized){
+            res.status(401).send("You did not provide an authorized admin token with your request")
+            return;
+        }
+
         const deletedAnswer = await maria.query('SELECT * FROM answers WHERE id = ?', [req.params.id]);
         if(deletedAnswer.length === 0){
             res.status(404).send(`answer with id ${req.params.id} not found`);

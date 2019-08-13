@@ -1,9 +1,9 @@
 const mariadb = require('mariadb');
 const pool = mariadb.createPool({
-     host: 'localhost', 
-     user:'root', 
+     host: process.env.DBHOST, 
+     user: process.env.DBUSER, 
      password: "Q7*i'/Hy>/:g$YZd",
-     database: 'CYSECPROJECT',
+     database: process.env.DBNAME,
      connectionLimit: 5,
      multipleStatements: true
 });

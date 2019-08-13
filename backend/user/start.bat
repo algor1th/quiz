@@ -1,0 +1,9 @@
+title Userserver
+set PORT=3000
+set GAMESERVER=http://localhost:3001
+set DBNAME=CYSECPROJECT
+set DBUSER=root
+set DBHOST=localhost
+set DBPASSWORD=testpassword
+set ADMINUSER=1
+nodemon index.js
