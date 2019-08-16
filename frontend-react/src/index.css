@@ -4,9 +4,9 @@
     #root {
       margin: 30px auto;
       padding: 10px;
-      width: 90vw;
+      width: 40vw;
       font-size: 1.2em;
-      font-family: 'Liberation Sans','Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Liberation Sans', 'Open Sans' ,'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: white;
       border-radius: 20px;
     }

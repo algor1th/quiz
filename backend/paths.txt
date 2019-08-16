@@ -8,12 +8,12 @@ UserServer:
 	GET /api/users/?sortBy=name
 	GET /api/users/?sortBy=score
 	GET /api/users/[ID]				// user mit ID {"id","name","score"} 	<- Jedes valide token
-	POST /api/users	{name, score}			// fügt user hinzu, ID wird vergeben 	<- Adminuser, falls ADMINUSER==0 -> Jeder
-	PUT /api/users/id {name, score}			// ändert Werte für einen User 		<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
-	DELETE /api/users/[ID]				// löscht einen User 			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
+	POST /api/users	{name, score}			// fÃ¼gt user hinzu, ID wird vergeben 	<- Adminuser, falls ADMINUSER==0 -> Jeder
+	PUT /api/users/id {name, score}			// Ã¤ndert Werte fÃ¼r einen User 		<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
+	DELETE /api/users/[ID]				// lÃ¶scht einen User 			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
 	
-	(POST /api/authentication {userID}		// PLATZHALTER FÜR LOGIN!!! generiert/gibt einen authentifizierungstoken für einen user {"id","name","score","token"}	<- Jeder)
-	DELETE /api/authentication/[userID]		// löscht den token für einen User			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
+	(POST /api/authentication {userID}		// PLATZHALTER FÃœR LOGIN!!! generiert/gibt einen authentifizierungstoken fÃ¼r einen user {"id","name","score","token"}	<- Jeder)
+	DELETE /api/authentication/[userID]		// lÃ¶scht den token fÃ¼r einen User			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
 	GET /api/authentication/[token]			// Validiert einen Token und gibt den user dazu 	<- Jedes validierte token
 
 GameServer:
@@ -21,16 +21,16 @@ GameServer:
 	GET /api/questions/?containAnswers=true
 	GET /api/questions/[ID]				// gibt eine expliziete Frage	<- Jedes valide token
 	GET /api/questions/[ID]/?containAnswers=true
-	POST /api/questions {text}			// fügt eine neue Frage hinzu	<- Adminuser
+	POST /api/questions {text}			// fÃ¼gt eine neue Frage hinzu	<- Adminuser
 	PUT /api/questions/[ID] {text}			// editiert eine Frage 		<- Adminuser
-	DELETE /api/questions/[ID]			// löscht eine Frage 		<- Adminuser
+	DELETE /api/questions/[ID]			// lÃ¶scht eine Frage 		<- Adminuser
 
 	GET /api/answers				// gibt alle antworten 		<- Adminuser
 	GET /api/answers/?forQuestion=[questionID]	// gibt alle Antworten auf eine expliziete Frage	<- Jedes valide token
 	GET /api/answers/[ID]				// gibt eine expliziete Antworten	<- Jedes valide token
-	POST /api/answers {text, questionID, isCorrect}		// fügt eine neue Antwort hinzu	<- Adminuser
+	POST /api/answers {text, questionID, isCorrect}		// fÃ¼gt eine neue Antwort hinzu	<- Adminuser
 	PUT /api/answers/id {text, questionID, isCorrect}	// editiert eine Antwort 	<- Adminuser
-	DELETE /api/answers/[ID]				// löscht eine Antwort 		<- Adminuser
+	DELETE /api/answers/[ID]				// lÃ¶scht eine Antwort 		<- Adminuser
 
 	GET /api/games					//gibt alle offenen Spiele. 	<- Adminuser
 	GET /api/games/[ID]				//gibt ein explizietes Spiel. 	<- Adminuser oder wenn User im Spiel
@@ -43,22 +43,22 @@ GameServer:
 	
 	PUT /api/rounds/[roundID] {answerID}		//gibt eine Antwort zu der gegebenen Runde <- Token der sich in der Runde befindet
 
-	(DELETE /api/authentication/[token]		//entwertet ein Token eines Nutzers im cache. Wird auschließlich intern verwendet und nicht extern gecallt! <- Jeder)
+	(DELETE /api/authentication/[token]		//entwertet ein Token eines Nutzers im cache. Wird auschlieÃŸlich intern verwendet und nicht extern gecallt! <- Jeder)
 
 
-Doku v 1.2(nächste Version):
+Doku v 1.2(nÃ¤chste Version):
 UserServer:
 	GET /api/users					// Liste der user [{"id","name","score"}] <- Jedes valide token	
 	GET /api/users/?sortBy=id
 	GET /api/users/?sortBy=name
 	GET /api/users/?sortBy=score
 	GET /api/users/[ID]				// user mit ID {"id","name","score"} 	<- Jedes valide token
-	POST /api/users	{name, score}			// fügt user hinzu, ID wird vergeben 	<- Adminuser, falls ADMINUSER==0 -> Jeder
-	PUT /api/users/id {name, score}			// ändert Werte für einen User 		<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
-	DELETE /api/users/[ID]				// löscht einen User 			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
+	POST /api/users	{name, score}			// fÃ¼gt user hinzu, ID wird vergeben 	<- Adminuser, falls ADMINUSER==0 -> Jeder
+	PUT /api/users/id {name, score}			// Ã¤ndert Werte fÃ¼r einen User 		<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
+	DELETE /api/users/[ID]				// lÃ¶scht einen User 			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
 	
-	(POST /api/authentication {userID}		// PLATZHALTER FÜR LOGIN!!! generiert/gibt einen authentifizierungstoken für einen user {"id","name","score","token"}	<- Jeder)
-	DELETE /api/authentication/[userID]		// löscht den token für einen User			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
+	(POST /api/authentication {userID}		// PLATZHALTER FÃœR LOGIN!!! generiert/gibt einen authentifizierungstoken fÃ¼r einen user {"id","name","score","token"}	<- Jeder)
+	DELETE /api/authentication/[userID]		// lÃ¶scht den token fÃ¼r einen User			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
 	GET /api/authentication/[token]			// Validiert einen Token und gibt den user dazu 	<- Jedes validierte token
 
 GameServer:
@@ -66,16 +66,16 @@ GameServer:
 	GET /api/questions/?containAnswers=true
 	GET /api/questions/[ID]				// gibt eine expliziete Frage	<- Jedes valide token
 	GET /api/questions/[ID]/?containAnswers=true
-	POST /api/questions {text}			// fügt eine neue Frage hinzu	<- Adminuser
+	POST /api/questions {text}			// fÃ¼gt eine neue Frage hinzu	<- Adminuser
 	PUT /api/questions/[ID] {text}			// editiert eine Frage 		<- Adminuser
-	DELETE /api/questions/[ID]			// löscht eine Frage 		<- Adminuser
+	DELETE /api/questions/[ID]			// lÃ¶scht eine Frage 		<- Adminuser
 
 	GET /api/answers				// gibt alle antworten 		<- Adminuser
 	GET /api/answers/?forQuestion=[questionID]	// gibt alle Antworten auf eine expliziete Frage	<- Jedes valide token
 	GET /api/answers/[ID]				// gibt eine expliziete Antworten	<- Jedes valide token
-	POST /api/answers {text, questionID, isCorrect}		// fügt eine neue Antwort hinzu	<- Adminuser
+	POST /api/answers {text, questionID, isCorrect}		// fÃ¼gt eine neue Antwort hinzu	<- Adminuser
 	PUT /api/answers/id {text, questionID, isCorrect}	// editiert eine Antwort 	<- Adminuser
-	DELETE /api/answers/[ID]				// löscht eine Antwort 		<- Adminuser
+	DELETE /api/answers/[ID]				// lÃ¶scht eine Antwort 		<- Adminuser
 
 	GET /api/games					//gibt alle offenen Spiele. 	<- Adminuser
 	GET /api/games/[ID]				//gibt ein explizietes Spiel. 	<- Adminuser oder wenn User im Spiel
@@ -84,9 +84,9 @@ GameServer:
 	
 	GET /api/rounds/[ID]				//gibt eine expliziete Runde. 	<- Adminuser oder wenn User in Runde	
 	GET /api/rounds/?forGame=gameID			//gibt die aktuelle Runde inder sich der Nutzer befindet, in dem jeweiligen Spiel. 
-							//Ist die letzte Runde beendet und der richtige Nutzer an der Reihe wird eine Auswahl über die 3 Kategorien gesendet. Valider token, der im Spiel ist
+							//Ist die letzte Runde beendet und der richtige Nutzer an der Reihe wird eine Auswahl Ã¼ber die 3 Kategorien gesendet. Valider token, der im Spiel ist
 	
 	PUT /api/rounds/[roundID] {answerID}		//gibt eine Antwort zu der gegebenen Runde <- Token der sich in der Runde befindet
-	PUT /api/rounds/[roundID] {categoryID}		//wählt die Kategorie aus und bekommt ein neues Spiel mit Fragen zurück <- Token der sich in der Runde befindet
+	PUT /api/rounds/[roundID] {categoryID}		//wÃ¤hlt die Kategorie aus und bekommt ein neues Spiel mit Fragen zurÃ¼ck <- Token der sich in der Runde befindet
 
-	(DELETE /api/authentication/[token]		//entwertet ein Token eines Nutzers im cache. Wird auschließlich intern verwendet und nicht extern gecallt! <- Jeder)
+	(DELETE /api/authentication/[token]		//entwertet ein Token eines Nutzers im cache. Wird auschlieÃŸlich intern verwendet und nicht extern gecallt! <- Jeder)
