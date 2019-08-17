@@ -24,7 +24,18 @@ function Question(props) {
           {question[0].text}
         </span>
         <div className="answer-buttons">
-            { question[1].map((answer)=> <button className="answer-button" key={answer.id}>{answer.text}</button>)}
+            { question[1].map((answer)=> <button className="answer-button" key={answer.id} onClick={() => {
+              const bdy = JSON.stringify({"answerID": answer.id})
+              console.log(bdy)
+              fetch(`/api/rounds/${props.roundId}`,{
+                headers: new Headers({
+                  'Content-Type': 'application/json',
+                  'authentication': window.user
+                }),
+                method: 'PUT',
+                body: bdy
+              }).then(console.log);
+            }}>{answer.text}</button>)}
         </div>
         
       </div>
