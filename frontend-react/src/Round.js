@@ -16,12 +16,12 @@ function Round({ match }) {
     })
       .then((round) => round.json())
       .then((round) => setRound(round));
-  }, [match.params.gId]);
+  }, [match.params.gId, currentround]);
   useEffect(() => {
-    if (round.questions[currentround][`answerID_${round.thisPlayer}`] != null) {
+    if (round && round.questions[currentround] && round.questions[currentround][`answerID_${round.thisPlayer}`] != null) {
       setcurrentround(currentround + 1);
     }
-  }, [currentround, round.questions, round.thisPlayer]);
+  }, [currentround, round]);
   console.log(round);
   function roundDone() {
     setcurrentround(currentround + 1)

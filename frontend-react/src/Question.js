@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 function Question(props) {
-  // let question = api.getQuestion(match.params.qId)
   const id = props.question.questionID;
   const [question, setQuestion] = useState();
   console.log(props.qId)

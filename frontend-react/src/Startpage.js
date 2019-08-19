@@ -25,7 +25,7 @@ function Startpage() {
             <div className='choose-category'>
                 <h2>active games</h2>
                 {games.map((game) => {
-                    let opponent = game.userID_1 === window.user.id ? game.userID_2 : game.userID_1;
+                    let opponent = game.userID_1 == window.user.id ? game.userID_2 : game.userID_1;
                     return (
                         <Link to={`/game/${game.id}/play`} key={game.id}>
                             <button>
