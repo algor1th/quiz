@@ -6,7 +6,7 @@ function Game({ match }) {
     useEffect(() => {
             fetch(`/api/games/${match.gId}?containsFullHistory=true`, {
                 headers: new Headers({
-                    'authentication': window.user
+                    'authentication': window.user.token
                 })
             })
             .then((game) => game.json())
