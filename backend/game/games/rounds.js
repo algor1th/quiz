@@ -26,7 +26,17 @@ module.exports = function(app){
 
         const token = req.get("authentication");
         var userID = await authentication.getUserID(token);
-        var isAuthorized = game["userID_1"] === userID || game["userID_2"] === userID;
+        var playerID = 0;
+        var isAuthorized = false;
+        if(game["userID_1"] === userID){
+            playerID = 1;
+            isAuthorized = true;
+        } 
+        if(game["userID_2"] === userID){
+            playerID = 2;
+            isAuthorized = true;
+        }         
+        
         if(!isAuthorized){
             res.status(401).send("Your provided token is not valid for a user of the game.")
             return;
@@ -43,8 +53,10 @@ module.exports = function(app){
 
         if(openRound){
             //opened round exist
-            res.send(serializeRound(openRound));
-            return
+            var output = serializeRound(openRound);
+            output["thisPlayer"] = playerID;
+            res.send(output);
+            return;
         }
         
         //no opened round exist
@@ -62,7 +74,11 @@ module.exports = function(app){
 
         const firstQuery = await maria.query('INSERT INTO rounds (gameID, questionID_1, questionID_2, questionID_3) VALUES (?, ?, ?, ?); SELECT LAST_INSERT_ID();', [req.query.forGame, questions[0]['id'], questions[1]['id'], questions[2]['id']]);
         const newRound = await maria.query('SELECT * FROM rounds WHERE id = ?', firstQuery[1][0]["LAST_INSERT_ID()"]);
-        res.send(serializeRound(newRound[0]));
+        
+        //add here
+        var output = serializeRound(newRound[0]);
+        output["thisPlayer"] = playerID;
+        res.send(output);
         return;
     });  
 
