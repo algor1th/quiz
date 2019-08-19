@@ -2,7 +2,7 @@ import React from 'react';
 import './App.css';
 import { useState, useEffect } from 'react'
 import Question from './Question'
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 function Round({ match }) {
   // let question = api.getQuestion(match.params.qId)
@@ -18,10 +18,10 @@ function Round({ match }) {
       .then((round) => setRound(round));
   }, [match.params.gId]);
   useEffect(() => {
-    if (round.questions[currentround].an) {
-
+    if (round.questions[currentround][`answerID_${round.thisPlayer}`] != null) {
+      setcurrentround(currentround + 1);
     }
-  }, [currentround])
+  }, [currentround, round.questions, round.thisPlayer]);
   console.log(round);
   function roundDone() {
     setcurrentround(currentround + 1)
