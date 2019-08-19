@@ -2,7 +2,7 @@ const mariadb = require('mariadb');
 const pool = mariadb.createPool({
      host: process.env.DBHOST, 
      user: process.env.DBUSER, 
-     password: "testpassword",
+     password: "Q7*i'/Hy>/:g$YZd",
      database: process.env.DBNAME,
      connectionLimit: 5,
      multipleStatements: true
