@@ -10,7 +10,7 @@ function Question(props) {
   useEffect(() => {
     fetch(`/api/questions/${id}?containAnswers=true`, {
       headers: new Headers({
-        'authentication': window.user
+        'authentication': window.user.token
       })
     })
       .then((question) => question.json())
@@ -30,11 +30,14 @@ function Question(props) {
               fetch(`/api/rounds/${props.roundId}`,{
                 headers: new Headers({
                   'Content-Type': 'application/json',
-                  'authentication': window.user
+                  'authentication': window.user.token
                 }),
                 method: 'PUT',
                 body: bdy
-              }).then(console.log);
+              }).then((body)=> {
+                console.log(body);
+                props.roundDone();
+              });
             }}>{answer.text}</button>)}
         </div>
         

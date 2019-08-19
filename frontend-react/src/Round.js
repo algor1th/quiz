@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import { useState, useEffect } from 'react'
 import Question from './Question'
+import { Redirect } from 'react-router-dom';
 
 function Round({ match }) {
   // let question = api.getQuestion(match.params.qId)
@@ -10,29 +11,26 @@ function Round({ match }) {
   useEffect(() => {
     fetch(`/api/rounds?forGame=${match.params.gId}`, {
       headers: new Headers({
-        'authentication': window.user
+        'authentication': window.user.token
       })
     })
       .then((round) => round.json())
       .then((round) => setRound(round));
   }, [match.params.gId])
   console.log(round);
+  function roundDone() {
+      setcurrentround(currentround + 1)
+  }
   if (round) {
+    if(currentround < round.questions.length){
     return (
       <>
-        <Question question={round.questions[currentround]} roundId={round.id}></Question>
-        <input type="number" value={currentround} onChange={(e) => {
-          e.preventDefault();
-          const newVal = e.target.value;
-          if (newVal < round.questions.length) {
-            setcurrentround(newVal);
-          }
-          console.log(e.target.value)
-        }
-        }>
-        </input>
+        <Question question={round.questions[currentround]} roundId={round.id} roundDone={roundDone}></Question>
+        <span>Question {currentround}</span>
       </>
-    );
+    );} else {
+      return <Redirect to="/"></Redirect>
+    }
   } else return <h1>loading...</h1>
 
 }

@@ -7,11 +7,17 @@ import Startpage from './Startpage';
 import Game from './Game'
 
 function App() {
-  window.user = prompt('token');
+  const token = prompt('token');
+  const userid = token.split("_")[1];
+  window.user = {
+    token: token,
+    id: userid
+  };
   if (window.user) {
     return (
       <Router>
         <div className="App">
+          <span>Player {window.user.id}</span>
           <Switch>
             <Route path='/' exact component={Startpage}></Route>
             <Route path='/category'><ChooseCategory></ChooseCategory></Route>
