@@ -1,4 +1,17 @@
-kategorien
-
 Tag system, proficency hirachy, difficulty
-matchmaking & scoring, multiple games
+kategorien
+Spielersuche & Herausfordern
+scoring, multiple games
+
+countdown
+
+
+
+
+
+Spieleübersicht über speziefisches Spiel (+Punkte)
+kategoieren im frontend auswählen
+Highscore & Spielersuche nach Namen
+Aktuelle Info über Spiel
+Richtige/falsche Antworten & Cooldownbalken
+

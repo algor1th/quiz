@@ -1,4 +1,4 @@
-[xyz] = replace xyz with parameter
+﻿[xyz] = replace xyz with parameter
 {xyz, abc} = body coded in json with keys xyz, abc
 
 Doku v 1.1(aktuell):
@@ -90,3 +90,8 @@ GameServer:
 	PUT /api/rounds/[roundID] {categoryID}		//wählt die Kategorie aus und bekommt ein neues Spiel mit Fragen zurück <- Token der sich in der Runde befindet
 
 	(DELETE /api/authentication/[token]		//entwertet ein Token eines Nutzers im cache. Wird auschließlich intern verwendet und nicht extern gecallt! <- Jeder)
+
+
+3t4k4ausw98d6ieawtpjkmuk4m6ccq0cdal_42
+iwykxgiuacf6hj1r8f7q1u0qtectfvf9j78_43
+mju1tudwac4sqgkxs5qrmeupdxq2jkpm7b5_44
