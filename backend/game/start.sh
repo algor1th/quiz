@@ -1,7 +1,7 @@
-export PORT=3001
-export USERSERVER=http://localhost:3000
+export PORT=9005
+export USERSERVER=http://localhost:9004
 export DBNAME=cysecproject
-export DBUSER=root
+export DBUSER=cysecproj
 export DBHOST=localhost
 export DBPASSWORD=testpassword
 export ADMINUSER=1

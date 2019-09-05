@@ -1,7 +1,7 @@
-export PORT=3000
-export GAMESERVER=http://localhost:3001
+export PORT=9004
+export GAMESERVER=http://localhost:9005
 export DBNAME=cysecproject
-export DBUSER=root
+export DBUSER=cysecproj
 export DBHOST=localhost
 export DBPASSWORD=testpassword
 export ADMINUSER=1
