@@ -38,7 +38,7 @@ GameServer:
 	GET /api/games/current				//gibt das aktuelle Spiel indem sich der authentifizierte Nutzer befindet. Existiert keins wird eins erstellt und gegeben <- jeder valide token
 	
 	GET /api/rounds/[ID]				//gibt eine expliziete Runde. 	<- Adminuser oder wenn User in Runde
-->	GET /api/rounds/?forGame=gameID			//gibt die aktuelle Runde inder sich der Nutzer befindet, in dem jeweiligen Spiel. 
+	GET /api/rounds/?forGame=gameID			//gibt die aktuelle Runde inder sich der Nutzer befindet, in dem jeweiligen Spiel. 
 							//Ist die letzte Runde beendet und der richtige Nutzer an der Reihe wirdein neues Spiel erstellt und gesendet. Valider token, der im Spiel ist
 	
 	PUT /api/rounds/[roundID] {answerID}		//gibt eine Antwort zu der gegebenen Runde <- Token der sich in der Runde befindet
@@ -86,21 +86,19 @@ GameServer:
 	
 	GET /api/rounds/[ID]				//gibt eine expliziete Runde. 	<- Adminuser oder wenn User in Runde	
 
-(done +add category names)
-'->	GET /api/rounds/?forGame=gameID			//gibt die aktuelle Runde inder sich der Nutzer befindet, in dem jeweiligen Spiel. 
+(done)	GET /api/rounds/?forGame=gameID			//gibt die aktuelle Runde inder sich der Nutzer befindet, in dem jeweiligen Spiel. 
 							//Ist die letzte Runde beendet und der richtige Nutzer an der Reihe wird eine Auswahl über die 3 Kategorien gesendet. Valider token, der im Spiel ist
 	
 	PUT /api/rounds/[roundID] {answerID}		//gibt eine Antwort zu der gegebenen Runde <- Token der sich in der Runde befindet
-(done +add category names)
-'->	PUT /api/rounds/[gameID]  {categoryID}		//wählt die Kategorie aus und bekommt ein neues Spiel mit Fragen zurück <- Token der sich in der Runde befindet
+(done)	PUT /api/rounds/[gameID]  {categoryID}		//wählt die Kategorie aus und bekommt ein neues Spiel mit Fragen zurück <- Token der sich in der Runde befindet
 
 	(DELETE /api/authentication/[token]		//entwertet ein Token eines Nutzers im cache. Wird auschließlich intern verwendet und nicht extern gecallt! <- Jeder)
 
-(5.9)	GET /api/categories				// Liste der kategorien [{"id","name"}] <- Jedes valide token	
-(5.9)	GET /api/categories/[ID]			// kategoire mit ID {"id","name"} 	<- Jedes valide token
-(5.9)	POST /api/categories {name}			// kategorieuser hinzu, ID wird vergeben<- Adminuser, falls ADMINUSER==0 -> Jeder
-(5.9)	PUT /api/categories/[ID] {name}			// ändert Werte für eine kategorie	<- Adminuser falls ADMINUSER==0 -> Jeder
-(5.9)	DELETE /api/users/[ID]				// löscht eine kategorie		<- Adminuser falls ADMINUSER==0 -> Jeder
+(done)	GET /api/categories				// Liste der kategorien [{"id","name"}] <- Jedes valide token	
+(done)	GET /api/categories/[ID]			// kategoire mit ID {"id","name"} 	<- Jedes valide token
+(done)	POST /api/categories {name}			// kategorieuser hinzu, ID wird vergeben<- Adminuser, falls ADMINUSER==0 -> Jeder
+(done)	PUT /api/categories/[ID] {name}			// ändert Werte für eine kategorie	<- Adminuser falls ADMINUSER==0 -> Jeder
+(done)	DELETE /api/users/[ID]				// löscht eine kategorie		<- Adminuser falls ADMINUSER==0 -> Jeder
 
 
 

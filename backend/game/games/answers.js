@@ -69,7 +69,7 @@ module.exports = function(app){
 
         const firstQuery = await maria.query('INSERT INTO answers (text, questionID, isCorrect) VALUES (?, ?, ?); SELECT LAST_INSERT_ID();', [req.body.text, req.body.questionID, req.body.isCorrect]);
         const newAnswer = await maria.query('SELECT * FROM answers WHERE id = ?', firstQuery[1][0]["LAST_INSERT_ID()"]);
-        res.send(newAnswer);  
+        res.send(newAnswer[0]);  
     });
 
     //update answer
@@ -96,7 +96,7 @@ module.exports = function(app){
         const firstQuery = await maria.query('UPDATE answers SET text = ?, questionID = ?, isCorrect = ? WHERE id = ?', [req.body.text, req.body.questionID, req.body.isCorrect, req.params.id]);
         const updatedAnswer = await maria.query('SELECT * FROM answers WHERE id = ?', [req.params.id]);
 
-        res.send(updatedAnswer);
+        res.send(updatedAnswer[0]);
     });
 
     //delete answer
@@ -114,6 +114,6 @@ module.exports = function(app){
             return;
         }
         await maria.query('DELETE FROM answers WHERE id = ?',[req.params.id]);
-        res.send(deletedAnswer);
+        res.send(deletedAnswer[0]);
     });
 }  

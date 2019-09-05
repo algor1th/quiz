@@ -1,0 +1,95 @@
+
+
+Social Engineering:
+
+Was ist eine geeignete Übersetzung für "Social Engineering"?
+- soziale Manipulation
+- Sozialsimulation
+- Mechanische Menschen
+- angewandte Sozialwissenschaft
+
+Welchen Email-Anhängen kann ich vertrauen?
+- pauschal gar keinen!
+- allen, die nicht auf .exe enden
+- allen
+- denen, die in der Email fehlerfreies Deutsch verwenden
+
+Womit lässt sich der Zugang zu einem System effektiv regulieren?
+- Drehtüren
+- Passwortkarten für die Türen
+- Ein Empfang der die Personen authentifiziert
+- schlechte Musik in der Eingangshalle
+
+Kann der Mensch ein Sicherheitsrisiko bei der Bedienung von Software sein?
+- Ja
+- Nein
+
+
+
+
+Websecurity
+
+Was ist XSS
+- Cross-Site-Scripting
+- Xylophone Social Science
+- Cascading Style Sheets
+
+Was versucht man bei SQL injection
+- In eine SQL Anfrage weitere Befehle einzuschleußen
+- Den SQL Server zu überlasten
+- Den Programmierer des SQL Server mit einer Spritze zu betäuben
+
+Für was steht DDOS
+- Denial of Service Attack
+- Destributed Denial of Service Attack
+- Digital Disguised Online Scam
+- Duo Duo On Screw
+
+Lohnt es sich Websecurity zu erforschen?
+- Ja, sonst würden wir es ja tun
+- Nein, ich will keine Punkte für die Frage
+
+
+Authentication
+
+Was ist wichtig bei der Auswahl des Passworts, damit es ein hohes Maß an Sicherheit aufweißt:
+- Ich muss es einfach merken können
+- Es muss unglaublich lang sein
+- Viele unterschiedliche Zeichen in einem nicht logischen Muster
+- Es muss den Vornamen meines Haustiers beinhalten
+
+Was ist 2FA?
+- Two Factor Authentication
+- To Few Authentication
+- Two Female Authentication
+- To Famous Authentication
+
+Ist 2FA sinnvoll?
+- Ja, es schützt oft vor breit angelegten "Massenattacken"
+- Ja, weil es Hackern erheblichen Mehraufwandt bereitet
+- Nein, es ist absolut nicht mehr Stand der Technik
+- Nur wenn man beide Faktoren immer zusammen aufbewahrt
+
+Ist Authentication auch im Internet notwendig?
+- Ja natürlich
+- eher nicht
+
+Sonstiges
+
+Was tue ich wenn mir keine Frage mehr einfällt?
+- Ich frage was ich tue wenn mir keine Frage mehr einfällt?
+- Ich gebe auf
+
+Ist diese Kategorie sinnvoll?
+- Ja, weil wir somit mehr Variation bekommen
+- Einfach nur ja
+
+Hat es dem Programmierer Spaß gemacht sich diese sinnvollen Fragen auszudenken?
+- Ja, offensichtlich
+- Nein, sein Haustier hat sie sich ausgedacht
+
+Ist dies deine Lieblingskategorie?
+- Ja
+- Ja
+- Ja
+- Nein 

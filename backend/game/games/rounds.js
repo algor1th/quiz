@@ -61,7 +61,7 @@ module.exports = function(app){
 
         //respond if an opened round exist
         if(openRound){
-            var output = serializeRound(openRound);
+            var output = await serializeRound(openRound);
             output["thisPlayer"] = playerID;
             res.send(output);
             return;
@@ -77,8 +77,7 @@ module.exports = function(app){
             return;
         } 
 
-        //TODO att category names
-        var categories = getRandomCategories(req.query.forGame, rounds.length);
+        var categories = await getRandomCategories(req.query.forGame, rounds.length);
         var response = {};
         response["gameID"] = req.query.forGame;
         response["category"]= categories;
@@ -129,15 +128,19 @@ module.exports = function(app){
             return;
         }
 
-        res.send(serializeRound(rounds[0]));    
+        var serializedRound = await serializeRound(rounds[0]);
+        res.send(serializedRound);    
     });
 }  
 
-function serializeRound(round) {
+async function serializeRound(round) {
     var newRound = {};
     newRound["id"] = round["id"];
     newRound["gameID"] = round["gameID"];
-    newRound["category"] = round["category"];
+    newRound["categoryID"] = round["category"];
+
+    var allCategories = await maria.query('SELECT * FROM categories');
+    newRound["category"] = allCategories[round["category"]];
 
     var q = [];
 
@@ -151,14 +154,15 @@ function serializeRound(round) {
     return newRound;
 }
 
-function getRandomCategories(gameID, roundNumber){
+async function getRandomCategories(gameID, roundNumber, categoryIntervall){
+    var allCategories = await maria.query('SELECT * FROM categories');
+
     var rng = seedrandom(gameID, roundNumber);
     var rounds = [];
     while(rounds.length<3){
-        //TODO validate interval
-        var i = parseInt(rng()*5);
-        if(!rounds.includes(i))
-            rounds.push(i);
+        var i = parseInt(rng()*allCategories.length);
+        if(!rounds.includes(i) && allCategories[i] != null)
+            rounds.push(allCategories[i]);
     }
     return rounds;
 }
@@ -200,7 +204,8 @@ async function handleAnswer(req, res){
                             const firstQuery = await maria.query('UPDATE games SET isFinished = 1 WHERE id = ?', [game["id"]]);
                         }
                     }
-                    res.send(serializeRound(updatedRound));
+                    var serializedRound = await serializeRound(updatedRound);
+                    res.send(serializedRound); 
                     return;
                 }
             }else{
@@ -221,8 +226,8 @@ async function handleAnswer(req, res){
                                 const firstQuery = await maria.query('UPDATE games SET isFinished = 1 WHERE id = ?', [game["id"]]);
                             }
                         }
-                        res.send(serializeRound(updatedRound));
-    
+                        var serializedRound = await serializeRound(updatedRound);
+                        res.send(serializedRound);     
                         return;
                     }
                 }else{
@@ -282,20 +287,26 @@ async function handleCategory(req, res){
             return;
         } 
 
-        var categories = getRandomCategories(req.params.id, rounds.length);
-        if(!categories.includes(req.body.categoryID)){
+        var categories = await getRandomCategories(req.params.id, rounds.length);
+        var isContained = false;
+        for(var i=0; i< categories.length; i++){
+            if(categories[i]["id"]==req.body.categoryID){
+                isContained = true;
+                break;
+            }
+        }
+        if(!isContained){
             res.status(404).send(`You tried select an invalid category`);
             return;
         }      
         
-        //TODO where category matches
         //creates new round
-        const questions = await maria.query('SELECT * FROM questions ORDER BY RAND() LIMIT 3');
+        const questions = await maria.query('SELECT * FROM questions WHERE categoryID = ? ORDER BY RAND() LIMIT 3', [req.body.categoryID]);
         const firstQuery = await maria.query('INSERT INTO rounds (gameID, category, questionID_1, questionID_2, questionID_3) VALUES (?, ?, ?, ?, ?); SELECT LAST_INSERT_ID();', [req.params.id, parseInt(req.body.categoryID) ,questions[0]['id'], questions[1]['id'], questions[2]['id']]);
         const newRound = await maria.query('SELECT * FROM rounds WHERE id = ?', firstQuery[1][0]["LAST_INSERT_ID()"]);
                         
         //respond new round
-        var output = serializeRound(newRound[0]);
+        var output = await serializeRound(newRound[0]);
         output["thisPlayer"] = playerID;
         res.send(output);
         return;

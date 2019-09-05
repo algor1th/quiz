@@ -6,6 +6,7 @@ const joi = require('@hapi/joi');
 
 const schemaQuestion = {
     text: joi.string().min(3).required().max(1024),
+    categoryID: joi.number().required()
 }
 
 module.exports = function(app){
@@ -77,9 +78,9 @@ module.exports = function(app){
             return;
         }
 
-        const firstQuery = await maria.query('INSERT INTO questions (text) VALUES (?); SELECT LAST_INSERT_ID();', [req.body.text]);
+        const firstQuery = await maria.query('INSERT INTO questions (text, categoryID) VALUES (?, ?); SELECT LAST_INSERT_ID();', [req.body.text, req.body.categoryID]);
         const newQuestion = await maria.query('SELECT * FROM questions WHERE id = ?', firstQuery[1][0]["LAST_INSERT_ID()"]);
-        res.send(newQuestion);  
+        res.send(newQuestion[0]);  
     });
 
     //update question
@@ -103,10 +104,10 @@ module.exports = function(app){
             return;
         }
     
-        const firstQuery = await maria.query('UPDATE questions SET text = ? WHERE id = ?', [req.body.text, req.params.id]);
+        const firstQuery = await maria.query('UPDATE questions SET text = ?, categoryID = ? WHERE id = ?', [req.body.text, req.body.categoryID, req.params.id]);
         const updatedQuestion = await maria.query('SELECT * FROM questions WHERE id = ?', [req.params.id]);
 
-        res.send(updatedQuestion);
+        res.send(updatedQuestion[0]);
     });
 
     //delete question
@@ -124,6 +125,6 @@ module.exports = function(app){
             return;
         }
         await maria.query('DELETE FROM questions WHERE id = ?',[req.params.id]);
-        res.send(deletedQuestion);
+        res.send(deletedQuestion[0]);
     });
 }  
