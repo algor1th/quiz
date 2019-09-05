@@ -1,7 +1,5 @@
-Tag system, proficency hirachy, difficulty
-kategorien
-Spielersuche & Herausfordern
-scoring, multiple games
+proficency hirachy, difficulty
+scoring
 
 countdown
 
