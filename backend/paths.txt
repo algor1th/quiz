@@ -80,9 +80,9 @@ GameServer:
 	GET /api/games					//gibt alle offenen Spiele. 	<- Adminuser
 	GET /api/games/[ID]				//gibt ein explizietes Spiel. 	<- Adminuser oder wenn User im Spiel
 	GET /api/games/[ID]/?containsFullHistory=true
-(6.9)	GET /api/games/current				//gibt alle Spiele indem sich der authentifizierte Nutzer befindet. <- jeder valide token
-(6.9)	POST /api/games/current 			//Erstellt ein Spiel und matched mit einem User der gleichen proficiency <- jeder valide token
-(6.9)	POST /api/games/current/?matchWith=[otherPlayer]//Erstellt ein Spiel und matched mit dem eingegeben User <- jeder valide token
+(done)	GET /api/games/current				//gibt alle Spiele indem sich der authentifizierte Nutzer befindet. <- jeder valide token
+(done)	POST /api/games/current 			//Erstellt ein Spiel und matched mit einem User der gleichen proficiency <- jeder valide token
+(done)	POST /api/games/current/?matchWith=[otherPlayer]//Erstellt ein Spiel und matched mit dem eingegeben User <- jeder valide token
 	
 	GET /api/rounds/[ID]				//gibt eine expliziete Runde. 	<- Adminuser oder wenn User in Runde	
 

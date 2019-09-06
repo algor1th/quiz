@@ -22,20 +22,59 @@ module.exports = function(app){
 
         var openedGames = await maria.query('SELECT * FROM games WHERE (userID_1 = ? OR userID_2 = ?) AND isFinished = false',[userID, userID]);
         if(openedGames.length !== 0){
-            res.send(openedGames[0]);    
+            res.send(openedGames);    
             return;
         }
+        res.status(404).send("No opened games found")
+    });
 
-        openedGames = await maria.query('SELECT * FROM games WHERE userID_2 IS NULL');
-        var openedGame;
-        if(openedGames.length === 0){
-            const firstQuery = await maria.query('INSERT INTO games (userID_1) VALUES (?); SELECT LAST_INSERT_ID();', [userID]);
-            openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [firstQuery[1][0]["LAST_INSERT_ID()"]]);     
-        }else{
-            await maria.query('UPDATE games SET userID_2 = ? WHERE id = ?',[userID, openedGames[0]['id']]);
-            openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [openedGames[0]['id']]); 
+    //create new game
+    app.post('/api/games/current', async (req, res) => {
+        const token = req.get("authentication");
+        var isAuthenticated = await authentication.isAuthenticated(token);
+        if(!isAuthenticated){
+            res.status(401).send("You did not provide an authorized token with your request")
+            return;
         }
-        res.send(openedGame[0]);    
+        var userID = await authentication.getUserID(token);
+
+        if(!req.query.matchWith){       
+            //random opponent
+            openedGames = await maria.query('SELECT * FROM games WHERE userID_2 IS NULL');
+            var openedGame;
+            if(openedGames.length === 0){
+                const firstQuery = await maria.query('INSERT INTO games (userID_1) VALUES (?); SELECT LAST_INSERT_ID();', [userID]);
+                openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [firstQuery[1][0]["LAST_INSERT_ID()"]]);     
+            }else{
+                if(openedGames[0]["userID_1"] == userID){
+                    res.status(404).send("You have already an open unmatched game!");
+                    return;
+                }
+                var alreadyActiveGames = await maria.query('SELECT * FROM games WHERE userID_1 IS ? AND userID_2 IS ?',[openedGames[0]["userID_1"], userID]);
+                if(alreadyActiveGames.length === 0){
+                    await maria.query('UPDATE games SET userID_2 = ? WHERE id = ?',[userID, openedGames[0]['id']]);
+                    openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [openedGames[0]['id']]); 
+                }
+                else{
+                    const firstQuery = await maria.query('INSERT INTO games (userID_1) VALUES (?); SELECT LAST_INSERT_ID();', [userID]);
+                    openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [firstQuery[1][0]["LAST_INSERT_ID()"]]);     
+                }
+                
+            }
+            res.send(openedGame[0]);    
+            return;
+        }else{
+            //specific target
+            var otherUser = req.query.matchWith;
+            var openedGames = await maria.query('SELECT * FROM games WHERE ((userID_1 = ? AND userID_2 = ?) OR (userID_1 = ? AND userID_2 = ?)) AND isFinished = false',[userID, otherUser, otherUser, userID]);
+            if(openedGames.length != 0){
+                res.status(404).send("You are already playing against this opponent")
+                return;
+            }
+            const firstQuery = await maria.query('INSERT INTO games (userID_1, userID_2) VALUES (?, ?); SELECT LAST_INSERT_ID();', [userID, otherUser]);
+            openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [firstQuery[1][0]["LAST_INSERT_ID()"]]); 
+            res.send(openedGame[0]);    
+        }
     });
 
     //get all opened games
@@ -94,7 +133,9 @@ module.exports = function(app){
 async function serializeRound(round) {
     var newRound = {};
     newRound["id"] = round["id"];
-    newRound["category"] = round["category"];
+
+    var allCategories = await maria.query('SELECT * FROM categories');
+    newRound["category"] = allCategories[round["category"]];
 
     var q = [];
     for(var i=1; i<=3; i++){
