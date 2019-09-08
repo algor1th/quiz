@@ -12,16 +12,30 @@ function Startpage() {
             crossDomain: true,
         })
             .then((game) => game.json())
-            .then((game) => setGames([game]));
-    })
+            .then((game) => setGames(game));
+    },[])
 
     console.log(games);
+    function newGame(e) {
+        e.preventDefault();
+        fetch(
+            '/api/games/current',
+            {
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                    'authentication': window.user.token
+                }),
+                method: 'POST',
+            }        
+        ).then(console.log);
+    }
     return (
         <>
             <h1>Quiz</h1>
-            {/* <div>
-                <Link to='/category'><button>Start game</button></Link>
-            </div> */}
+            <div>
+                <Link to='/scoreboard'><button>Scoreboard</button></Link>
+                <button onClick={newGame}>Start game</button>
+            </div>
             <div className='choose-category'>
                 <h2>active games</h2>
                 {games.map((game) => {

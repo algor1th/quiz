@@ -4,7 +4,7 @@
     #root {
       margin: 30px auto;
       padding: 10px;
-      width: 40vw;
+      width: 90vw;
       font-size: 1.2em;
       font-family: 'Liberation Sans', 'Open Sans' ,'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: white;
@@ -54,6 +54,7 @@
       border: 3px #211973 solid;
       margin: 10px 0;
       transition: ease 0.5s;
+      width: 100%;
     }
     button:hover {
       border: 3px #ff7a00 solid;

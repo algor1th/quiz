@@ -18,7 +18,7 @@ function Round({ match }) {
       .then((round) => setRound(round));
   }, [match.params.gId, currentround]);
   useEffect(() => {
-    if (round && round.questions[currentround] && round.questions[currentround][`answerID_${round.thisPlayer}`] != null) {
+    if (round && round.questions && round.questions[currentround] && round.questions[currentround][`answerID_${round.thisPlayer}`] != null) {
       setcurrentround(currentround + 1);
     }
   }, [currentround, round]);
@@ -27,6 +27,9 @@ function Round({ match }) {
     setcurrentround(currentround + 1)
   }
   if (round) {
+    if(round.category) {
+      return <p>choose category</p>
+    }
     if (currentround < round.questions.length) {
       return (
         <>
