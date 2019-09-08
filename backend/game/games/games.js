@@ -50,7 +50,7 @@ module.exports = function(app){
                     res.status(404).send("You have already an open unmatched game!");
                     return;
                 }
-                var alreadyActiveGames = await maria.query('SELECT * FROM games WHERE userID_1 IS ? AND userID_2 IS ?',[openedGames[0]["userID_1"], userID]);
+                var alreadyActiveGames = await maria.query('SELECT * FROM games WHERE userID_1 = ? AND userID_2 = ?',[openedGames[0]["userID_1"], userID]);
                 if(alreadyActiveGames.length === 0){
                     await maria.query('UPDATE games SET userID_2 = ? WHERE id = ?',[userID, openedGames[0]['id']]);
                     openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [openedGames[0]['id']]); 
