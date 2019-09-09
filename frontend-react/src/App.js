@@ -5,6 +5,7 @@ import Round from './Round';
 import ChooseCategory from './ChooseCategory';
 import Startpage from './Startpage';
 import Game from './Game'
+import Scoreboard from './Scoreboard';
 
 function App() {
   const token = prompt('token');
@@ -24,6 +25,7 @@ function App() {
             {/* <Route path='/q/:qId' component={Round}></Route> */}
             <Route path='/game/:gId/play' component={Round}></Route>
             <Route path='/game/:gId' component={Game}></Route>
+            <Route path='/scoreboard' component={Scoreboard}></Route>
           </Switch>
         </div>
       </Router>
