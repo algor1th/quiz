@@ -1,10 +1,10 @@
-Doku Version 1.2(aktuelle Version)
+Doku Version 1.3(aktuelle Version)
 
-users	id:int name:string(100) score:int token:string(100)
+users	id:int name:string(100) score:int token:string(100) level:int
 
-questions id:int text:string(1024) categoryID:int
+questions id:int text:string(1024) categoryID:int requiredLevel:int score:int answerTime:int
 answers id:int text:string(512) questionID:int isCorrect:bool
-categories: id:int name:string(512)
+categories: id:int name:string(512) requiredLevel:int
 
 games	id:int	userID_1:int	userID_2:int	isFinished:bool
 rounds	id:int	gameID:int	category:string(256)	questionID_1:int	questionID_2:int	questionID_3:int	answerID_1_1:int	answerID_1_2:int	answerID_1_3:int	answerID_2_1:int	answerID_2_2:int	answerID_2_3:int

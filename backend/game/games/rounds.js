@@ -160,7 +160,8 @@ async function getRandomCategories(gameID, roundNumber, categoryIntervall){
     var rounds = [];
     while(rounds.length<3){
         var i = parseInt(rng()*allCategories.length);
-        if(!rounds.includes(i) && allCategories[i] != null)
+        console.log(i);
+        if(!rounds.includes(allCategories[i]) && allCategories[i] != null)
             rounds.push(allCategories[i]);
     }
     return rounds;

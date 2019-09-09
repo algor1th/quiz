@@ -1,7 +1,7 @@
-proficency hirachy, difficulty
-scoring
-
-countdown
+give just questions matching to proficency 
+give scoring after game
+apply countdown
+(fix password of databases)
 
 
 

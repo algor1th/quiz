@@ -6,7 +6,10 @@ const joi = require('@hapi/joi');
 
 const schemaQuestion = {
     text: joi.string().min(3).required().max(1024),
-    categoryID: joi.number().required()
+    categoryID: joi.number().required(),
+    requiredLevel: joi.number().required(),
+    score: joi.number().required(),
+    answerTime: joi.number().required()
 }
 
 module.exports = function(app){
@@ -78,7 +81,7 @@ module.exports = function(app){
             return;
         }
 
-        const firstQuery = await maria.query('INSERT INTO questions (text, categoryID) VALUES (?, ?); SELECT LAST_INSERT_ID();', [req.body.text, req.body.categoryID]);
+        const firstQuery = await maria.query('INSERT INTO questions (text, categoryID, requiredLevel, score, answerTime) VALUES (?, ?, ?, ?, ?); SELECT LAST_INSERT_ID();', [req.body.text, req.body.categoryID, req.body.requiredLevel, req.body.categoryID.score, req.body.answerTime]);
         const newQuestion = await maria.query('SELECT * FROM questions WHERE id = ?', firstQuery[1][0]["LAST_INSERT_ID()"]);
         res.send(newQuestion[0]);  
     });
@@ -104,7 +107,7 @@ module.exports = function(app){
             return;
         }
     
-        const firstQuery = await maria.query('UPDATE questions SET text = ?, categoryID = ? WHERE id = ?', [req.body.text, req.body.categoryID, req.params.id]);
+        const firstQuery = await maria.query('UPDATE questions SET text = ?, categoryID = ?, requiredLevel = ?, score = ?, answerTime = ? WHERE id = ?', [req.body.text, req.body.categoryID, req.body.requiredLevel, req.body.score, req.body.answerTime, req.params.id]);
         const updatedQuestion = await maria.query('SELECT * FROM questions WHERE id = ?', [req.params.id]);
 
         res.send(updatedQuestion[0]);

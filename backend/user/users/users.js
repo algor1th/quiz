@@ -7,7 +7,8 @@ const joi = require('@hapi/joi');
 
 const schemaUser = {
     name: joi.string().min(3).required(),
-    score: joi.number().required()
+    score: joi.number().required(),
+    level: joi.number().required()
 }
 
 module.exports = function(app){
@@ -31,6 +32,8 @@ module.exports = function(app){
                     break;
                 case 'score':
                         users = await maria.query('SELECT * FROM users ORDER BY score DESC');
+                case 'level':
+                        users = await maria.query('SELECT * FROM users ORDER BY level DESC');
                     break;
             }
         }else{
@@ -43,6 +46,7 @@ module.exports = function(app){
             user["id"] = users[i]["id"];
             user["name"] = users[i]["name"];
             user["score"] = users[i]["score"];
+            user["level"] = users[i]["level"];
             output[i] = user;
         }
 
@@ -66,6 +70,7 @@ module.exports = function(app){
         newUser["id"] = user[0]["id"];
         newUser["name"] = user[0]["name"];
         newUser["score"] = user[0]["score"];
+        newUser["level"] = user[0]["level"];
         res.send(newUser);    
     });
 
@@ -83,13 +88,15 @@ module.exports = function(app){
             return;
         }
 
-        const firstQuery = await maria.query('INSERT INTO users (name,score) VALUES (?, ?); SELECT LAST_INSERT_ID();', [req.body.name,req.body.score]);
+        const firstQuery = await maria.query('INSERT INTO users (name,score,level) VALUES (?, ?, ?); SELECT LAST_INSERT_ID();', [req.body.name,req.body.score, req.body.level]);
         const newUser = await maria.query('SELECT * FROM users WHERE id = ?', firstQuery[1][0]["LAST_INSERT_ID()"]);
         
         var newUserOutput = {}
         newUserOutput["id"] = newUser[0]["id"];
         newUserOutput["name"] = newUser[0]["name"];
         newUserOutput["score"] = newUser[0]["score"];
+        newUserOutput["level"] = newUser[0]["level"];
+
         res.send(newUserOutput);    
     });
 
@@ -115,13 +122,15 @@ module.exports = function(app){
             return;
         }
     
-        const firstQuery = await maria.query('UPDATE users SET name = ?, score = ? WHERE id = ?', [req.body.name,req.body.score, req.params.id]);
+        const firstQuery = await maria.query('UPDATE users SET name = ?, score = ?, level = ? WHERE id = ?', [req.body.name,req.body.score, req.body.level, req.params.id]);
         const updatedUser = await maria.query('SELECT * FROM users WHERE id = ?', [req.params.id]);
 
         var newUserOutput = {}
         newUserOutput["id"] = updatedUser[0]["id"];
         newUserOutput["name"] = updatedUser[0]["name"];
         newUserOutput["score"] = updatedUser[0]["score"];
+        newUserOutput["level"] = updatedUser[0]["level"];
+
         res.send(newUserOutput);    
     });
 
@@ -147,6 +156,7 @@ module.exports = function(app){
         newUserOutput["id"] = deletedUser[0]["id"];
         newUserOutput["name"] = deletedUser[0]["name"];
         newUserOutput["score"] = deletedUser[0]["score"];
+        newUserOutput["level"] = deletedUser[0]["level"];
         res.send(newUserOutput);   
     });
 }  

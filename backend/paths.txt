@@ -2,29 +2,32 @@
 {xyz, abc} = body coded in json with keys xyz, abc
 
 
-Doku v 1.2(aktuelle Version):
+Doku v 1.3(aktuelle Version):
 UserServer:
-	GET /api/users					// Liste der user [{"id","name","score"}] <- Jedes valide token	
+(1.3)	GET /api/users					// Liste der user [{"id","name","score","level"}] <- Jedes valide token	
 	GET /api/users/?sortBy=id
 	GET /api/users/?sortBy=name
 	GET /api/users/?sortBy=score
-	GET /api/users/[ID]				// user mit ID {"id","name","score"} 	<- Jedes valide token
-	POST /api/users	{name, score}			// fügt user hinzu, ID wird vergeben 	<- Adminuser, falls ADMINUSER==0 -> Jeder
-	PUT /api/users/id {name, score}			// ändert Werte für einen User 		<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
-	DELETE /api/users/[ID]				// löscht einen User 			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
+(1.3)	GET /api/users/?sortBy=level
+(1.3)	GET /api/users/[ID]				// user mit ID {"id","name","score","level"} 	<- Jedes valide token
+(1.3)	POST /api/users	{name, score, level}			// fügt user hinzu, ID wird vergeben 	<- Adminuser, falls ADMINUSER==0 -> Jeder
+(1.3)	PUT /api/users/id {name, score, level}			// ändert Werte für einen User 		<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
+(1.3)	DELETE /api/users/[ID]				// löscht einen User 			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
 	
 	(POST /api/authentication {userID}		// PLATZHALTER FÜR LOGIN!!! generiert/gibt einen authentifizierungstoken für einen user {"id","name","score","token"}	<- Jeder)
 	DELETE /api/authentication/[userID]		// löscht den token für einen User			<- User selbst, Adminuser falls ADMINUSER==0 -> Jeder
 	GET /api/authentication/[token]			// Validiert einen Token und gibt den user dazu 	<- Jedes validierte token
 
 GameServer:
-	GET /api/questions				// gibt alle Fragen an		<- Adminuser
-	GET /api/questions/?containAnswers=true
-	GET /api/questions/[ID]				// gibt eine expliziete Frage	<- Jedes valide token
-	GET /api/questions/[ID]/?containAnswers=true
-	POST /api/questions {text}			// fügt eine neue Frage hinzu	<- Adminuser
-	PUT /api/questions/[ID] {text}			// editiert eine Frage 		<- Adminuser
-	DELETE /api/questions/[ID]			// löscht eine Frage 		<- Adminuser
+(1.3)	GET /api/questions				// gibt alle Fragen an		<- Adminuser
+(1.3)	GET /api/questions/?containAnswers=true
+(1.3)	GET /api/questions/[ID]				// gibt eine expliziete Frage	<- Jedes valide token
+(1.3)	GET /api/questions/[ID]/?containAnswers=true
+(1.3)	POST /api/questions {text, categoryID, 
+		requiredLevel, score, answerTime}	// fügt eine neue Frage hinzu	<- Adminuser
+(1.3)	PUT /api/questions/[ID] {text, categoryID, 
+		requiredLevel, score, answerTime}	// editiert eine Frage 		<- Adminuser
+(1.3)	DELETE /api/questions/[ID]			// löscht eine Frage 		<- Adminuser
 
 	GET /api/answers				// gibt alle antworten 		<- Adminuser
 	GET /api/answers/?forQuestion=[questionID]	// gibt alle Antworten auf eine expliziete Frage	<- Jedes valide token
@@ -36,40 +39,26 @@ GameServer:
 	GET /api/games					//gibt alle offenen Spiele. 	<- Adminuser
 	GET /api/games/[ID]				//gibt ein explizietes Spiel. 	<- Adminuser oder wenn User im Spiel
 	GET /api/games/[ID]/?containsFullHistory=true
-(new)	GET /api/games/current				//gibt alle Spiele indem sich der authentifizierte Nutzer befindet. <- jeder valide token
-(new)	POST /api/games/current 			//Erstellt ein Spiel und matched mit einem User der gleichen proficiency <- jeder valide token
-(new)	POST /api/games/current/?matchWith=[otherPlayer]//Erstellt ein Spiel und matched mit dem eingegeben User <- jeder valide token
+(1.2)	GET /api/games/current				//gibt alle Spiele indem sich der authentifizierte Nutzer befindet. <- jeder valide token
+(1.2)	POST /api/games/current 			//Erstellt ein Spiel und matched mit einem User der gleichen proficiency <- jeder valide token
+(1.2)	POST /api/games/current/?matchWith=[otherPlayer]//Erstellt ein Spiel und matched mit dem eingegeben User <- jeder valide token
 	
 	GET /api/rounds/[ID]				//gibt eine expliziete Runde. 	<- Adminuser oder wenn User in Runde	
 
-(new)	GET /api/rounds/?forGame=gameID			//gibt die aktuelle Runde inder sich der Nutzer befindet, in dem jeweiligen Spiel. 
+(1.2)	GET /api/rounds/?forGame=gameID			//gibt die aktuelle Runde inder sich der Nutzer befindet, in dem jeweiligen Spiel. 
 							//Ist die letzte Runde beendet und der richtige Nutzer an der Reihe wird eine Auswahl über die 3 Kategorien gesendet. Valider token, der im Spiel ist
 	
 	PUT /api/rounds/[roundID] {answerID}		//gibt eine Antwort zu der gegebenen Runde <- Token der sich in der Runde befindet
-(new)	PUT /api/rounds/[gameID]  {categoryID}		//wählt die Kategorie aus und bekommt ein neues Spiel mit Fragen zurück <- Token der sich in der Runde befindet
+(1.2)	PUT /api/rounds/[gameID]  {categoryID}		//wählt die Kategorie aus und bekommt ein neues Spiel mit Fragen zurück <- Token der sich in der Runde befindet
 
 	(DELETE /api/authentication/[token]		//entwertet ein Token eines Nutzers im cache. Wird auschließlich intern verwendet und nicht extern gecallt! <- Jeder)
 
-(new)	GET /api/categories				// Liste der kategorien [{"id","name"}] <- Jedes valide token	
-(new)	GET /api/categories/[ID]			// kategoire mit ID {"id","name"} 	<- Jedes valide token
-(new)	POST /api/categories {name}			// kategorieuser hinzu, ID wird vergeben<- Adminuser, falls ADMINUSER==0 -> Jeder
-(new)	PUT /api/categories/[ID] {name}			// ändert Werte für eine kategorie	<- Adminuser falls ADMINUSER==0 -> Jeder
-(new)	DELETE /api/users/[ID]				// löscht eine kategorie		<- Adminuser falls ADMINUSER==0 -> Jeder
+(1.2&3)	GET /api/categories				// Liste der kategorien [{"id","name", "requiredLevel"}] <- Jedes valide token	
+(1.2&3)	GET /api/categories/[ID]			// kategoire mit ID {"id","name", "requiredLevel"} 	<- Jedes valide token
+(1.2&3)	POST /api/categories {name, requiredLevel}	// kategorieuser hinzu, ID wird vergeben<- Adminuser, falls ADMINUSER==0 -> Jeder
+(1.2&3)	PUT /api/categories/[ID] {name, requiredLevel}	// ändert Werte für eine kategorie	<- Adminuser falls ADMINUSER==0 -> Jeder
+(1.2&3)	DELETE /api/users/[ID]				// löscht eine kategorie		<- Adminuser falls ADMINUSER==0 -> Jeder
 
 
 
 Tokens for testing:
-ptpt0yorvdo9o1ybifgu873yj6pxv5zu468_1
-3t4k4ausw98d6ieawtpjkmuk4m6ccq0cdal_42
-iwykxgiuacf6hj1r8f7q1u0qtectfvf9j78_43
-mju1tudwac4sqgkxs5qrmeupdxq2jkpm7b5_44
-yfh5f6vhod95ecz7nylcemnruqproo70vwu_45
-mckedcmpctpraflj8meg0a6o3j94puyy4ul_46
-16uzsrtan1bj4f08z8zbiv2t57rbgra14dh_47
-bxmbr6y2g90ahcnxip3gisemwod4l658y8w_48
-smb21qh7frwv7o4n5ttq3cvc8k8ts0lrhyj_49
-2zojqxojszkwcwakjmhgxdv9w5cec0dhj83_50
-625c49min1dvmxwxee71xsb8iweymdn8usp_75
-0hb1nvlxffuztebgq5w37x3j85mhmms1yg6_76
-jych7sr4z3377k5tbczwbpwdzhkwouf4kv9_77
-by8cokp0kldz8kk2ca94u8s7hrqfxywmsa7_78	

@@ -6,6 +6,7 @@ const joi = require('@hapi/joi');
 
 const schemaCategory = {
     name: joi.string().min(3).required().max(1024),
+    requiredLevel: joi.number().required()
 }
 
 module.exports = function(app){
@@ -59,7 +60,7 @@ module.exports = function(app){
             return;
         }
 
-        const firstQuery = await maria.query('INSERT INTO categories (name) VALUES (?); SELECT LAST_INSERT_ID();', [req.body.name]);
+        const firstQuery = await maria.query('INSERT INTO categories (name, requiredLevel) VALUES (?, ?); SELECT LAST_INSERT_ID();', [req.body.name, req.body.requiredLevel]);
         const newCategory = await maria.query('SELECT * FROM categories WHERE id = ?', firstQuery[1][0]["LAST_INSERT_ID()"]);
         res.send(newCategory[0]);  
     });
@@ -85,7 +86,7 @@ module.exports = function(app){
             return;
         }
     
-        const firstQuery = await maria.query('UPDATE categories SET name = ? WHERE id = ?', [req.body.name, req.params.id]);
+        const firstQuery = await maria.query('UPDATE categories SET name = ?, requiredLevel = ? WHERE id = ?', [req.body.name, req.body.requiredLevel, req.params.id]);
         const updatedCategory = await maria.query('SELECT * FROM categories WHERE id = ?', [req.params.id]);
 
         res.send(updatedCategory[0]);

@@ -59,6 +59,7 @@ DROP TABLE IF EXISTS `categories`;
 CREATE TABLE `categories` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(512) NOT NULL,
+  `requiredLevel` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -69,7 +70,7 @@ CREATE TABLE `categories` (
 
 LOCK TABLES `categories` WRITE;
 /*!40000 ALTER TABLE `categories` DISABLE KEYS */;
-INSERT INTO `categories` VALUES (1,'Social Engineering'),(2,'Websecurity'),(3,'Authentication'),(4,'Sonstiges');
+INSERT INTO `categories` VALUES (1,'Social Engineering',2),(2,'Websecurity',3),(3,'Authentication',3),(4,'Sonstiges(Currently fun/placeholder)',4);
 /*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -86,7 +87,7 @@ CREATE TABLE `games` (
   `userID_2` int(11) DEFAULT NULL,
   `isFinished` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,7 +96,6 @@ CREATE TABLE `games` (
 
 LOCK TABLES `games` WRITE;
 /*!40000 ALTER TABLE `games` DISABLE KEYS */;
-INSERT INTO `games` VALUES (23,15,16,0),(24,42,1337,0),(25,43,44,0),(26,45,46,0),(27,47,48,0),(28,49,50,0),(29,51,52,0),(30,1007,1008,0),(31,25,26,0),(32,2,1,1),(33,33,2,0),(34,1,3,0),(35,75,76,0),(36,77,78,0),(37,77,77,0),(38,77,1,0),(39,77,50,0),(40,77,39,0),(41,1,NULL,0);
 /*!40000 ALTER TABLE `games` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -110,6 +110,9 @@ CREATE TABLE `questions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `text` varchar(1024) NOT NULL,
   `categoryID` int(11) NOT NULL,
+  `requiredLevel` int(11) DEFAULT NULL,
+  `score` int(11) DEFAULT NULL,
+  `answerTime` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -120,7 +123,7 @@ CREATE TABLE `questions` (
 
 LOCK TABLES `questions` WRITE;
 /*!40000 ALTER TABLE `questions` DISABLE KEYS */;
-INSERT INTO `questions` VALUES (1,'Was ist eine geeignete Übersetzung für \'Social Engineering\'?',1),(2,'Welchen Email-Anhängen kann ich vertrauen?',1),(3,'Womit lässt sich der Zugang zu einem System effektiv regulieren?',1),(4,'Kann der Mensch ein Sicherheitsrisiko bei der Bedienung von Software sein?',1),(5,'Was ist XSS?',2),(6,'Was versteht man unter einer SQL Injection?',2),(7,'Für was steht DDOS?',2),(8,'Lohnt es sich Websecurity zu erforschen?',2),(9,'Was ist wichtig bei der Auswahl des Passworts, damit es ein hohes Maß an Sicherheit aufweißt?',3),(10,'Was ist 2FA?',3),(11,'Ist 2FA sinnvoll?',3),(12,'Ist Authentication auch im Internet notwendig?',3),(13,'Was tue ich wenn mir keine Frage mehr einfällt?',4),(14,'Ist diese Kategorie sinnvoll?',4),(15,'Hat es dem Programmierer Spaß gemacht sich diese sinnvollen Fragen auszudenken?',4),(16,'Ist dies deine Lieblingskategorie?',4);
+INSERT INTO `questions` VALUES (1,'Was ist eine geeignete Übersetzung für \'Social Engineering\'?',1,3,1,10),(2,'Welchen Email-Anhängen kann ich vertrauen?',1,3,1,10),(3,'Womit lässt sich der Zugang zu einem System effektiv regulieren?',1,3,1,10),(4,'Kann der Mensch ein Sicherheitsrisiko bei der Bedienung von Software sein?',1,4,1,10),(5,'Was ist XSS?',2,3,1,10),(6,'Was versteht man unter einer SQL Injection?',2,3,1,10),(7,'Für was steht DDOS?',2,3,1,10),(8,'Lohnt es sich Websecurity zu erforschen?',2,4,1,10),(9,'Was ist wichtig bei der Auswahl des Passworts, damit es ein hohes Maß an Sicherheit aufweißt?',3,3,1,10),(10,'Was ist 2FA?',3,3,1,10),(11,'Ist 2FA sinnvoll?',3,3,1,10),(12,'Ist Authentication auch im Internet notwendig?',3,4,1,10),(13,'Was tue ich wenn mir keine Frage mehr einfällt?',4,4,1,10),(14,'Ist diese Kategorie sinnvoll?',4,4,1,10),(15,'Hat es dem Programmierer Spaß gemacht sich diese sinnvollen Fragen auszudenken?',4,4,1,10),(16,'Ist dies deine Lieblingskategorie?',4,4,1,10);
 /*!40000 ALTER TABLE `questions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -145,7 +148,7 @@ CREATE TABLE `rounds` (
   `answerID_2_2` int(11) DEFAULT NULL,
   `answerID_2_3` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,7 +157,6 @@ CREATE TABLE `rounds` (
 
 LOCK TABLES `rounds` WRITE;
 /*!40000 ALTER TABLE `rounds` DISABLE KEYS */;
-INSERT INTO `rounds` VALUES (17,23,NULL,8,9,10,8,NULL,NULL,9,8,8),(18,24,NULL,9,10,8,9,9,8,9,11,7),(19,29,NULL,10,9,8,NULL,NULL,NULL,NULL,NULL,NULL),(20,30,NULL,8,10,9,7,11,9,NULL,NULL,NULL),(21,31,NULL,9,10,8,NULL,NULL,NULL,NULL,NULL,NULL),(22,32,NULL,8,10,9,7,11,9,7,11,9),(23,32,NULL,10,8,9,11,7,10,11,8,9),(24,32,NULL,8,10,9,7,12,9,7,12,10),(25,32,NULL,10,8,9,11,7,9,11,8,10),(26,32,NULL,9,10,8,9,11,7,9,11,7),(27,32,NULL,10,8,9,12,8,10,11,8,9),(28,33,NULL,8,10,9,7,12,9,7,12,9),(29,33,NULL,8,10,9,7,11,9,7,11,NULL),(30,34,NULL,9,10,8,10,12,8,9,11,7),(31,34,NULL,10,8,9,12,8,10,11,7,9),(32,34,NULL,10,8,9,11,7,9,12,8,10),(33,34,NULL,9,8,10,NULL,NULL,NULL,NULL,NULL,NULL),(34,25,NULL,9,10,8,10,11,7,9,12,7),(35,25,NULL,10,8,9,12,8,9,11,8,9),(36,25,NULL,10,9,8,NULL,NULL,NULL,11,10,NULL),(37,26,NULL,8,9,10,NULL,NULL,NULL,NULL,NULL,NULL),(38,35,'3',9,8,10,NULL,NULL,NULL,NULL,NULL,NULL),(39,36,'1',1,3,2,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `rounds` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -170,8 +172,9 @@ CREATE TABLE `users` (
   `name` varchar(100) NOT NULL,
   `score` int(11) NOT NULL,
   `token` varchar(100) DEFAULT NULL,
+  `level` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -180,7 +183,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Andy',9000,'ptpt0yorvdo9o1ybifgu873yj6pxv5zu468_1'),(2,'NeuerLenny',4,'h34iyuki4s4c72k3z0eyufa2j9v4sfr9wh0_2'),(3,'Pascal',22,'4vw3c3yqge9k3ebr57cr41uuym5g8ukd694_3'),(25,'Nils',-5,'niv6k5gm4s3ngmqtsthulf4hvzkx15d5hyu_25'),(26,'Olli',1337,NULL),(33,'Karsten',1,'n8g5n2q3yaot17lxidxbj1t1skrv8ov7czs_33'),(41,'Harry Hirsch',17,'qhfk04h5rm4nkutcrxbu4uhqpjanafoq6e9_41'),(42,'Testuser1',27,'3t4k4ausw98d6ieawtpjkmuk4m6ccq0cdal_42'),(43,'Testuser2',27,'iwykxgiuacf6hj1r8f7q1u0qtectfvf9j78_43'),(44,'Testuser 3',1234,'mju1tudwac4sqgkxs5qrmeupdxq2jkpm7b5_44'),(45,'teset001',123,'yfh5f6vhod95ecz7nylcemnruqproo70vwu_45'),(46,'teset002',123,'mckedcmpctpraflj8meg0a6o3j94puyy4ul_46'),(47,'Test_010',20,'16uzsrtan1bj4f08z8zbiv2t57rbgra14dh_47'),(48,'Test_011',20,'bxmbr6y2g90ahcnxip3gisemwod4l658y8w_48'),(49,'Test_012',20,'smb21qh7frwv7o4n5ttq3cvc8k8ts0lrhyj_49'),(50,'Test_013',20,'2zojqxojszkwcwakjmhgxdv9w5cec0dhj83_50'),(51,'Test',123,NULL),(52,'Test',123,NULL),(53,'Test',123,NULL),(54,'Test',123,NULL),(55,'Test',123,NULL),(56,'Test',123,NULL),(57,'Test',123,NULL),(58,'Test',123,NULL),(59,'Test',123,NULL),(60,'Test',123,NULL),(61,'Test',123,NULL),(62,'Test',123,NULL),(63,'Test',123,NULL),(64,'Test',123,NULL),(65,'Test',123,NULL),(66,'Test',123,NULL),(67,'Test',123,NULL),(68,'Test',123,NULL),(69,'Test',123,NULL),(70,'Test',123,NULL),(71,'Test',123,NULL),(72,'Test',123,NULL),(73,'Test',123,NULL),(74,'Test073',123,NULL),(75,'Test075',123,'625c49min1dvmxwxee71xsb8iweymdn8usp_75'),(76,'Test076',123,'0hb1nvlxffuztebgq5w37x3j85mhmms1yg6_76'),(77,'Test077',123,'jych7sr4z3377k5tbczwbpwdzhkwouf4kv9_77'),(78,'Test078',123,'by8cokp0kldz8kk2ca94u8s7hrqfxywmsa7_78');
+INSERT INTO `users` VALUES (1,'Admin',9999999,'ot5lyety960667nnkt4x100waf5jys3sz2x_1',5),(2,'Andy',999,'2plqwewnhgjlprbouumrzrcvx15oi9lkx3v_2',4),(3,'Lenny',998,'gzjfneeyujbsxgg3pwc2rvm5169536qtb0h_3',4),(4,'Oli',1000,'ixt2ili8caxqyh79az24lqfxfl9se4wf8qd_4',3);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -193,4 +196,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-09-09  0:52:01
+-- Dump completed on 2019-09-09 13:14:11
