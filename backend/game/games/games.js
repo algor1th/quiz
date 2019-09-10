@@ -66,7 +66,10 @@ module.exports = function(app){
         }else{
             //specific target
             var otherUser = req.query.matchWith;
-            var openedGames = await maria.query('SELECT * FROM games WHERE ((userID_1 = ? AND userID_2 = ?) OR (userID_1 = ? AND userID_2 = ?)) AND isFinished = false',[userID, otherUser, otherUser, userID]);
+            if(userID == otherUser){
+                res.status(404).send("You can not match with yourself!")
+                return; 
+            } var openedGames = await maria.query('SELECT * FROM games WHERE ((userID_1 = ? AND userID_2 = ?) OR (userID_1 = ? AND userID_2 = ?)) AND isFinished = false',[userID, otherUser, otherUser, userID]);
             if(openedGames.length != 0){
                 res.status(404).send("You are already playing against this opponent")
                 return;

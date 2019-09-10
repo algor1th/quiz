@@ -12,7 +12,9 @@ const schemaAuthenticate = {
 module.exports = function(app){
     app.delete('/api/authentication/:token', async (req, res) => {
         if(req.params.token in authentication.authenticatedUsers){
-            delete authentication.authenticatedUsers[req.params.token];                        
+            var id = authentication.authenticatedUsers[req.params.token]['userID'];                                            
+            delete authentication.authenticatedUsers[id];    
+            delete authentication.authenticatedUsers[req.params.token];    
             res.send(`revoked token ${req.params.token} successfull`);    
             return; 
         }
@@ -21,6 +23,7 @@ module.exports = function(app){
     }),
 
     app.get('/api/authentication', async (req, res) => {
+        console.log(authentication.authenticatedUsers);
         const token = req.get("authentication");
         var isAuthorized = await authentication.isAuthenticated(token);
         if(isAuthorized){

@@ -1,7 +1,5 @@
-give just questions matching to proficency 
-give scoring after game
+discuss scoring
 apply countdown
-(fix password of databases)
 
 
 

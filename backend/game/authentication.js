@@ -55,9 +55,15 @@ module.exports = {
             return null;
         }      
     },
+    getUserLevel: async function(userID){
+        if(userID in authenticatedUsers){
+           return authenticatedUsers[userID]['level'];
+        }else{
+            return 5;
+        }      
+    },
     isAuthenticated: async function(token){
         if(token in authenticatedUsers){
-            console.log(authenticatedUsers)
             return true;
         }else{
             await refreshToken(token);
@@ -69,7 +75,7 @@ module.exports = {
         return userID ==  process.env.ADMINUSER;
     },
     authenticatedUsers: authenticatedUsers,
-}
+} 
 
 function refreshToken(token){
     return new Promise(function (resolve, reject) {
@@ -78,7 +84,9 @@ function refreshToken(token){
                 var newUser = {};
                 newUser["name"] = body.name;
                 newUser["userID"] = body.id;
+                newUser["level"] = body.level;
                 authenticatedUsers[token] = newUser; 
+                authenticatedUsers[body.id] = newUser; 
             }                
             resolve();
         });

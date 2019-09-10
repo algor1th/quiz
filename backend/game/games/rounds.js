@@ -77,7 +77,13 @@ module.exports = function(app){
             return;
         } 
 
-        var categories = await getRandomCategories(req.query.forGame, rounds.length);
+        if(game['userID_2'] === null){
+            res.status(404).send(`waiting for other play to join the game, bevore beginning`);
+            return;
+        }
+        var maxLevel = Math.min(await authentication.getUserLevel(game["userID_1"]), await authentication.getUserLevel(game["userID_2"]))
+
+        var categories = await getRandomCategories(req.query.forGame, rounds.length, maxLevel);
         var response = {};
         response["gameID"] = req.query.forGame;
         response["category"]= categories;
@@ -153,15 +159,14 @@ async function serializeRound(round) {
     return newRound;
 }
 
-async function getRandomCategories(gameID, roundNumber, categoryIntervall){
+async function getRandomCategories(gameID, roundNumber, maxLevel){
     var allCategories = await maria.query('SELECT * FROM categories');
 
     var rng = seedrandom(gameID, roundNumber);
     var rounds = [];
     while(rounds.length<3){
         var i = parseInt(rng()*allCategories.length);
-        console.log(i);
-        if(!rounds.includes(allCategories[i]) && allCategories[i] != null)
+        if(!rounds.includes(allCategories[i]) && allCategories[i] != null && allCategories[i]['requiredLevel'] <= maxLevel)
             rounds.push(allCategories[i]);
     }
     return rounds;
@@ -206,6 +211,7 @@ async function handleAnswer(req, res){
                     }
                     var serializedRound = await serializeRound(updatedRound);
                     res.send(serializedRound); 
+                    //check if answer was correct -> points
                     return;
                 }
             }else{
@@ -227,7 +233,8 @@ async function handleAnswer(req, res){
                             }
                         }
                         var serializedRound = await serializeRound(updatedRound);
-                        res.send(serializedRound);     
+                        res.send(serializedRound);  
+                        //check if answer was correct -> points  
                         return;
                     }
                 }else{
@@ -287,7 +294,8 @@ async function handleCategory(req, res){
             return;
         } 
 
-        var categories = await getRandomCategories(req.params.id, rounds.length);
+        var maxLevel = Math.min(await authentication.getUserLevel(game["userID_1"]), await authentication.getUserLevel(game["userID_2"]))
+        var categories = await getRandomCategories(req.params.id, rounds.length, maxLevel);
         var isContained = false;
         for(var i=0; i< categories.length; i++){
             if(categories[i]["id"]==req.body.categoryID){
@@ -301,7 +309,7 @@ async function handleCategory(req, res){
         }      
         
         //creates new round
-        const questions = await maria.query('SELECT * FROM questions WHERE categoryID = ? ORDER BY RAND() LIMIT 3', [req.body.categoryID]);
+        const questions = await maria.query('SELECT * FROM questions WHERE categoryID = ? AND requiredLevel <= ? ORDER BY RAND() LIMIT 3', [req.body.categoryID, maxLevel]);
         const firstQuery = await maria.query('INSERT INTO rounds (gameID, category, questionID_1, questionID_2, questionID_3) VALUES (?, ?, ?, ?, ?); SELECT LAST_INSERT_ID();', [req.params.id, parseInt(req.body.categoryID) ,questions[0]['id'], questions[1]['id'], questions[2]['id']]);
         const newRound = await maria.query('SELECT * FROM rounds WHERE id = ?', firstQuery[1][0]["LAST_INSERT_ID()"]);
                         
