@@ -41,7 +41,7 @@ function Startpage() {
                 {games.map((game) => {
                     let opponent = game.userID_1 == window.user.id ? game.userID_2 : game.userID_1;
                     return (
-                        <Link to={`/game/${game.id}/play`} key={game.id}>
+                        <Link to={`/game/${game.id}`} key={game.id}>
                             <button>
                                 Game against {opponent} <b>{game.isFinished ? "DONE" : "ACTIVE"}</b>
                             </button>
