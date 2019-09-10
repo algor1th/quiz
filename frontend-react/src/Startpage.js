@@ -11,7 +11,7 @@ function Startpage() {
             }),
             crossDomain: true,
         })
-            .then((game) => game.json())
+            .then((game) => game.ok? game.json(): [])
             .then((game) => setGames(game));
     },[])
 

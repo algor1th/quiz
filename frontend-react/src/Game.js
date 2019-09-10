@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 function Game({ match }) {
     const [game, setGame] = useState();
     useEffect(() => {
-        fetch(`/api/games/${match.gId}?containsFullHistory=true`, {
+        fetch(`/api/games/${match.params.gId}?containsFullHistory=true`, {
             headers: new Headers({
                 'authentication': window.user.token
             })
@@ -18,10 +18,11 @@ function Game({ match }) {
     } else
         return (
             <>
-                <h1>Game {match.params.gId} <small><i>{game.category || 'NO CATEGORY'}</i></small></h1>
+                <h1>Game {game.id} <small><i>{game.category || 'NO CATEGORY'}</i></small></h1>
                 {game.rounds.map((round) => {
                     return (
                         <div key={round.id}>
+                            <h2>Round {round.id} </h2>
                             <table style={
                                 {
                                     margin: '20px auto',
@@ -74,7 +75,7 @@ function Game({ match }) {
                     )
                 })}
                 {
-                    <Link to={`/game/${game.id}/question`}><button>Play</button></Link>
+                    <Link to={`/game/${game.id}/play`}><button>Play</button></Link>
                 }
             </>
         );

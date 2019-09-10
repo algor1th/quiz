@@ -14,7 +14,7 @@ function Round({ match }) {
         'authentication': window.user.token
       })
     })
-      .then((round) => round.json())
+      .then((round) => round.ok? round.json(): null)
       .then((round) => setRound(round));
   }, [match.params.gId, currentround]);
   useEffect(() => {
@@ -22,15 +22,37 @@ function Round({ match }) {
       setcurrentround(currentround + 1);
     }
   }, [currentround, round]);
-  console.log(round);
+  console.log(round)
+  ;
   function roundDone() {
     setcurrentround(currentround + 1)
   }
+  function chooseCategory(categoryID) {
+    fetch(
+      `/api/rounds/${match.params.gId}`,
+      {
+          headers: new Headers({
+              'Content-Type': 'application/json',
+              'authentication': window.user.token
+          }),
+          method: 'PUT',
+          body: JSON.stringify({categoryID: categoryID})
+      }        
+  ).then(console.log);
+    console.log(categoryID)
+  }
   if (round) {
-    if(round.category) {
-      return <p>choose category</p>
-    }
-    if (currentround < round.questions.length) {
+    if(Array.isArray(round.category)) {
+      return (
+      <div>
+        <h1>Choose category</h1>
+       { round.category.map(element => {
+         console.log(element);
+          return (<button key={element.id} onClick={()=> chooseCategory(element.id)}>{element.name}</button>)
+       }
+       )}
+      </div>)
+    } else if (currentround < round.questions.length) {
       return (
         <>
           <Question question={round.questions[currentround]} roundId={round.id} roundDone={roundDone}></Question>

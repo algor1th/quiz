@@ -22,7 +22,6 @@ function App() {
           <Switch>
             <Route path='/' exact component={Startpage}></Route>
             <Route path='/category'><ChooseCategory></ChooseCategory></Route>
-            {/* <Route path='/q/:qId' component={Round}></Route> */}
             <Route path='/game/:gId/play' component={Round}></Route>
             <Route path='/game/:gId' component={Game}></Route>
             <Route path='/scoreboard' component={Scoreboard}></Route>
