@@ -8,7 +8,7 @@ function Round({ match }) {
   // let question = api.getQuestion(match.params.qId)
   const [round, setRound] = useState();
   const [currentround, setcurrentround] = useState(0);
-  useEffect(() => {
+  const getGame = () => {
     fetch(`/api/rounds?forGame=${match.params.gId}`, {
       headers: new Headers({
         'authentication': window.user.token
@@ -16,7 +16,8 @@ function Round({ match }) {
     })
       .then((round) => round.ok? round.json(): null)
       .then((round) => setRound(round));
-  }, [match.params.gId, currentround]);
+  };
+  useEffect(getGame, [match.params.gId, currentround]);
   useEffect(() => {
     if (round && round.questions && round.questions[currentround] && round.questions[currentround][`answerID_${round.thisPlayer}`] != null) {
       setcurrentround(currentround + 1);
@@ -38,7 +39,7 @@ function Round({ match }) {
           method: 'PUT',
           body: JSON.stringify({categoryID: categoryID})
       }        
-  ).then(console.log);
+  ).then(console.log).then(getGame);
     console.log(categoryID)
   }
   if (round) {

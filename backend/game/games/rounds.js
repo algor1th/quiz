@@ -162,6 +162,9 @@ async function serializeRound(round) {
 async function getRandomCategories(gameID, roundNumber, maxLevel){
     var allCategories = await maria.query('SELECT * FROM categories');
 
+    console.log(gameID);
+    console.log(roundNumber);
+
     var rng = seedrandom(gameID, roundNumber);
     var rounds = [];
     while(rounds.length<3){

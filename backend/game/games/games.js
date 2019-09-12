@@ -105,7 +105,7 @@ module.exports = function(app){
 
         var games = await maria.query('SELECT * FROM games WHERE id = ?', req.params.id);
 
-        var isAuthorized = isAdmin || (games.length > 0 && (games[0]["userID_1"] === userID || games[0]["userID_1"] === userID))
+        var isAuthorized = isAdmin || (games.length > 0 && (games[0]["userID_1"] === userID || games[0]["userID_2"] === userID))
         if(!isAuthorized){
             res.status(401).send("You did not provide an authorized admin token or a token of a user of this game, with your request")
             return;

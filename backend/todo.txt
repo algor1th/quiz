@@ -1,6 +1,7 @@
-discuss scoring
-apply countdown
-
+discuss scoring 		// differenz begrenzte Punkte
+apply countdown 		
+fix proficiency uncached bugg	// timeout tokens
+sort by score
 
 
 
@@ -10,4 +11,15 @@ kategoieren im frontend auswählen
 Highscore & Spielersuche nach Namen
 Aktuelle Info über Spiel
 Richtige/falsche Antworten & Cooldownbalken
+
+
+
+
+
+
+Was kann das ding? (Features, matchmaking, proficiency, scoring...)
+Doku struktur des projects
+Technische Teil, backend doku
+Wo und wie ändere ich die fehlenden Sachen (Scoring, matchmaking, authentication, "admin interface")
+
 
