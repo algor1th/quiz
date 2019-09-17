@@ -32,6 +32,7 @@ module.exports = function(app){
                     break;
                 case 'score':
                         users = await maria.query('SELECT * FROM users ORDER BY score DESC');
+                    break;
                 case 'level':
                         users = await maria.query('SELECT * FROM users ORDER BY level DESC');
                     break;

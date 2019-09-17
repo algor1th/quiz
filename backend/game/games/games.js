@@ -140,6 +140,8 @@ async function serializeRound(round) {
     var allCategories = await maria.query('SELECT * FROM categories');
     newRound["category"] = allCategories[round["category"]];
 
+    //console.log(allCategories[round["category"]])
+
     var q = [];
     for(var i=1; i<=3; i++){
         q[i-1] = {};

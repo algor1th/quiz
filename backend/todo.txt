@@ -1,25 +1,50 @@
-discuss scoring 		// differenz begrenzte Punkte
-apply countdown 		
-fix proficiency uncached bugg	// timeout tokens
-sort by score
+Todo Backend:
+	discuss scoring 		// differenz begrenzte Punkte
+	apply countdown 		
+	fix proficiency uncached bugg	// timeout tokens
+
+	mehrere offene spiele
+	matchen klappt nicht wenn Spiele offen sind
+
+
+Todo Frontend:
+	Spieleübersicht über speziefisches Spiel (+Punkte)
+	kategoieren im frontend auswählen
+	Highscore & Spielersuche nach Namen
+	Aktuelle Info über Spiel
+	Richtige/falsche Antworten & Cooldownbalken
 
 
 
 
-Spieleübersicht über speziefisches Spiel (+Punkte)
-kategoieren im frontend auswählen
-Highscore & Spielersuche nach Namen
-Aktuelle Info über Spiel
-Richtige/falsche Antworten & Cooldownbalken
+
+Todo Doku:
+	Was kann das ding? (Features, matchmaking, proficiency, scoring...)
+	Doku struktur des projects
+	Technische Teil, backend doku
+	Wo und wie ändere ich die fehlenden Sachen (Scoring, matchmaking, authentication, "admin interface")
 
 
+Proposal Todo Frontend:
+	- token bleibt gespeichert
+	- LoginFeld für Token
+	- Playername im Menü statt ID
+	- Playername in "Spieldetail-Fenster" statt ID
+	- Gegnername statt SpielID in "Spieldetail-Fenster"
+	- open game "Game against "ACTIVE" -> "Waiting for opponent" oder ähnlich
+	- home/zurück button in "Spieldetail-Fenster"
+	- refresh Button in Hauptmenü
+	- zurückbutton in "loading" Fenster -> "Spieldetail-Fenster" nicht wieder hauptmenü
+	- "loading" -> waiting to be ready
+	- "loading" -> refresh button
+	- show round after answering questions
+	- show opponent anwswers after both answering questions
+	- corrcet icons for "is correct" in round details
+	- nach dem beantworten zu "Spieldetail-Fenster" nicht Hauptmenü
+	- "Spieldetail-Fenster" Playbutton nur anzeien wenn ready?
+	- Questionindex 1,2,3 not 0,1,2 (start counting by 1 instead of 0
+	- show categories per round in "Spieldetail-Fenster"
+	- "Start game" Button updated Seite nicht
 
-
-
-
-Was kann das ding? (Features, matchmaking, proficiency, scoring...)
-Doku struktur des projects
-Technische Teil, backend doku
-Wo und wie ändere ich die fehlenden Sachen (Scoring, matchmaking, authentication, "admin interface")
-
-
+	- show if answer was correct / show correct answer
+	- time indicator

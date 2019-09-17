@@ -73,6 +73,7 @@ module.exports = function(app){
             return;
         }
         if(((game['userID_1'] == userID) && ((rounds.length % 2) === 0)) || ((game['userID_2'] == userID) && ((rounds.length % 2) === 1)) ){
+            console.log("waiting for other") 
             res.status(404).send(`waiting for other play to create a new round`);
             return;
         } 
@@ -162,10 +163,8 @@ async function serializeRound(round) {
 async function getRandomCategories(gameID, roundNumber, maxLevel){
     var allCategories = await maria.query('SELECT * FROM categories');
 
-    console.log(gameID);
-    console.log(roundNumber);
-
-    var rng = seedrandom(gameID, roundNumber);
+    console.log(gameID, roundNumber)
+    var rng = seedrandom(gameID+" "+roundNumber);
     var rounds = [];
     while(rounds.length<3){
         var i = parseInt(rng()*allCategories.length);
