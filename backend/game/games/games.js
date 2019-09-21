@@ -83,7 +83,7 @@ module.exports = function(app){
         }
     });
 
-    //get all opened games
+    //get all games
     app.get('/api/games', async (req, res) => {
         const token = req.get("authentication");
         var isAuthorized = await authentication.isAdmin(token);
@@ -92,7 +92,7 @@ module.exports = function(app){
             return;
         }
         
-        var games = await maria.query('SELECT * FROM games WHERE isFinished = false');
+        var games = await maria.query('SELECT * FROM games');
         if(games.length === 0){
             res.status(404).send(`no open games found`);
             return;

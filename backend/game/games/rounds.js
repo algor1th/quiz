@@ -4,6 +4,7 @@ const authentication = require('../authentication.js');
 const maria = require('../maria.js');
 const joi = require('@hapi/joi');
 var seedrandom = require('seedrandom');
+const request = require('request');
 
 const schemaAnswer = {
     answerID: joi.number().required()
@@ -209,11 +210,44 @@ async function handleAnswer(req, res){
                         var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[game["id"]]);
                         if(rounds.length === 6){
                             const firstQuery = await maria.query('UPDATE games SET isFinished = 1 WHERE id = ?', [game["id"]]);
+
+                            //round is over, find winner
+                            var correct1 = 0;
+                            var correct2 = 0;
+
+                            for(var i=0; i<rounds.length; i++){
+                                for(var j=1; j<=3; j++){
+                                    var answer = await maria.query('SELECT * FROM answers WHERE id = ?',[rounds[i]["answerID_1_"+j]])[0];
+                                    if(answer["isCorrect"]===1)
+                                        correct1++;
+                                    answer = await maria.query('SELECT * FROM answers WHERE id = ?',[rounds[i]["answerID_2_"+j]])[0];
+                                    if(answer["isCorrect"]===1)
+                                        correct2++;
+                                }
+                            }
+                            //give winner points
+                            const userServerURL = process.env.USERSERVER;
+                            request.put(userServerURL + '/api/authentication/'+user[0]["token"], { json: true }, (err2, res2, body2) => {
+                                if(res2.statusCode == 404 || res2.statusCode == 200){
+                                    res.send(updatedUser[0]);
+                                }
+                            });
+                             
+                            var result = await request.post('http://localhost:3000/api/users', {
+                                headers:{
+                                    'content-type': 'application/json',
+                                    'authentication': 'ot5lyety960667nnkt4x100waf5jys3sz2x_1',
+                                },
+                                body: JSON.stringify({
+                                    name: 'TestUser', 
+                                    score: '42', 
+                                    level: '3', 
+                                })
+                            });
                         }
                     }
                     var serializedRound = await serializeRound(updatedRound);
                     res.send(serializedRound); 
-                    //check if answer was correct -> points
                     return;
                 }
             }else{
@@ -236,7 +270,6 @@ async function handleAnswer(req, res){
                         }
                         var serializedRound = await serializeRound(updatedRound);
                         res.send(serializedRound);  
-                        //check if answer was correct -> points  
                         return;
                     }
                 }else{

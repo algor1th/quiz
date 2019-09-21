@@ -3,10 +3,6 @@ Todo Backend:
 	apply countdown 		
 	fix proficiency uncached bugg	// timeout tokens
 
-	mehrere offene spiele
-	matchen klappt nicht wenn Spiele offen sind
-
-
 Todo Frontend:
 	Spieleübersicht über speziefisches Spiel (+Punkte)
 	kategoieren im frontend auswählen
@@ -48,3 +44,4 @@ Proposal Todo Frontend:
 	- Antwortmöglichkeiten nicht symetrisch angeordnet (oben links hat einen abstand zum weißen rand, oben rechts nicht)
 	- show if answer was correct / show correct answer
 	- time indicator
+	- history to show games that are over
