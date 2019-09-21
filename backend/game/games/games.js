@@ -10,7 +10,7 @@ const schemaRequest = {
 
 module.exports = function(app){
 
-    //get a opened game / create new game
+    //get a opened game
     app.get('/api/games/current', async (req, res) => {
         const token = req.get("authentication");
         var isAuthenticated = await authentication.isAuthenticated(token);
@@ -41,26 +41,28 @@ module.exports = function(app){
         if(!req.query.matchWith){       
             //random opponent
             openedGames = await maria.query('SELECT * FROM games WHERE userID_2 IS NULL');
-            var openedGame;
-            if(openedGames.length === 0){
-                const firstQuery = await maria.query('INSERT INTO games (userID_1) VALUES (?); SELECT LAST_INSERT_ID();', [userID]);
-                openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [firstQuery[1][0]["LAST_INSERT_ID()"]]);     
-            }else{
-                if(openedGames[0]["userID_1"] == userID){
+            //check if player already has an opened unmatched game
+            for(var i=0; i<openedGames.length; i++){
+                if(openedGames[i]["userID_1"] == userID){
                     res.status(404).send("You have already an open unmatched game!");
                     return;
                 }
-                var alreadyActiveGames = await maria.query('SELECT * FROM games WHERE userID_1 = ? AND userID_2 = ?',[openedGames[0]["userID_1"], userID]);
+            }  
+
+            //match with opened games if no game between these players exist
+            for(var i=0; i<openedGames.length; i++){
+                var alreadyActiveGames = await maria.query('SELECT * FROM games WHERE ((userID_1 = ? AND userID_2 = ?) OR (userID_1 = ? AND userID_2 = ?)) AND isFinished = false',[openedGames[i]["userID_1"], userID, userID, openedGames[i]["userID_1"]]);
                 if(alreadyActiveGames.length === 0){
-                    await maria.query('UPDATE games SET userID_2 = ? WHERE id = ?',[userID, openedGames[0]['id']]);
-                    openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [openedGames[0]['id']]); 
+                    await maria.query('UPDATE games SET userID_2 = ? WHERE id = ?',[userID, openedGames[i]['id']]);
+                    var openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [openedGames[i]['id']]); 
+                    res.send(openedGame[0]);    
+                    return;
                 }
-                else{
-                    const firstQuery = await maria.query('INSERT INTO games (userID_1) VALUES (?); SELECT LAST_INSERT_ID();', [userID]);
-                    openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [firstQuery[1][0]["LAST_INSERT_ID()"]]);     
-                }
-                
-            }
+            } 
+            
+            //create a new game
+            const firstQuery = await maria.query('INSERT INTO games (userID_1) VALUES (?); SELECT LAST_INSERT_ID();', [userID]);
+            var openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [firstQuery[1][0]["LAST_INSERT_ID()"]]);         
             res.send(openedGame[0]);    
             return;
         }else{
@@ -69,8 +71,9 @@ module.exports = function(app){
             if(userID == otherUser){
                 res.status(404).send("You can not match with yourself!")
                 return; 
-            } var openedGames = await maria.query('SELECT * FROM games WHERE ((userID_1 = ? AND userID_2 = ?) OR (userID_1 = ? AND userID_2 = ?)) AND isFinished = false',[userID, otherUser, otherUser, userID]);
-            if(openedGames.length != 0){
+            } 
+            var openedGames = await maria.query('SELECT * FROM games WHERE ((userID_1 = ? AND userID_2 = ?) OR (userID_1 = ? AND userID_2 = ?)) AND isFinished = false',[userID, otherUser, otherUser, userID]);
+            if(openedGames.length > 0){
                 res.status(404).send("You are already playing against this opponent")
                 return;
             }
