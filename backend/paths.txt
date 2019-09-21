@@ -36,7 +36,7 @@ GameServer:
 	PUT /api/answers/id {text, questionID, isCorrect}	// editiert eine Antwort 	<- Adminuser
 	DELETE /api/answers/[ID]				// löscht eine Antwort 		<- Adminuser
 
-	GET /api/games					//gibt alle offenen Spiele. 	<- Adminuser
+(1.5)	GET /api/games					//gibt alle Spiele. 	<- Adminuser
 	GET /api/games/[ID]				//gibt ein explizietes Spiel. 	<- Adminuser oder wenn User im Spiel
 	GET /api/games/[ID]/?containsFullHistory=true
 (1.2)	GET /api/games/current				//gibt alle Spiele indem sich der authentifizierte Nutzer befindet. <- jeder valide token
