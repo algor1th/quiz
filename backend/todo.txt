@@ -45,6 +45,6 @@ Proposal Todo Frontend:
 	- Questionindex 1,2,3 not 0,1,2 (start counting by 1 instead of 0
 	- show categories per round in "Spieldetail-Fenster"
 	- "Start game" Button updated Seite nicht
-
+	- Antwortmöglichkeiten nicht symetrisch angeordnet (oben links hat einen abstand zum weißen rand, oben rechts nicht)
 	- show if answer was correct / show correct answer
 	- time indicator
