@@ -1,7 +1,8 @@
 Todo Backend:
-	discuss scoring 		// differenz begrenzte Punkte
-	apply countdown 		
-	fix proficiency uncached bugg	// timeout tokens
+	- apply countdown 		
+	- timeout tokens
+	- fix maria db passwort + admintoken
+	- save change in database
 
 Todo Frontend:
 	Spieleübersicht über speziefisches Spiel (+Punkte)
@@ -15,7 +16,7 @@ Todo Frontend:
 
 
 Todo Doku:
-	Was kann das ding? (Features, matchmaking, proficiency, scoring...)
+	Was kann das ding? ( ,Features, matchmaking, proficiency, scoring...)
 	Doku struktur des projects
 	Technische Teil, backend doku
 	Wo und wie ändere ich die fehlenden Sachen (Scoring, matchmaking, authentication, "admin interface")
@@ -45,3 +46,6 @@ Proposal Todo Frontend:
 	- show if answer was correct / show correct answer
 	- time indicator
 	- history to show games that are over
+	- in der Gameübersicht "Round 1" "Round 2"... instead of round IDs
+	- zurückbutton beim scoreboard
+	- alle fehler werden kurz rot eingeblendet

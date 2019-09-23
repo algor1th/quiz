@@ -74,7 +74,6 @@ module.exports = function(app){
             return;
         }
         if(((game['userID_1'] == userID) && ((rounds.length % 2) === 0)) || ((game['userID_2'] == userID) && ((rounds.length % 2) === 1)) ){
-            console.log("waiting for other") 
             res.status(404).send(`waiting for other play to create a new round`);
             return;
         } 
@@ -83,7 +82,7 @@ module.exports = function(app){
             res.status(404).send(`waiting for other play to join the game, bevore beginning`);
             return;
         }
-        var maxLevel = Math.min(await authentication.getUserLevel(game["userID_1"]), await authentication.getUserLevel(game["userID_2"]))
+        var maxLevel = Math.min(await authentication.getUserLevel(token, game["userID_1"]), await authentication.getUserLevel(token, game["userID_2"]))
 
         var categories = await getRandomCategories(req.query.forGame, rounds.length, maxLevel);
         var response = {};
@@ -164,7 +163,6 @@ async function serializeRound(round) {
 async function getRandomCategories(gameID, roundNumber, maxLevel){
     var allCategories = await maria.query('SELECT * FROM categories');
 
-    console.log(gameID, roundNumber)
     var rng = seedrandom(gameID+" "+roundNumber);
     var rounds = [];
     while(rounds.length<3){
@@ -206,47 +204,16 @@ async function handleAnswer(req, res){
                     var updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
                     updatedRound = updatedRound[0];
 
+                    var serializedRound = await serializeRound(updatedRound);
+
                     if(updatedRound['answerID_1_3'] !== null && updatedRound['answerID_2_3'] !== null){
                         var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[game["id"]]);
-                        if(rounds.length === 6){
+                        if(rounds.length === 1){
                             const firstQuery = await maria.query('UPDATE games SET isFinished = 1 WHERE id = ?', [game["id"]]);
-
-                            //round is over, find winner
-                            var correct1 = 0;
-                            var correct2 = 0;
-
-                            for(var i=0; i<rounds.length; i++){
-                                for(var j=1; j<=3; j++){
-                                    var answer = await maria.query('SELECT * FROM answers WHERE id = ?',[rounds[i]["answerID_1_"+j]])[0];
-                                    if(answer["isCorrect"]===1)
-                                        correct1++;
-                                    answer = await maria.query('SELECT * FROM answers WHERE id = ?',[rounds[i]["answerID_2_"+j]])[0];
-                                    if(answer["isCorrect"]===1)
-                                        correct2++;
-                                }
-                            }
-                            //give winner points
-                            const userServerURL = process.env.USERSERVER;
-                            request.put(userServerURL + '/api/authentication/'+user[0]["token"], { json: true }, (err2, res2, body2) => {
-                                if(res2.statusCode == 404 || res2.statusCode == 200){
-                                    res.send(updatedUser[0]);
-                                }
-                            });
-                             
-                            var result = await request.post('http://localhost:3000/api/users', {
-                                headers:{
-                                    'content-type': 'application/json',
-                                    'authentication': 'ot5lyety960667nnkt4x100waf5jys3sz2x_1',
-                                },
-                                body: JSON.stringify({
-                                    name: 'TestUser', 
-                                    score: '42', 
-                                    level: '3', 
-                                })
-                            });
+                            serializedRound['scoring'] = await doScoring(rounds, game, token);    
+                            console.log(serializedRound)
                         }
                     }
-                    var serializedRound = await serializeRound(updatedRound);
                     res.send(serializedRound); 
                     return;
                 }
@@ -266,6 +233,8 @@ async function handleAnswer(req, res){
                             var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[game["id"]]);
                             if(rounds.length === 6){
                                 const firstQuery = await maria.query('UPDATE games SET isFinished = 1 WHERE id = ?', [game["id"]]);
+                                serializedRound['scoring'] = await doScoring(rounds, game, token);    
+                                console.log(serializedRound)
                             }
                         }
                         var serializedRound = await serializeRound(updatedRound);
@@ -329,7 +298,7 @@ async function handleCategory(req, res){
             return;
         } 
 
-        var maxLevel = Math.min(await authentication.getUserLevel(game["userID_1"]), await authentication.getUserLevel(game["userID_2"]))
+        var maxLevel = Math.min(await authentication.getUserLevel(token, game["userID_1"]), await authentication.getUserLevel(token, game["userID_2"]))
         var categories = await getRandomCategories(req.params.id, rounds.length, maxLevel);
         var isContained = false;
         for(var i=0; i< categories.length; i++){
@@ -353,4 +322,82 @@ async function handleCategory(req, res){
         output["thisPlayer"] = playerID;
         res.send(output);
         return;
+
+}
+
+async function doScoring(rounds, game, userToken){
+    //round is over, get correct answers of each player
+    var correct_1 = 0;
+    var correct_2 = 0;
+
+    for(var i=0; i<rounds.length; i++){
+         for(var j=1; j<=3; j++){
+             var answer = (await maria.query('SELECT * FROM answers WHERE id = ?',[rounds[i]["answerID_1_"+j]]))[0];
+             if(answer["isCorrect"]===1)
+                 correct_1++;
+             answer = (await maria.query('SELECT * FROM answers WHERE id = ?',[rounds[i]["answerID_2_"+j]]))[0];
+             if(answer["isCorrect"]===1)
+                 correct_2++;
+         }
+    }
+
+    //get current scores of each player
+    var user_1 = await authentication.getUserByID(userToken,game['userID_1']);;
+    var user_2 = await authentication.getUserByID(userToken,game['userID_2']);;
+
+    var score_1 = user_1['score'];
+    var score_2 = user_2['score'];
+
+
+    //edit scores
+    var change = 0;
+    var result = {}
+    result['winner'] = 0;
+    if(correct_1>correct_2){
+        var factor = score_2/score_1;
+        var dif = correct_1-correct_2;
+        change = Math.min(score_2,factor*dif);
+        score_1 += change;
+        score_2 -= change;
+        result['winner'] = 1;
+    }
+    if(correct_1<correct_2){
+        var factor = score_1/score_2;
+        var dif = correct_2-correct_1;
+        change = Math.min(score_1,factor*dif);
+        score_1 -= change;
+        score_2 += change;
+        result['winner'] = 2;
+    }
+    result['change'] = change;
+
+    //send to server
+    const userServerURL = process.env.USERSERVER;
+    const userServerAdminToken = 'ot5lyety960667nnkt4x100waf5jys3sz2x_1';
+
+    console.log(userServerAdminToken);
+    await request.put(userServerURL+'/api/users/'+user_1['userID'], {
+        headers:{
+            'content-type': 'application/json',
+            'authentication': userServerAdminToken,
+        },
+        body: JSON.stringify({
+            name: user_1['name'], 
+            score: score_1, 
+            level: user_1['level'], 
+        })
+    });
+    await request.put(userServerURL+'/api/users/'+user_2['userID'], {
+        headers:{
+            'content-type': 'application/json',
+            'authentication': userServerAdminToken,
+        },
+        body: JSON.stringify({
+            name: user_2['name'], 
+            score: score_2, 
+            level: user_2['level'], 
+        })
+    });
+
+    return result;
 }

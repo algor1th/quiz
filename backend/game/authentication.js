@@ -55,12 +55,42 @@ module.exports = {
             return null;
         }      
     },
-    getUserLevel: async function(userID){
-        if(userID in authenticatedUsers){
-           return authenticatedUsers[userID]['level'];
-        }else{
-            return 5;
-        }      
+    getUserLevel: async function(casterToken, userID){
+        if(await this.isAuthenticated(casterToken)){
+            if(userID in authenticatedUsers){
+                return authenticatedUsers[userID]['level'];
+            }else{
+                await cacheUserByID(casterToken, userID);
+                if(userID in authenticatedUsers)
+                    return authenticatedUsers[userID]['level'];
+            }
+        }  
+        return null;  
+    },
+    getUserScore: async function(casterToken, userID){
+        if(await this.isAuthenticated(casterToken)){
+            if(userID in authenticatedUsers){
+                return authenticatedUsers[userID]['score'];
+            }else{
+                await cacheUserByID(casterToken, userID);
+                if(userID in authenticatedUsers)
+                    return authenticatedUsers[userID]['score'];
+            }
+        }  
+        return null;  
+    },
+    getUserByID: async function(casterToken, userID){
+        if(await this.isAuthenticated(casterToken)){
+            if(userID in authenticatedUsers){
+                return authenticatedUsers[userID];
+            }else{
+                await cacheUserByID(casterToken, userID);
+                if(userID in authenticatedUsers){
+                    return authenticatedUsers[userID];
+                }
+            }
+        }  
+        return null;  
     },
     isAuthenticated: async function(token){
         if(token in authenticatedUsers){
@@ -83,6 +113,7 @@ function refreshToken(token){
             if(res.statusCode !== 401){
                 var newUser = {};
                 newUser["name"] = body.name;
+                newUser["score"] = body.score;
                 newUser["userID"] = body.id;
                 newUser["level"] = body.level;
                 authenticatedUsers[token] = newUser; 
@@ -90,5 +121,26 @@ function refreshToken(token){
             }                
             resolve();
         });
+    });
+}
+
+function cacheUserByID(casterToken, ID){
+    return new Promise(function (resolve, reject) {
+        request(userServerURL +'/api/users/'+ID, {
+            headers:{
+                'content-type': 'application/json',
+                'authentication': casterToken,
+            },
+            json: true}, (err, res, body) => {
+                if(res.statusCode !== 404){
+                    var newUser = {};
+                    newUser["name"] = body.name;
+                    newUser["score"] = body.score;
+                    newUser["userID"] = body.id;
+                    newUser["level"] = body.level;
+                    authenticatedUsers[body.id] = newUser; 
+                }
+                resolve();                
+            });
     });
 }

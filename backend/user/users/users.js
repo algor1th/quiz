@@ -104,6 +104,7 @@ module.exports = function(app){
     //update user
     app.put('/api/users/:id', async (req, res) => {
         const token = req.get("authentication");
+        console.log("received: "+token);
         var isAdmin = await authentication.isAdmin(token)
         var uTemp = await authentication.getUser(token)
         var isAuth = isAdmin || (uTemp != null && uTemp["id"] == req.params.id )

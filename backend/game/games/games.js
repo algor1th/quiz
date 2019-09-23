@@ -51,7 +51,7 @@ module.exports = function(app){
 
             //match with opened games if no game between these players exist
             for(var i=0; i<openedGames.length; i++){
-                var alreadyActiveGames = await maria.query('SELECT * FROM games WHERE ((userID_1 = ? AND userID_2 = ?) OR (userID_1 = ? AND userID_2 = ?)) AND isFinished = false',[openedGames[i]["userID_1"], userID, userID, openedGames[i]["userID_1"]]);
+                var alreadyActiveGames = await maria.query('SELECT * FROM games WHERE ((userID_1 = ? AND userID_2 = ?) OR (userID_1 = ? AND userID_2 = ?)) AND isFinished = 0',[openedGames[i]["userID_1"], userID, userID, openedGames[i]["userID_1"]]);
                 if(alreadyActiveGames.length === 0){
                     await maria.query('UPDATE games SET userID_2 = ? WHERE id = ?',[userID, openedGames[i]['id']]);
                     var openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [openedGames[i]['id']]); 
@@ -72,7 +72,7 @@ module.exports = function(app){
                 res.status(404).send("You can not match with yourself!")
                 return; 
             } 
-            var openedGames = await maria.query('SELECT * FROM games WHERE ((userID_1 = ? AND userID_2 = ?) OR (userID_1 = ? AND userID_2 = ?)) AND isFinished = false',[userID, otherUser, otherUser, userID]);
+            var openedGames = await maria.query('SELECT * FROM games WHERE ((userID_1 = ? AND userID_2 = ?) OR (userID_1 = ? AND userID_2 = ?)) AND isFinished = 0',[userID, otherUser, otherUser, userID]);
             if(openedGames.length > 0){
                 res.status(404).send("You are already playing against this opponent")
                 return;

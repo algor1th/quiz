@@ -23,7 +23,6 @@ module.exports = function(app){
     }),
 
     app.get('/api/authentication', async (req, res) => {
-        console.log(authentication.authenticatedUsers);
         const token = req.get("authentication");
         var isAuthorized = await authentication.isAuthenticated(token);
         if(isAuthorized){
