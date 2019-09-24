@@ -22,7 +22,7 @@ module.exports = function(app){
 
         var openedGames = await maria.query('SELECT * FROM games WHERE (userID_1 = ? OR userID_2 = ?) AND isFinished = false',[userID, userID]);
         if(openedGames.length !== 0){
-            res.send(openedGames);    
+            res.send(fixSerializeGameArray(openedGames));    
             return;
         }
         res.status(404).send("No opened games found")
@@ -55,7 +55,7 @@ module.exports = function(app){
                 if(alreadyActiveGames.length === 0){
                     await maria.query('UPDATE games SET userID_2 = ? WHERE id = ?',[userID, openedGames[i]['id']]);
                     var openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [openedGames[i]['id']]); 
-                    res.send(openedGame[0]);    
+                    res.send(fixSerializeGame(openedGame[0]));    
                     return;
                 }
             } 
@@ -63,7 +63,7 @@ module.exports = function(app){
             //create a new game
             const firstQuery = await maria.query('INSERT INTO games (userID_1) VALUES (?); SELECT LAST_INSERT_ID();', [userID]);
             var openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [firstQuery[1][0]["LAST_INSERT_ID()"]]);         
-            res.send(openedGame[0]);    
+            res.send(fixSerializeGame(openedGame[0]));    
             return;
         }else{
             //specific target
@@ -79,7 +79,7 @@ module.exports = function(app){
             }
             const firstQuery = await maria.query('INSERT INTO games (userID_1, userID_2) VALUES (?, ?); SELECT LAST_INSERT_ID();', [userID, otherUser]);
             openedGame = await maria.query('SELECT * FROM games WHERE id = ?', [firstQuery[1][0]["LAST_INSERT_ID()"]]); 
-            res.send(openedGame[0]);    
+            res.send(fixSerializeGame(openedGame[0]));    
         }
     });
 
@@ -97,7 +97,7 @@ module.exports = function(app){
             res.status(404).send(`no open games found`);
             return;
         }        
-        res.send(games);    
+        res.send(fixSerializeGameArray(games));    
     });
 
     //get specific game
@@ -132,7 +132,7 @@ module.exports = function(app){
             games = games[0];
         }
         
-        res.send(games);    
+        res.send(fixSerializeGame(games));    
     });
 }  
 
@@ -142,9 +142,6 @@ async function serializeRound(round) {
 
     var allCategories = await maria.query('SELECT * FROM categories');
     newRound["category"] = allCategories[round["category"]];
-
-    //console.log(allCategories[round["category"]])
-
     var q = [];
     for(var i=1; i<=3; i++){
         q[i-1] = {};
@@ -158,4 +155,38 @@ async function serializeRound(round) {
     newRound["questions"] = q;
        
     return newRound;
+}
+
+function fixSerializeGame(game){
+    var scoring = {};
+    if(game["userID_1"]<0){
+        game["userID_1"] = Math.abs(game["userID_1"]);
+        scoring["winner"] = 2;
+        scoring["change"] = game["isFinished"];
+        game["isFinished"] = 1;
+        game["scoring"] = scoring;
+        return game;
+    }
+    if(game["userID_2"]<0){
+        game["userID_2"] = Math.abs(game["userID_2"]);
+        scoring["winner"] = 1;
+        scoring["change"] = game["isFinished"];
+        game["isFinished"] = 1;
+        game["scoring"] = scoring;
+        return game;
+    }
+    if(game["userID_1"]>0 && game["userID_2"]>0 && game["isFinished"] > 0){
+        scoring["winner"] = 0;
+        scoring["change"] = 0;
+        game["scoring"] = scoring;
+    }
+    return game;
+}
+
+function fixSerializeGameArray(games){
+    var newGames = [];
+    for(var i = 0; i<games.length; i++){
+        newGames[i] = fixSerializeGame(games[i]);
+    }
+    return newGames;
 }

@@ -208,10 +208,18 @@ async function handleAnswer(req, res){
 
                     if(updatedRound['answerID_1_3'] !== null && updatedRound['answerID_2_3'] !== null){
                         var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[game["id"]]);
-                        if(rounds.length === 1){
-                            const firstQuery = await maria.query('UPDATE games SET isFinished = 1 WHERE id = ?', [game["id"]]);
-                            serializedRound['scoring'] = await doScoring(rounds, game, token);    
-                            console.log(serializedRound)
+                        if(rounds.length > 0){
+                            serializedRound['scoring'] = await doScoring(rounds, game, token);
+                            var userID_1 = game['userID_1'];
+                            var userID_2 = game['userID_2'];
+                            var isFinished = 1;
+                            if(serializedRound['scoring']['winner'] === 1)
+                                userID_2 = -userID_2;
+                            if(serializedRound['scoring']['winner']  === 2)
+                                userID_1 = -userID_1;
+                            if(serializedRound['scoring']['winner'] != 0)
+                                isFinished = serializedRound['scoring']['change'];
+                            const firstQuery = await maria.query('UPDATE games SET isFinished = ?, userID_1 = ?, userID_2 = ? WHERE id = ?', [isFinished, userID_1, userID_2, game["id"]]);
                         }
                     }
                     res.send(serializedRound); 
@@ -229,12 +237,23 @@ async function handleAnswer(req, res){
                         var updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
                         updatedRound = updatedRound[0];
 
+                        var serializedRound = await serializeRound(updatedRound);
+
                         if(updatedRound['answerID_1_3'] !== null && updatedRound['answerID_2_3'] !== null){
                             var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[game["id"]]);
-                            if(rounds.length === 6){
-                                const firstQuery = await maria.query('UPDATE games SET isFinished = 1 WHERE id = ?', [game["id"]]);
+                            if(rounds.length > 0){
                                 serializedRound['scoring'] = await doScoring(rounds, game, token);    
-                                console.log(serializedRound)
+                                var userID_1 = game['userID_1'];
+                                var userID_2 = game['userID_2'];
+                                var isFinished = 1;
+                                if(serializedRound['scoring']['winner'] === 1)
+                                    userID_2 = -userID_2;
+                                if(serializedRound['scoring']['winner']  === 2)
+                                    userID_1 = -userID_1;
+                                if(serializedRound['scoring']['winner'] != 0)
+                                    isFinished = serializedRound['scoring']['change'];
+                                const firstQuery = await maria.query('UPDATE games SET isFinished = ?, userID_1 = ?, userID_2 = ? WHERE id = ?', [isFinished, userID_1, userID_2, game["id"]]);
+
                             }
                         }
                         var serializedRound = await serializeRound(updatedRound);
@@ -356,7 +375,7 @@ async function doScoring(rounds, game, userToken){
     if(correct_1>correct_2){
         var factor = score_2/score_1;
         var dif = correct_1-correct_2;
-        change = Math.min(score_2,factor*dif);
+        change = Math.round(Math.min(score_2,factor*dif));
         score_1 += change;
         score_2 -= change;
         result['winner'] = 1;
@@ -364,7 +383,7 @@ async function doScoring(rounds, game, userToken){
     if(correct_1<correct_2){
         var factor = score_1/score_2;
         var dif = correct_2-correct_1;
-        change = Math.min(score_1,factor*dif);
+        change = Math.round(Math.min(score_1,factor*dif));
         score_1 -= change;
         score_2 += change;
         result['winner'] = 2;
@@ -373,9 +392,8 @@ async function doScoring(rounds, game, userToken){
 
     //send to server
     const userServerURL = process.env.USERSERVER;
-    const userServerAdminToken = 'ot5lyety960667nnkt4x100waf5jys3sz2x_1';
+    const userServerAdminToken = process.env.USERSERVERADMINTOKEN;
 
-    console.log(userServerAdminToken);
     await request.put(userServerURL+'/api/users/'+user_1['userID'], {
         headers:{
             'content-type': 'application/json',

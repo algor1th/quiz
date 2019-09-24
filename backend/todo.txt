@@ -1,8 +1,6 @@
 Todo Backend:
 	- apply countdown 		
 	- timeout tokens
-	- fix maria db passwort + admintoken
-	- save change in database
 
 Todo Frontend:
 	Spieleübersicht über speziefisches Spiel (+Punkte)
