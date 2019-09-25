@@ -14,7 +14,7 @@ function Round({ match }) {
         'authentication': window.user.token
       })
     })
-      .then((round) => round.ok? round.json(): null)
+      .then((round) => round.ok ? round.json() : null)
       .then((round) => setRound(round));
   };
   useEffect(getGame, [match.params.gId, currentround]);
@@ -24,7 +24,7 @@ function Round({ match }) {
     }
   }, [currentround, round]);
   console.log(round)
-  ;
+    ;
   function roundDone() {
     setcurrentround(currentround + 1)
   }
@@ -32,40 +32,41 @@ function Round({ match }) {
     fetch(
       `/api/rounds/${match.params.gId}`,
       {
-          headers: new Headers({
-              'Content-Type': 'application/json',
-              'authentication': window.user.token
-          }),
-          method: 'PUT',
-          body: JSON.stringify({categoryID: categoryID})
-      }        
-  ).then(console.log).then(getGame);
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'authentication': window.user.token
+        }),
+        method: 'PUT',
+        body: JSON.stringify({ categoryID: categoryID })
+      }
+    ).then(console.log).then(getGame);
     console.log(categoryID)
   }
   if (round) {
-    if(Array.isArray(round.category)) {
+    if (Array.isArray(round.category)) {
       return (
-      <div>
-        <h1>Choose category</h1>
-       { round.category.map(element => {
-         console.log(element);
-          return (<button key={element.id} onClick={()=> chooseCategory(element.id)}>{element.name}</button>)
-       }
-       )}
-      </div>)
+        <div>
+          <h1>Choose category</h1>
+          {round.category.map(element => {
+            console.log(element);
+            return (<button key={element.id} onClick={() => chooseCategory(element.id)}>{element.name}</button>)
+          }
+          )}
+        </div>)
     } else if (currentround < round.questions.length) {
       return (
         <>
           <Question question={round.questions[currentround]} roundId={round.id} roundDone={roundDone}></Question>
-          <span>Question {currentround}</span>
+          <span>Question {currentround + 1}</span>
         </>
       );
     } else {
-      return <Redirect to="/"></Redirect>
+      return <Redirect to={`/game/${match.params.gId}`}></Redirect>
     }
   } else return (
     <>
-      <h1>loading...</h1>
+      <h1>Waiting for turn</h1>
+      <button onClick={getGame}>refresh</button>
       <Link to='/'>Start screen</Link>
     </>);
 

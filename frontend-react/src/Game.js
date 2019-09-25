@@ -11,14 +11,14 @@ function Game({ match }) {
         })
             .then((game) => game.json())
             .then((game) => setGame(game));
-    })
+    }, [match.params.gId])
     console.log(game);
     if (!game) {
         return <h1>Game not ready</h1>
     } else
         return (
             <>
-                <h1>Game {game.id} <small><i>{game.category || 'NO CATEGORY'}</i></small></h1>
+                <h1>Game Overwiev</h1>
                 {game.rounds.map((round) => {
                     return (
                         <div key={round.id}>
@@ -27,49 +27,50 @@ function Game({ match }) {
                                 {
                                     margin: '20px auto',
                                     border: '1px solid black',
-                                    borderRadius: '5px'
+                                    borderRadius: '5px',
+                                    width: '100%',
                                 }
                             } key={round.id} >
-                                <tr>
-                                    <td>
-                                        Question
+                                <thead>
+                                    <tr>
+                                        <td>
+                                            Player 1
                                         </td>
-                                    <td>
-                                        Player 1
+                                        <td>
+                                            Player 2
                                         </td>
-                                    <td>
-                                        Player 2
-                                        </td>
-                                </tr>
-                                {round.questions.map((question) => {
-                                    let answer1;
-                                    if (question.question.answers[0])
-                                        answer1 = question.question.answers[0].isCorrect ? '✅' : '❌';
-                                    else
-                                        answer1 = '⌛';
-                                    let answer2;
-                                    if (question.question.answers[1])
-                                        answer2 = question.question.answers[1].isCorrect ? '✅' : '❌';
-                                    else
-                                        answer2 = '⌛'
-                                    return (
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {round.questions.map((question) => {
+                                        let answer1;
+                                        const ans1 = question.answerID_1;
+                                        if (ans1)
+                                            answer1 = question.question.answers.find((ans) => ans.id === ans1).isCorrect ? '✅' : '❌';
+                                        else
+                                            answer1 = '⌛';
+                                        let answer2;
+                                        let ans2 = question.answerID_2;
+                                        if (ans2)
+                                            answer2 = question.question.answers.find((ans) => ans.id === ans2).isCorrect ? '✅' : '❌';
+                                        else
+                                            answer2 = '⌛'
+                                        return (
 
-                                        <tr style={{
-                                            margin: '100px'
-                                        }}>
-                                            {/* <td><h2>question 1</h2></td> */}
-                                            <td>
-                                                {question.question.text}
-                                            </td>
-                                            <td>
-                                                {answer1}
-                                            </td>
-                                            <td>
-                                                {answer2}
-                                            </td>
-                                        </tr>
-                                    )
-                                })}
+                                            <tr style={{
+                                                margin: '100px',
+                                                fontSize: '5em'
+                                            }} key={question.question.id}>
+                                                <td>
+                                                    {answer1}
+                                                </td>
+                                                <td>
+                                                    {answer2}
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
                             </table>
                         </div>
                     )

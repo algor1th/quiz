@@ -7,7 +7,7 @@ function Question(props) {
   const id = props.question.questionID;
   const [question, setQuestion] = useState();
   console.log(props.qId)
-  useEffect(() => {
+  const loadQuestion = () => {
     fetch(`/api/questions/${id}?containAnswers=true`, {
       headers: new Headers({
         'authentication': window.user.token
@@ -15,7 +15,8 @@ function Question(props) {
     })
       .then((question) => question.json())
       .then((question) => setQuestion(question));
-  }, [id])
+  }
+  useEffect(loadQuestion, [id])
   console.log(question);
   if (question) {
     return (
@@ -26,7 +27,6 @@ function Question(props) {
         <div className="answer-buttons">
           {question[1].map((answer) => <button className="answer-button" key={answer.id} onClick={() => {
             const bdy = JSON.stringify({ "answerID": answer.id })
-            console.log(bdy)
             fetch(`/api/rounds/${props.roundId}`, {
               headers: new Headers({
                 'Content-Type': 'application/json',
@@ -34,10 +34,11 @@ function Question(props) {
               }),
               method: 'PUT',
               body: bdy
-            }).then((body) => {
-              console.log(body);
-              props.roundDone();
-            });
+            }).then((body) => body.json())
+              .then((body) => {
+                console.log(body);
+                props.roundDone();
+              });
           }}>{answer.text}</button>)}
         </div>
 
@@ -45,7 +46,8 @@ function Question(props) {
     );
   } else return (
     <>
-      <h1>loading...</h1>
+      <h1>waiting for turn</h1>
+      <button onClick={loadQuestion}>refresh</button>
       <Link to='/'>Start screen</Link>
     </>);
 

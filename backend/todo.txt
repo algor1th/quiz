@@ -26,20 +26,20 @@ Proposal Todo Frontend:
 	- Playername im Menü statt ID
 	- Playername in "Spieldetail-Fenster" statt ID
 	- Gegnername statt SpielID in "Spieldetail-Fenster"
-	- open game "Game against "ACTIVE" -> "Waiting for opponent" oder ähnlich
+	- open game "Game against "ACTIVE" -> "Waiting for opponent" oder ähnlich (done)
 	- home/zurück button in "Spieldetail-Fenster"
 	- refresh Button in Hauptmenü
 	- zurückbutton in "loading" Fenster -> "Spieldetail-Fenster" nicht wieder hauptmenü
-	- "loading" -> waiting to be ready
-	- "loading" -> refresh button
+	- "loading" -> waiting to be ready (done)
+	- "loading" -> refresh button (done)
 	- show round after answering questions
 	- show opponent anwswers after both answering questions
-	- corrcet icons for "is correct" in round details
-	- nach dem beantworten zu "Spieldetail-Fenster" nicht Hauptmenü
+	- corrcet icons for "is correct" in round details (done)
+	- nach dem beantworten zu "Spieldetail-Fenster" nicht Hauptmenü (done)
 	- "Spieldetail-Fenster" Playbutton nur anzeien wenn ready?
 	- Questionindex 1,2,3 not 0,1,2 (start counting by 1 instead of 0
 	- show categories per round in "Spieldetail-Fenster"
-	- "Start game" Button updated Seite nicht
+	- "Start game" Button updated Seite nicht (done)
 	- Antwortmöglichkeiten nicht symetrisch angeordnet (oben links hat einen abstand zum weißen rand, oben rechts nicht)
 	- show if answer was correct / show correct answer
 	- time indicator

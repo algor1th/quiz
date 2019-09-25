@@ -4,18 +4,18 @@ import { Link } from 'react-router-dom';
 
 function Startpage() {
     const [games, setGames] = useState([]);
-    useEffect(() => {
+    const loadGames = () => {
         fetch('/api/games/current', {
             headers: new Headers({
                 'authentication': window.user.token
             }),
             crossDomain: true,
         })
-            .then((game) => game.ok? game.json(): [])
+            .then((game) => game.ok ? game.json() : [])
             .then((game) => setGames(game));
-    },[])
+    }
+    useEffect(loadGames, [])
 
-    console.log(games);
     function newGame(e) {
         e.preventDefault();
         fetch(
@@ -26,8 +26,8 @@ function Startpage() {
                     'authentication': window.user.token
                 }),
                 method: 'POST',
-            }        
-        ).then(console.log);
+            }
+        ).then(loadGames);
     }
     return (
         <>
@@ -39,7 +39,14 @@ function Startpage() {
             <div className='choose-category'>
                 <h2>active games</h2>
                 {games.map((game) => {
-                    let opponent = game.userID_1 == window.user.id ? game.userID_2 : game.userID_1;
+                    if (!game.userID_2) {
+                        return (<Link to={`/game/${game.id}`} key={game.id}>
+                            <button>
+                                waiting for player
+                            </button>
+                        </Link>)
+                    }
+                    let opponent = game.userID_1 === window.user.id ? game.userID_2 : game.userID_1;
                     return (
                         <Link to={`/game/${game.id}`} key={game.id}>
                             <button>
