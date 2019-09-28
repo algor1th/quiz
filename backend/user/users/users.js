@@ -42,13 +42,18 @@ module.exports = function(app){
         }
         
         var output = []
+        var i2 = 0;
         for (var i = 0; i < users.length; i++) { 
             var user = {}
+            if(users[i]['id'] == process.env.ADMINUSER){
+                continue;
+            }
             user["id"] = users[i]["id"];
             user["name"] = users[i]["name"];
             user["score"] = users[i]["score"];
             user["level"] = users[i]["level"];
-            output[i] = user;
+            output[i2] = user;
+            i2++;
         }
 
         res.send(output);   

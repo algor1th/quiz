@@ -3,6 +3,7 @@
 const authentication = require('../authentication.js');
 const maria = require('../maria.js');
 const joi = require('@hapi/joi');
+const questionTime = require('./questionTime.js');
 
 const schemaQuestion = {
     text: joi.string().min(3).required().max(1024),
@@ -62,6 +63,11 @@ module.exports = function(app){
             response = question[0];
         }
         
+        var referenceRoundID = 0;
+        if(req.query.forRound)
+            referenceRoundID = req.query.forRound;
+        questionTime.startQuestion(await authentication.getUserID(token),req.params.id,referenceRoundID);
+
         res.send(response);    
     });
 

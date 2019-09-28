@@ -134,6 +134,22 @@ module.exports = function(app){
         
         res.send(fixSerializeGame(games));    
     });
+
+    //delete all games
+    app.delete('/api/games', async (req, res) => {
+        const token = req.get("authentication");
+        var isAdmin = await authentication.isAdmin(token);
+       
+        if(!isAdmin){
+            res.status(401).send("You did not provide an authorized admin token with your request")
+            return;
+        }
+        
+        await maria.query('TRUNCATE games');
+        await maria.query('TRUNCATE rounds');
+       
+        res.send("Cleared all games and rounds!");    
+    });
 }  
 
 async function serializeRound(round) {

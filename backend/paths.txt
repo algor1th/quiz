@@ -22,6 +22,7 @@ GameServer:
 (1.3)	GET /api/questions				// gibt alle Fragen an		<- Adminuser
 (1.3)	GET /api/questions/?containAnswers=true
 (1.3)	GET /api/questions/[ID]				// gibt eine expliziete Frage	<- Jedes valide token
+(1.6)	GET /api/questions/[ID]/?forRound=[RoundID]	// gibt eine expliziete Frage mit Angabe der Runde für die sie gebraucht wird	<- Jedes valide token
 (1.3)	GET /api/questions/[ID]/?containAnswers=true
 (1.3)	POST /api/questions {text, categoryID, 
 		requiredLevel, score, answerTime}	// fügt eine neue Frage hinzu	<- Adminuser

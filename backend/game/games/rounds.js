@@ -5,6 +5,7 @@ const maria = require('../maria.js');
 const joi = require('@hapi/joi');
 var seedrandom = require('seedrandom');
 const request = require('request');
+const questionTime = require('./questionTime.js');
 
 const schemaAnswer = {
     answerID: joi.number().required()
@@ -173,6 +174,7 @@ async function getRandomCategories(gameID, roundNumber, maxLevel){
     return rounds;
 }
 
+
 async function handleAnswer(req, res){
     var rounds = await maria.query('SELECT * FROM rounds WHERE id = ?',[req.params.id]);
         if(rounds.length === 0){
@@ -196,11 +198,18 @@ async function handleAnswer(req, res){
             if(game['userID_1'] == userID){
                 if(openRound['answerID_1_'+i] === null){
                     const questions = await maria.query('SELECT * FROM answers WHERE id = ? AND questionID = ?', [req.body.answerID, openRound['questionID_'+i],]);
+                    const question = (await maria.query('SELECT * FROM questions WHERE id = ?', [openRound['questionID_'+i]]))[0];
                     if(questions.length === 0){
                         res.status(404).send(`invalid answer with id ${req.body.answerID} for question with id ${openRound['questionID_'+i]}`);
                         return;
                     }
-                    const firstQuery = await maria.query('UPDATE rounds SET answerID_1_'+i+' = ? WHERE id = ?', [req.body.answerID, req.params.id]);
+
+                    var inTime = questionTime.tryEndQuestion(userID,question['id'],openRound['id'],question['answerTime']);
+                    if(inTime){
+                        await maria.query('UPDATE rounds SET answerID_1_'+i+' = ? WHERE id = ?', [req.body.answerID, req.params.id]);
+                    }else{
+                        await maria.query('UPDATE rounds SET answerID_1_'+i+' = ? WHERE id = ?', [0, req.params.id]);
+                    }
                     var updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
                     updatedRound = updatedRound[0];
 
@@ -208,7 +217,9 @@ async function handleAnswer(req, res){
 
                     if(updatedRound['answerID_1_3'] !== null && updatedRound['answerID_2_3'] !== null){
                         var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[game["id"]]);
-                        if(rounds.length > 0){
+                        questionTime.finishRound(updatedRound['id']);
+                        
+                        if(rounds.length > 5){
                             serializedRound['scoring'] = await doScoring(rounds, game, token);
                             var userID_1 = game['userID_1'];
                             var userID_2 = game['userID_2'];
@@ -228,12 +239,19 @@ async function handleAnswer(req, res){
             }else{
                 if(game['userID_2'] == userID){
                     if(openRound['answerID_2_'+i] === null){
-                        const questions = await maria.query('SELECT * FROM answers WHERE id = ? AND questionID = ?', [req.body.answerID, openRound['questionID_'+i]]);
+                        const question = (await maria.query('SELECT * FROM questions WHERE id = ?', [openRound['questionID_'+i]]))[0];
                         if(questions.length === 0){
                             res.status(404).send(`invalid answer with id ${req.body.answerID} for question with id ${openRound['questionID_'+i]}`);
                             return;
                         }
-                        const firstQuery = await maria.query('UPDATE rounds SET answerID_2_'+i+' = ? WHERE id = ?', [req.body.answerID, req.params.id]);
+    
+                        var inTime = questionTime.tryEndQuestion(userID,question['id'],openRound['id'],question['answerTime']);
+                        if(inTime){
+                            await maria.query('UPDATE rounds SET answerID_2_'+i+' = ? WHERE id = ?', [req.body.answerID, req.params.id]);
+                        }else{
+                            await maria.query('UPDATE rounds SET answerID_2_'+i+' = ? WHERE id = ?', [0, req.params.id]);
+                        }
+                        
                         var updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
                         updatedRound = updatedRound[0];
 
@@ -241,7 +259,9 @@ async function handleAnswer(req, res){
 
                         if(updatedRound['answerID_1_3'] !== null && updatedRound['answerID_2_3'] !== null){
                             var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[game["id"]]);
-                            if(rounds.length > 0){
+                            questionTime.finishRound(updatedRound["id"]);
+                            
+                            if(rounds.length  > 5){
                                 serializedRound['scoring'] = await doScoring(rounds, game, token);    
                                 var userID_1 = game['userID_1'];
                                 var userID_2 = game['userID_2'];
