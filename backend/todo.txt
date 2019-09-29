@@ -28,9 +28,9 @@ Proposal Todo Frontend:
 	- "Start game" Button updated Seite nicht (done)
 
 	- token bleibt gespeichert
-	- LoginFeld für Token
-	- Playername im Menü statt ID
-	- Playername in "Spieldetail-Fenster" statt ID
+	- LoginFeld für Token 
+	- Playername im Menü statt ID (done)
+	- Playername in "Spieldetail-Fenster" statt ID (done)
 	- Gegnername statt SpielID in "Spieldetail-Fenster"
 	- home/zurück button in "Spieldetail-Fenster"
 	- refresh Button in Hauptmenü
@@ -38,13 +38,13 @@ Proposal Todo Frontend:
 	- show round after answering questions
 	- show opponent anwswers after both answering questions
 	- "Spieldetail-Fenster" Playbutton nur anzeien wenn ready?
-	- Questionindex 1,2,3 not 0,1,2 (start counting by 1 instead of 0
-	- show categories per round in "Spieldetail-Fenster"
+	- Questionindex 1,2,3 not 0,1,2 (start counting by 1 instead of 0 (done)
+	- show categories per round in "Spieldetail-Fenster" (done)
 	- Antwortmöglichkeiten nicht symetrisch angeordnet (oben links hat einen abstand zum weißen rand, oben rechts nicht)
 	- show if answer was correct / show correct answer
 	- time indicator
 	- history to show games that are over
-	- in der Gameübersicht "Round 1" "Round 2"... instead of round IDs
+	- in der Gameübersicht "Round 1" "Round 2"... instead of round IDs (done (category names))
 	- zurückbutton beim scoreboard
 	- alle fehler werden kurz rot eingeblendet
 	- fix buggy "Play against" -> wrong player is shown. Always playerID_1?

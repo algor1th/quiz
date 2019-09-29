@@ -40,6 +40,7 @@ function Game({ match }) {
                 {game.rounds.map((round) => {
                     return (
                         <div key={round.id}>
+                            <h2>{round.category.name}</h2>
                             <table style={
                                 {
                                     margin: '20px auto',
