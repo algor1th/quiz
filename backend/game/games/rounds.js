@@ -197,7 +197,7 @@ async function handleAnswer(req, res){
         for(var i = 1; i<=3; i++){
             if(game['userID_1'] == userID){
                 if(openRound['answerID_1_'+i] === null){
-                    const questions = await maria.query('SELECT * FROM answers WHERE id = ? AND questionID = ?', [req.body.answerID, openRound['questionID_'+i],]);
+                    const questions = await maria.query('SELECT * FROM answers WHERE id = ? AND questionID = ?', [req.body.answerID, openRound['questionID_'+i]]);
                     const question = (await maria.query('SELECT * FROM questions WHERE id = ?', [openRound['questionID_'+i]]))[0];
                     if(questions.length === 0){
                         res.status(404).send(`invalid answer with id ${req.body.answerID} for question with id ${openRound['questionID_'+i]}`);
@@ -239,6 +239,7 @@ async function handleAnswer(req, res){
             }else{
                 if(game['userID_2'] == userID){
                     if(openRound['answerID_2_'+i] === null){
+                        const questions = await maria.query('SELECT * FROM answers WHERE id = ? AND questionID = ?', [req.body.answerID, openRound['questionID_'+i]]);
                         const question = (await maria.query('SELECT * FROM questions WHERE id = ?', [openRound['questionID_'+i]]))[0];
                         if(questions.length === 0){
                             res.status(404).send(`invalid answer with id ${req.body.answerID} for question with id ${openRound['questionID_'+i]}`);
