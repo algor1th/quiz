@@ -28,14 +28,16 @@ module.exports = function(app){
             res.status(404).send(`user with id ${req.body.userID} not found`);
             return;
         }
-        if(user[0]["token"] !== null){
+        var dt = new Date();
+        if(user[0]["token"] !== null && user[0]['authTime'] && user[0]['authTime'] + process.env.TOKENDECAYTIME > dt.getTime()){
+            await maria.query('UPDATE users SET authTime = ? WHERE id = ?', [dt.getTime(), req.body.userID]);
             res.send(user[0]);
             return;
         }
 
         const token = rand(180, 36)+"_"+req.body.userID;
 
-        const firstQuery = await maria.query('UPDATE users SET token = ? WHERE id = ?', [token, req.body.userID]);
+        const firstQuery = await maria.query('UPDATE users SET token = ?, authTime = ? WHERE id = ?', [token, dt.getTime(), req.body.userID]);
         const updatedUser = await maria.query('SELECT * FROM users WHERE id = ?', [req.body.userID]);
 
         res.send(updatedUser[0]);
@@ -75,7 +77,12 @@ module.exports = function(app){
             res.status(401).send(`The token ${req.params.token} is no valid token`);
             return;
         }
-       
+        var dt = new Date();
+        if(!user[0]['authTime'] || user[0]['authTime'] + process.env.TOKENDECAYTIME <= dt.getTime()){
+            await maria.query('UPDATE users SET token = null WHERE id = ?', [user[0]['id']]);
+            res.status(401).send(`The token ${req.params.token} is decayed`);
+            return;  
+        }
         res.send(user[0]);
     });
 }  

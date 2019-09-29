@@ -16,14 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Current Database: `CYSECPROJECT`
---
-
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `cysecproject` /*!40100 DEFAULT CHARACTER SET latin1 */;
-
-USE `CYSECPROJECT`;
-
---
 -- Table structure for table `answers`
 --
 
@@ -36,7 +28,7 @@ CREATE TABLE `answers` (
   `questionID` int(11) NOT NULL,
   `isCorrect` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,7 +37,7 @@ CREATE TABLE `answers` (
 
 LOCK TABLES `answers` WRITE;
 /*!40000 ALTER TABLE `answers` DISABLE KEYS */;
-INSERT INTO `answers` VALUES (1,'soziale Manipulation',1,1),(2,'angewandte Sozialwissenschaft',1,1),(3,'Sozialsimulation',1,0),(4,'Mechanische Menschen',1,0),(5,'pauschal gar keinen!',2,1),(6,'allen, die nicht auf .exe enden',2,0),(7,'allen',2,0),(8,'denen, die in der Email fehlerfreies Deutsch verwenden',2,0),(9,'Passwortkarten für die Türen',3,1),(10,'Ein Empfang der die Personen authentifiziert',3,1),(11,'Drehtüren',3,0),(12,'schlechte Musik in der Eingangshalle',3,0),(13,'Ja, ist er auch',4,1),(14,'Nein',4,0),(15,'Cross-Site-Scripting',5,1),(16,'Xylophone Social Science',5,0),(17,'Cascading Style Sheets',5,0),(18,'In eine SQL Anfrage weitere Befehle einzuschleußen',6,1),(19,'Den SQL Server zu überlasten',6,0),(20,'Den Programmierer des SQL Server mit einer Spritze zu betäuben',6,0),(21,'Denial of Service Attack',7,0),(22,'Destributed Denial of Service Attack',7,1),(23,'Digital Disguised Online Scam',7,0),(24,'Do Duo On Screw',7,0),(25,'Ja, sonst würden wir es ja tun',8,1),(26,'Nein, ich will keine Punkte für die Frage',8,0),(27,'Ich muss es mir einfach merken können',9,0),(28,'Es muss unglaublich lang sein',9,0),(29,'Viele unterschiedliche Zeichen in einem nicht logischen Muster',9,1),(30,'Es muss den Vornamen meines Haustiers beinhalten',9,0),(31,'Two Factor Authentication',10,1),(32,'To Few Authentication',10,0),(33,'Two Female Authentication',10,0),(34,'To Famous Authentication',10,0),(35,'Ja, es schützt oft vor breit angelegten \'Massenattacken\'',11,1),(36,'Ja, weil es Hackern erheblichen Mehraufwandt bereitet',11,1),(37,'Nein, es ist absolut nicht mehr Stand der Technik',11,0),(38,'Nur wenn man beide Faktoren immer zusammen aufbewahrt',11,0),(39,'Nein, das macht Google für mich',12,0),(40,'Ja, gerade dort',12,1),(41,'Ich frage was ich tue wenn mir keine Frage mehr einfällt!',13,1),(42,'Ich gebe auf',13,0),(43,'Ja, weil wir somit mehr Variation bekommen',14,1),(44,'Einfach nur ja',14,1),(45,'Ja, offensichtlich',15,1),(46,'Nein, sein Haustier hat sie sich ausgedacht',15,0),(47,'Ja!',16,1),(48,'Ja!',16,1),(49,'Ja!',16,1),(50,'Ja!',16,1);
+INSERT INTO `answers` VALUES (1,'soziale Manipulation',1,1),(2,'angewandte Sozialwissenschaft',1,1),(3,'Sozialsimulation',1,0),(4,'Mechanische Menschen',1,0),(5,'pauschal gar keinen!',2,1),(6,'allen, die nicht auf .exe enden',2,0),(7,'allen',2,0),(8,'denen, die in der Email fehlerfreies Deutsch verwenden',2,0),(9,'Passwortkarten für die Türen',3,1),(10,'Ein Empfang der die Personen authentifiziert',3,1),(11,'Drehtüren',3,0),(12,'schlechte Musik in der Eingangshalle',3,0),(13,'Ja, ist er auch',4,1),(14,'Nein',4,0),(15,'Cross-Site-Scripting',5,1),(16,'Xylophone Social Science',5,0),(17,'Cascading Style Sheets',5,0),(18,'In eine SQL Anfrage weitere Befehle einzuschleußen',6,1),(19,'Den SQL Server zu überlasten',6,0),(20,'Den Programmierer des SQL Server mit einer Spritze zu betäuben',6,0),(21,'Denial of Service Attack',7,0),(22,'Destributed Denial of Service Attack',7,1),(23,'Digital Disguised Online Scam',7,0),(24,'Do Duo On Screw',7,0),(25,'Ja, sonst würden wir es ja tun',8,1),(26,'Nein, ich will keine Punkte für die Frage',8,0),(27,'Ich muss es mir einfach merken können',9,0),(28,'Es muss unglaublich lang sein',9,0),(29,'Viele unterschiedliche Zeichen in einem nicht logischen Muster',9,1),(30,'Es muss den Vornamen meines Haustiers beinhalten',9,0),(31,'Two Factor Authentication',10,1),(32,'To Few Authentication',10,0),(33,'Two Female Authentication',10,0),(34,'To Famous Authentication',10,0),(35,'Ja, es schützt oft vor breit angelegten \'Massenattacken\'',11,1),(36,'Ja, weil es Hackern erheblichen Mehraufwandt bereitet',11,1),(37,'Nein, es ist absolut nicht mehr Stand der Technik',11,0),(38,'Nur wenn man beide Faktoren immer zusammen aufbewahrt',11,0),(39,'Nein, das macht Google für mich',12,0),(40,'Ja, gerade dort',12,1),(41,'Ich frage was ich tue wenn mir keine Frage mehr einfällt!',13,1),(42,'Ich gebe auf',13,0),(43,'Ja, weil wir somit mehr Variation bekommen',14,1),(44,'Einfach nur ja',14,1),(45,'Ja, offensichtlich',15,1),(46,'Nein, sein Haustier hat sie sich ausgedacht',15,0),(47,'Ja!',16,1),(48,'Ja!',16,1),(49,'Ja!',16,1),(50,'Ja!',16,1),(51,'Time is over',0,0);
 /*!40000 ALTER TABLE `answers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -87,7 +79,7 @@ CREATE TABLE `games` (
   `userID_2` int(11) DEFAULT NULL,
   `isFinished` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -96,6 +88,7 @@ CREATE TABLE `games` (
 
 LOCK TABLES `games` WRITE;
 /*!40000 ALTER TABLE `games` DISABLE KEYS */;
+INSERT INTO `games` VALUES (1,3,2,0);
 /*!40000 ALTER TABLE `games` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -148,7 +141,7 @@ CREATE TABLE `rounds` (
   `answerID_2_2` int(11) DEFAULT NULL,
   `answerID_2_3` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,6 +150,7 @@ CREATE TABLE `rounds` (
 
 LOCK TABLES `rounds` WRITE;
 /*!40000 ALTER TABLE `rounds` DISABLE KEYS */;
+INSERT INTO `rounds` VALUES (1,1,'4',13,14,15,41,44,0,51,51,51);
 /*!40000 ALTER TABLE `rounds` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,8 +167,9 @@ CREATE TABLE `users` (
   `score` int(11) NOT NULL,
   `token` varchar(100) DEFAULT NULL,
   `level` int(11) DEFAULT NULL,
+  `authTime` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -183,7 +178,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Admin',9999999,'ot5lyety960667nnkt4x100waf5jys3sz2x_1',5),(2,'Andy',999,'2plqwewnhgjlprbouumrzrcvx15oi9lkx3v_2',4),(3,'Lenny',998,'gzjfneeyujbsxgg3pwc2rvm5169536qtb0h_3',4),(4,'Oli',1000,'ixt2ili8caxqyh79az24lqfxfl9se4wf8qd_4',3);
+INSERT INTO `users` VALUES (1,'Admin',9999999,'ray2frxosid7nb6dl2vvo4gm5fhu5uyrke0_1',5,1569755349959),(2,'Andy',977,'d2e187f5mrt0yz94ph19y7pavzl44t0d4do_2',4,1569755357221),(3,'Lenny',996,'be3hu9jl599jdam5ixbgy3kk34s28wswx2r_3',4,1569755368861),(4,'Oli',1022,'feq9n2a5jgt9gyr5y7mn29k6o2aesfc0b6f_4',3,1569755376489),(5,'TestUser',42,'wo9gk82dt9xoyrgesrsucqi1deb4x5o10fr_5',3,1569755383708),(6,'TestUser',42,'sxjbhvgbsvlhy1ivothjm76tp208h11giv8_6',3,1569755390281),(7,'Jan',100,'kl0phlsvqh411q78zx55uiz720f9mo0qttz_7',4,1569755398184);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -196,4 +191,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-09-09 13:14:11
+-- Dump completed on 2019-09-29 13:15:56

@@ -6,7 +6,7 @@ const userServerURL = process.env.USERSERVER;
 
 module.exports = {
     checkUsername: async function(token, name){
-        if(token in authenticatedUsers){
+        if(token in authenticatedUsers && checkAuthTime(token)){
             if(authenticatedUsers[token]["name"] === name){
                 return true;
             }else{
@@ -16,12 +16,12 @@ module.exports = {
         }else{
             await refreshToken(token);
             if(token in authenticatedUsers)
-                return false;
-            return authenticatedUsers[token]["name"] === name;
+                return authenticatedUsers[token]["name"] === name;
+            return false;
         }        
     },
     checkUserID: async function(token, id){
-        if(token in authenticatedUsers){
+        if(token in authenticatedUsers  && checkAuthTime(token)){
             if(authenticatedUsers[token]["userID"] === id){
                 return true;
             }else{
@@ -31,12 +31,12 @@ module.exports = {
         }else{
             await refreshToken(token);
             if(token in authenticatedUsers)
-                return false;
-            return authenticatedUsers[token]["userID"] === id;
+                return authenticatedUsers[token]["userID"] === id;
+            return false;
         }        
     },
     getUserName: async function(token){
-        if(token in authenticatedUsers){
+        if(token in authenticatedUsers  && checkAuthTime(token)){
            return authenticatedUsers[token]["name"];
         }else{
             await refreshToken(token);
@@ -46,7 +46,7 @@ module.exports = {
         }      
     },
     getUserID: async function(token){
-        if(token in authenticatedUsers){
+        if(token in authenticatedUsers  && checkAuthTime(token)){
            return authenticatedUsers[token]["userID"];
         }else{
             await refreshToken(token);
@@ -93,7 +93,7 @@ module.exports = {
         return null;  
     },
     isAuthenticated: async function(token){
-        if(token in authenticatedUsers){
+        if(token in authenticatedUsers  && checkAuthTime(token)){
             return true;
         }else{
             await refreshToken(token);
@@ -116,6 +116,7 @@ function refreshToken(token){
                 newUser["score"] = body.score;
                 newUser["userID"] = body.id;
                 newUser["level"] = body.level;
+                newUser["authTime"] = body.authTime;
                 authenticatedUsers[token] = newUser; 
                 authenticatedUsers[body.id] = newUser; 
             }                
@@ -143,4 +144,9 @@ function cacheUserByID(casterToken, ID){
                 resolve();                
             });
     });
+}
+
+function checkAuthTime(token){
+    var dt = new Date();
+    return token['authTime']+ process.env.TOKENDECAYTIME > dt.getTime();
 }

@@ -6,4 +6,5 @@ set DBUSER=root
 set DBHOST=localhost
 set DBPASSWORD=testpassword
 set ADMINUSER=1
+set TOKENDECAYTIME=604800000
 nodemon index.js
