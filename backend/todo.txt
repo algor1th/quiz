@@ -40,7 +40,7 @@ Proposal Todo Frontend:
 	- "Spieldetail-Fenster" Playbutton nur anzeien wenn ready?
 	- Questionindex 1,2,3 not 0,1,2 (start counting by 1 instead of 0 (done)
 	- show categories per round in "Spieldetail-Fenster" (done)
-	- Antwortmöglichkeiten nicht symetrisch angeordnet (oben links hat einen abstand zum weißen rand, oben rechts nicht)
+	- Antwortmöglichkeiten nicht symetrisch angeordnet (oben links hat einen abstand zum weißen rand, oben rechts nicht) (done)
 	- show if answer was correct / show correct answer
 	- time indicator
 	- history to show games that are over
