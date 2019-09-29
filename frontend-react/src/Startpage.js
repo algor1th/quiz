@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 
 function Startpage() {
     const [games, setGames] = useState([]);
+    const [opponents, setOpponents] = useState({});
     const loadGames = () => {
         fetch('/api/games/current', {
             headers: new Headers({
@@ -12,7 +13,9 @@ function Startpage() {
             crossDomain: true,
         })
             .then((game) => game.ok ? game.json() : [])
-            .then((game) => setGames(game));
+            .then((game) => {
+                setGames(game)
+            });
     }
     useEffect(loadGames, [])
 
