@@ -25,7 +25,10 @@ module.exports = {
 async function queryGetUser(token){
     const user = await maria.query('SELECT * FROM users WHERE token = ?', [token]);
     var dt = new Date();
-    if(user.length === 0 || !token['authTime'] || token['authTime']+ process.env.TOKENDECAYTIME <dt.getTime()){
+    if(user.length === 0){
+        return null;
+    }
+    if(!user[0]['authTime'] || user[0]['authTime']+ process.env.TOKENDECAYTIME <dt.getTime()){
         return null;
     }
     return user[0];
