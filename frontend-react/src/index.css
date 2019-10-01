@@ -1,27 +1,49 @@
     body {
+      margin: 0;
+      padding: 0;
       background-color: #211973;
     }
     #root {
-      margin: 30px auto;
-      padding: 10px;
-      width: 90vw;
+      margin: 80px 0;
+      padding: 0;
+      width: 100vw;
       font-size: 1.2em;
-      font-family: 'Liberation Sans', 'Open Sans' ,'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: white;
-      border-radius: 20px;
+      font-family: 'Montserrat' ,'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      /* background-color: white; */
+      color: white;
+    }
+    .nav {
+      text-align: justify;
+      display: inline;
+      padding: 20px;
+      position: fixed;
+      width: 100vw;
+      top: 0;
+      left: 0;
+      background-color: #ff7a00;
+      color: white;
+    }
+    .nav > span {
+      margin: 10px;
+    }
+    .nav > a {
+      color: white;
+    }
+    .nav > a:visited {
+      color: white;
     }
 
     .question {
-      background-color: white;
+      /* background-color: white; */
       margin: 0 auto;
     }
 
     .question-medium {
       display: block;
       padding: 50px 0;
-      border: 5px solid #211973;
+      /* border: 5px solid #211973; */
       border-radius: 10px;
-      margin-bottom: 100px;
+      margin: 100px 0;
       /* text-align: center; */
     }
 
@@ -34,30 +56,33 @@
 
     .answer-button {
       background-color: white;
-      border: 3px #211973 solid;
-      border-radius: 10px;
-      margin: 10px;
+      border: none;
+      /* border-radius: 10px; */
+      margin: 0;
       transition: ease 0.5s;
     }
 
     .answer-button:hover {
-      border: 3px #ff7a00 solid;
+      /* border: 3px #ff7a00 solid; */
     }
 
     .choose-category button {
       width: 100%;
-      margin: 20px auto;
+      margin: 20px 0;
     }
     button {
+      font-size: 1rem;
       background-color: white;
-      border-radius: 10px;
+      /* border-radius: 10px; */
       padding: 30px;
-      border: 3px #211973 solid;
-      margin: 10px 0;
+      border: none;
+      margin: 0;
       transition: ease 0.5s;
       width: 100%;
     }
     button:hover {
-      border: 3px #ff7a00 solid;
+      color: white;
+      background-color: #ff7a00;
+      border: none;
     }
   

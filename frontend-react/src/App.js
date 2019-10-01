@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import './App.css';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import Round from './Round';
 import ChooseCategory from './ChooseCategory';
 import Startpage from './Startpage';
@@ -28,8 +28,13 @@ function App() {
   if (window.user) {
     return (
       <Router>
-        <div className="App">
+        <div className="nav">
+          <span><Link to="/">Home</Link></span>
+          <span><Link to="/scoreboard">scoreboard</Link></span>
           <span>Player {window.user.name}</span>
+        </div>
+        <div className="App">
+
           <Switch>
             <Route path='/' exact component={Startpage}></Route>
             <Route path='/category'><ChooseCategory></ChooseCategory></Route>

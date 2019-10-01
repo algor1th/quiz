@@ -55,10 +55,7 @@ function Round({ match }) {
         </div>)
     } else if (currentround < round.questions.length) {
       return (
-        <>
-          <Question question={round.questions[currentround]} roundId={round.id} roundDone={roundDone}></Question>
-          <span>Question {currentround + 1}</span>
-        </>
+        <Question question={round.questions[currentround]} roundId={round.id} roundDone={roundDone}></Question>
       );
     } else {
       return <Redirect to={`/game/${match.params.gId}`}></Redirect>

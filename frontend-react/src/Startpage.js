@@ -36,7 +36,7 @@ function Startpage() {
         <>
             <h1>Quiz</h1>
             <div>
-                <Link to='/scoreboard'><button>Scoreboard</button></Link>
+                {/* <Link to='/scoreboard'><button>Scoreboard</button></Link> */}
                 <button onClick={newGame}>Start game</button>
             </div>
             <div className='choose-category'>

@@ -40,12 +40,12 @@ function Game({ match }) {
                 {game.rounds.map((round) => {
                     return (
                         <div key={round.id}>
-                            <h2>{round.category.name}</h2>
+                            <h2>{round.category && round.category.name}</h2>
                             <table style={
                                 {
                                     margin: '20px auto',
-                                    border: '1px solid black',
-                                    borderRadius: '5px',
+                                    border: 'none',
+                                    backgroundColor: 'white',
                                     width: '100%',
                                 }
                             } key={round.id} >
@@ -65,6 +65,7 @@ function Game({ match }) {
                                             answer1 = '⌛';
                                         let answer2;
                                         let ans2 = question.answerID_2;
+                                        console.log(question)
                                         if (ans2)
                                             answer2 = question.question.answers.find((ans) => ans.id === ans2).isCorrect ? '✅' : '❌';
                                         else
@@ -88,7 +89,8 @@ function Game({ match }) {
                             </table>
                         </div>
                     )
-                })}
+                })
+                }
                 {
                     <Link to={`/game/${game.id}/play`}><button>Play</button></Link>
                 }

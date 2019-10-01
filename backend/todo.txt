@@ -35,8 +35,8 @@ Proposal Todo Frontend:
 	- home/zurück button in "Spieldetail-Fenster"
 	- refresh Button in Hauptmenü
 	- zurückbutton in "loading" Fenster -> "Spieldetail-Fenster" nicht wieder hauptmenü
-	- show round after answering questions
-	- show opponent anwswers after both answering questions
+	- show round after answering questions (done)
+	- show opponent anwswers after both answering questions (done - no longer showing answers, only if they were correct, like quizduell)
 	- "Spieldetail-Fenster" Playbutton nur anzeien wenn ready?
 	- Questionindex 1,2,3 not 0,1,2 (start counting by 1 instead of 0 (done)
 	- show categories per round in "Spieldetail-Fenster" (done)
