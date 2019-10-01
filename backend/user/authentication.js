@@ -23,6 +23,9 @@ module.exports = {
 }
 
 async function queryGetUser(token){
+    if(!token){
+        return null;
+    }
     const user = await maria.query('SELECT * FROM users WHERE token = ?', [token]);
     var dt = new Date();
     if(user.length === 0){

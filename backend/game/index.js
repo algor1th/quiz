@@ -8,6 +8,8 @@ require('./games/games')(app);
 require('./games/rounds')(app);
 require('./games/categories')(app);
 require('./authenticationAPI')(app);
+require('./ping')(app);
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listen on port ${port}...`));
