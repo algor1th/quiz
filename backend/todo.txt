@@ -1,5 +1,5 @@
 Todo Backend:		
-	- timeout tokens
+	- check gamebreaking bugg, both timeout round 3
 	
 Todo Frontend:
 	Spieleübersicht über speziefisches Spiel (+Punkte)
@@ -20,33 +20,38 @@ Todo Doku:
 
 
 Proposal Todo Frontend:
-	- open game "Game against "ACTIVE" -> "Waiting for opponent" oder ähnlich (done)
-	- "loading" -> waiting to be ready (done)
-	- "loading" -> refresh button (done)
-	- corrcet icons for "is correct" in round details (done)
-	- nach dem beantworten zu "Spieldetail-Fenster" nicht Hauptmenü (done)
-	- "Start game" Button updated Seite nicht (done)
+	Checked:
+		- open game "Game against "ACTIVE" -> "Waiting for opponent" oder ähnlich (done)
+		- "loading" -> waiting to be ready (done)
+		- "loading" -> refresh button (done)
+		- corrcet icons for "is correct" in round details (done)
+		- nach dem beantworten zu "Spieldetail-Fenster" nicht Hauptmenü (done)
+		- "Start game" Button updated Seite nicht (done)
+		- Playername im Menü statt ID (done)
+		- Playername in "Spieldetail-Fenster" statt ID (done)
+		- Questionindex 1,2,3 not 0,1,2 (start counting by 1 instead of 0 (done)
+		- show categories per round in "Spieldetail-Fenster" (done)
+		- show round after answering questions (done)
+		- Antwortmöglichkeiten nicht symetrisch angeordnet (oben links hat einen abstand zum weißen rand, oben rechts nicht) (done)
 
-	- token bleibt gespeichert
-	- LoginFeld für Token 
-	- Playername im Menü statt ID (done)
-	- Playername in "Spieldetail-Fenster" statt ID (done)
-	- Gegnername statt SpielID in "Spieldetail-Fenster"
-	- home/zurück button in "Spieldetail-Fenster"
-	- refresh Button in Hauptmenü
-	- zurückbutton in "loading" Fenster -> "Spieldetail-Fenster" nicht wieder hauptmenü
-	- show round after answering questions (done)
-	- show opponent anwswers after both answering questions (done - no longer showing answers, only if they were correct, like quizduell)
-	- "Spieldetail-Fenster" Playbutton nur anzeien wenn ready?
-	- Questionindex 1,2,3 not 0,1,2 (start counting by 1 instead of 0 (done)
-	- show categories per round in "Spieldetail-Fenster" (done)
-	- Antwortmöglichkeiten nicht symetrisch angeordnet (oben links hat einen abstand zum weißen rand, oben rechts nicht) (done)
-	- show if answer was correct / show correct answer
-	- time indicator
-	- history to show games that are over
-	- in der Gameübersicht "Round 1" "Round 2"... instead of round IDs (done (category names))
-	- zurückbutton beim scoreboard
-	- alle fehler werden kurz rot eingeblendet
-	- fix buggy "Play against" -> wrong player is shown. Always playerID_1?
-	- crash bei Overtime -> Zeige overtime an wenn answerID = 0
-	- send round when query question?
+	Unchecked:
+		
+
+	Open:
+		- "Spieldetail-Fenster" Playbutton nur anzeien wenn ready? Show unclickable "waiting button" or something similar
+		- show if answer was correct / show correct answer (eg green/red highlighting like quizduel for fixed time, eg 2 seconds)
+		- time indicator
+		- history to show games that are over
+		- alle userfehler werden kurz rot eingeblendet (eg if you have already an opened game and try to create a new one)
+		- send round when query question?
+
+	New:
+		- reask for login if wrong ID (eg. token) is entered
+		- Game against loading (missing opponent name)
+		- waiting for player do not update automatically (Update mainpage automatically?)
+		- round overview show questions and answers not just icons 
+		- show new round after played yourself, not when its created!
+		- waiting for turn, Backbutton instead of "start screen". Button in same design instead of link
+		- show roundnumber (1,2,3,4,5,6) bevore category name in game overview (eg "1: Authentication")
+		- make round in gameoverview smaller (icons smaller)
+		- home/scoreboard links in white color instead of blue? (fit better to design?)
