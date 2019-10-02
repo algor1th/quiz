@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 function Startpage() {
     const [games, setGames] = useState([]);
-    const [opponents, setOpponents] = useState({});
+    const [opponents, setOpponents] = useState([]);
     const loadGames = () => {
         fetch('/api/games/current', {
             headers: new Headers({
@@ -18,7 +18,28 @@ function Startpage() {
             });
     }
     useEffect(loadGames, [])
+    console.log(opponents)
+    const getName = (opponentID) => {
+        let o = opponents.find((opponent) => opponent.id === opponentID);
+        console.log(o)
+        if (o && o.name) {
+            return o.name;
+        } else {
+            fetch(`/api/users/${opponentID}`, {
+                headers: new Headers({
+                    'authentication': window.user.token
+                })
+            })
+                .then((opponent) => opponent.json())
+                .then(((opponent) => {
+                    let tmp = opponents;
+                    tmp.push(opponent);
+                    setOpponents(tmp);
+                }))
 
+            return 'loading';
+        }
+    }
     function newGame(e) {
         e.preventDefault();
         fetch(
@@ -39,7 +60,7 @@ function Startpage() {
                 {/* <Link to='/scoreboard'><button>Scoreboard</button></Link> */}
                 <button onClick={newGame}>Start game</button>
             </div>
-            <div className='choose-category'>
+            <div>
                 <h2>active games</h2>
                 {games.map((game) => {
                     if (!game.userID_2) {
@@ -53,7 +74,7 @@ function Startpage() {
                     return (
                         <Link to={`/game/${game.id}`} key={game.id}>
                             <button>
-                                Game against {opponent} <b>{game.isFinished ? "DONE" : "ACTIVE"}</b>
+                                Game against {getName(opponent)}
                             </button>
                         </Link>
                     )

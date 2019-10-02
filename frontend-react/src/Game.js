@@ -47,6 +47,7 @@ function Game({ match }) {
                                     border: 'none',
                                     backgroundColor: 'white',
                                     width: '100%',
+                                    color: 'black'
                                 }
                             } key={round.id} >
                                 <thead>
