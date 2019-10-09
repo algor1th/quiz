@@ -208,13 +208,14 @@ async function handleAnswer(req, res){
                     if(inTime){
                         await maria.query('UPDATE rounds SET answerID_1_'+i+' = ? WHERE id = ?', [req.body.answerID, req.params.id]);
                     }else{
-                        await maria.query('UPDATE rounds SET answerID_1_'+i+' = ? WHERE id = ?', [0, req.params.id]);
+                        await maria.query('UPDATE rounds SET answerID_1_'+i+' = ? WHERE id = ?', [-1, req.params.id]);
                     }
                     var updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
                     updatedRound = updatedRound[0];
 
                     var serializedRound = await serializeRound(updatedRound);
 
+                    console.log(updatedRound['answerID_1_3']+"  "+updatedRound['answerID_2_3']);
                     if(updatedRound['answerID_1_3'] !== null && updatedRound['answerID_2_3'] !== null){
                         var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[game["id"]]);
                         questionTime.finishRound(updatedRound['id']);
@@ -250,7 +251,7 @@ async function handleAnswer(req, res){
                         if(inTime){
                             await maria.query('UPDATE rounds SET answerID_2_'+i+' = ? WHERE id = ?', [req.body.answerID, req.params.id]);
                         }else{
-                            await maria.query('UPDATE rounds SET answerID_2_'+i+' = ? WHERE id = ?', [0, req.params.id]);
+                            await maria.query('UPDATE rounds SET answerID_2_'+i+' = ? WHERE id = ?', [-1, req.params.id]);
                         }
                         
                         var updatedRound = await maria.query('SELECT * FROM rounds WHERE id = ?', [req.params.id]);
@@ -372,12 +373,14 @@ async function doScoring(rounds, game, userToken){
 
     for(var i=0; i<rounds.length; i++){
          for(var j=1; j<=3; j++){
-             var answer = (await maria.query('SELECT * FROM answers WHERE id = ?',[rounds[i]["answerID_1_"+j]]))[0];
-             if(answer["isCorrect"]===1)
-                 correct_1++;
-             answer = (await maria.query('SELECT * FROM answers WHERE id = ?',[rounds[i]["answerID_2_"+j]]))[0];
-             if(answer["isCorrect"]===1)
-                 correct_2++;
+             var answers = (await maria.query('SELECT * FROM answers WHERE id = ?',[rounds[i]["answerID_1_"+j]]));
+             if(answers.length>0)
+                 if(answers[0]["isCorrect"]===1)
+                     correct_1++;
+             answers = (await maria.query('SELECT * FROM answers WHERE id = ?',[rounds[i]["answerID_2_"+j]]));
+             if(answers.length>0)
+                 if(answers[0]["isCorrect"]===1)
+                     correct_2++;
          }
     }
 

@@ -60,16 +60,25 @@ function Game({ match }) {
                                     {round.questions.map((question) => {
                                         let answer1;
                                         const ans1 = question.answerID_1;
-                                        if (ans1)
-                                            answer1 = question.question.answers.find((ans) => ans.id === ans1).isCorrect ? '✅' : '❌';
+                                        if (ans1){
+                                            if(ans1=="-1"){
+                                                answer1 = '❌';
+                                            }else{
+                                                answer1 = question.question.answers.find((ans) => ans.id === ans1).isCorrect ? '✅' : '❌';
+                                            }
+                                        }
                                         else
                                             answer1 = '⌛';
                                         let answer2;
                                         let ans2 = question.answerID_2;
                                         console.log(question)
-                                        if (ans2)
-                                            answer2 = question.question.answers.find((ans) => ans.id === ans2).isCorrect ? '✅' : '❌';
-                                        else
+                                        if (ans2){
+                                            if(ans2=="-1"){
+                                                answer2 = '❌';
+                                            }else{
+                                                answer2 = question.question.answers.find((ans) => ans.id === ans2).isCorrect ? '✅' : '❌';
+                                            }
+                                        }else
                                             answer2 = '⌛'
                                         return (
 

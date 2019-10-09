@@ -9,16 +9,6 @@ Todo Frontend:
 	Richtige/falsche Antworten & Cooldownbalken
 
 
-
-
-
-Todo Doku:
-	Was kann das ding? ( ,Features, matchmaking, proficiency, scoring...)
-	Doku struktur des projects
-	Technische Teil, backend doku
-	Wo und wie ändere ich die fehlenden Sachen (Scoring, matchmaking, authentication, "admin interface")
-
-
 Proposal Todo Frontend:
 	Checked:
 		- open game "Game against "ACTIVE" -> "Waiting for opponent" oder ähnlich (done)
@@ -44,6 +34,7 @@ Proposal Todo Frontend:
 		- history to show games that are over
 		- alle userfehler werden kurz rot eingeblendet (eg if you have already an opened game and try to create a new one)
 		- send round when query question?
+		- randomize position of answers in question
 		
 	New:
 		- reask for login if wrong ID (eg. token) is entered
@@ -57,3 +48,23 @@ Proposal Todo Frontend:
 		- home/scoreboard links in white color instead of blue? (fit better to design?)
 		- scoreboard cant challenge yourself
 		- scoreboard make all names, numbers and challenge buttons in rows (like a table) with fixed offset
+
+
+
+
+
+
+
+Struktur Doku:
+	1: Deckblatt Gamification Cybersicherheitsprojekt
+	2: Inhaltsübersicht
+	3: Einleitung (Zielgruppe, Usecade, Grobe Funktionen der anwendung)
+	4: Technische Übersicht (Serverstruktur, Backend, Frontend)
+	5: Frontend (Verwendete Technologien, Implementierdetails, Offene Punkte -> Warum offen, wo und wie weiterentwickeln?)
+	6: Backend (Verwendete Technologien, Serverstruktur und Datenbank, Features, Ablauf und Struktur eines Spiels, Implementierdetails, Offene Punkte -> Warum offen, wo und wie weiterentwickeln?)
+	7. Docu verwendbare Pfade Backend
+	8. Admin UI (Funktionsumfang im Bezug auf die Pfad, verwendete Technologien, Weiterentwicklung)
+
+
+	Was kann das ding? ( ,Features, matchmaking, proficiency, scoring...)
+		Wo und wie ändere ich die fehlenden Sachen (Scoring, matchmaking, authentication, "admin interface")
