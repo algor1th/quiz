@@ -26,13 +26,19 @@
     .nav > span {
       margin: 10px;
     }
-    .nav > a {
+    a {
       color: white;
     }
-    .nav > a:visited {
+    a:visited {
       color: white;
     }
-
+  .correct {
+    background-color: greenyellow !important;
+  }
+  .incorrect {
+    color: white;
+    background-color: red !important;
+  }
     .question {
       /* background-color: white; */
       margin: 0 auto;

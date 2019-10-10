@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 function Question(props) {
   const id = props.question.questionID;
   const [question, setQuestion] = useState();
-  console.log(props.qId)
+  const [answered, setAnswered] = useState(false);
   const loadQuestion = () => {
     fetch(`/api/questions/${id}?containAnswers=true`, {
       headers: new Headers({
@@ -16,8 +16,8 @@ function Question(props) {
       .then((question) => question.json())
       .then((question) => setQuestion(question));
   }
+  console.log(question)
   useEffect(loadQuestion, [id])
-  console.log(question);
   if (question) {
     return (
       <div className="question">
@@ -25,7 +25,7 @@ function Question(props) {
           {question[0].text}
         </span>
         <div className="answer-buttons">
-          {question[1].map((answer) => <button className="answer-button" key={answer.id} onClick={() => {
+          {question[1].map((answer) => <button className={"answer-button " + (answered === true ? (answer.isCorrect == 1 ? 'correct' : 'incorrect') : '')} key={answer.id} onClick={() => {
             const bdy = JSON.stringify({ "answerID": answer.id })
             fetch(`/api/rounds/${props.roundId}`, {
               headers: new Headers({
@@ -36,8 +36,8 @@ function Question(props) {
               body: bdy
             }).then((body) => body.json())
               .then((body) => {
-                console.log(body);
-                props.roundDone();
+                setAnswered(true);
+                setTimeout(() => { props.roundDone(); setAnswered(false) }, 2000);
               });
           }}>{answer.text}</button>)}
         </div>

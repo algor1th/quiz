@@ -60,10 +60,10 @@ function Game({ match }) {
                                     {round.questions.map((question) => {
                                         let answer1;
                                         const ans1 = question.answerID_1;
-                                        if (ans1){
-                                            if(ans1=="-1"){
+                                        if (ans1) {
+                                            if (ans1 == "-1") {
                                                 answer1 = '❌';
-                                            }else{
+                                            } else {
                                                 answer1 = question.question.answers.find((ans) => ans.id === ans1).isCorrect ? '✅' : '❌';
                                             }
                                         }
@@ -71,20 +71,19 @@ function Game({ match }) {
                                             answer1 = '⌛';
                                         let answer2;
                                         let ans2 = question.answerID_2;
-                                        console.log(question)
-                                        if (ans2){
-                                            if(ans2=="-1"){
+                                        if (ans2) {
+                                            if (ans2 == "-1") {
                                                 answer2 = '❌';
-                                            }else{
+                                            } else {
                                                 answer2 = question.question.answers.find((ans) => ans.id === ans2).isCorrect ? '✅' : '❌';
                                             }
-                                        }else
+                                        } else
                                             answer2 = '⌛'
                                         return (
 
                                             <tr style={{
                                                 margin: '100px',
-                                                fontSize: '5em'
+                                                fontSize: '5rem'
                                             }} key={question.question.id}>
                                                 <td>
                                                     {answer1}

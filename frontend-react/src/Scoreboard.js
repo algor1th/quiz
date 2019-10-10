@@ -30,20 +30,29 @@ function Scoreboard(props) {
     });
   }
   return (
-    <ol style={{
+    <table style={{
+      width: '100%',
       backgroundColor: 'white',
       color: '#211973',
       textAlign: 'left'
     }}>
-      {board.map((user) => <li>{user.name} ({user.score})<button style={
-        {
-          width: 'auto',
-          padding: '20px',
-          backgroundColor: '#211973',
-          color: 'white'
-        }
-      } onClick={() => challengePlayer(user.id)}>challenge</button></li>)}
-    </ol>
+      <thead style={{ fontWeight: 'bold' }}>
+        <td>Name</td>
+        <td>Score</td>
+      </thead>
+      {board.map((user) => <tr>
+        <td>{user.name}</td>
+        <td>{user.score}</td>
+        <td><button style={
+          {
+            width: 'auto',
+            padding: '20px',
+            backgroundColor: '#211973',
+            color: 'white'
+          }
+        } onClick={() => challengePlayer(user.id)}>challenge</button></td>
+      </tr>)}
+    </table>
   )
 
 }

@@ -23,8 +23,6 @@ function Round({ match }) {
       setcurrentround(currentround + 1);
     }
   }, [currentround, round]);
-  console.log(round)
-    ;
   function roundDone() {
     setcurrentround(currentround + 1)
   }
