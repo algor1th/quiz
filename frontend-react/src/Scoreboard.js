@@ -37,10 +37,12 @@ function Scoreboard(props) {
       textAlign: 'left'
     }}>
       <thead style={{ fontWeight: 'bold' }}>
+        <td>Place</td>
         <td>Name</td>
         <td>Score</td>
       </thead>
-      {board.map((user) => <tr>
+      {board.map((user, index) => <tr>
+        <td>{index + 1}</td>
         <td>{user.name}</td>
         <td>{user.score}</td>
         <td><button style={

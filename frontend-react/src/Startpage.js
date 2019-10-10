@@ -42,7 +42,7 @@ function Startpage() {
                 <h2>active games</h2>
                 {games.map((game) => {
                     if (!game.userID_2) {
-                        return (<Link to={`/game/${game.id}`} key={game.id}>
+                        return (<Link key={game.id}>
                             <button>
                                 waiting for player
                             </button>

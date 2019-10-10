@@ -8,7 +8,7 @@ function Question(props) {
   const [question, setQuestion] = useState();
   const [answered, setAnswered] = useState(false);
   const loadQuestion = () => {
-    fetch(`/api/questions/${id}?containAnswers=true`, {
+    fetch(`/api/questions/${id}?containAnswers=true&forRound=${props.roundId}`, {
       headers: new Headers({
         'authentication': window.user.token
       })
