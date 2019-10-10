@@ -48,7 +48,8 @@ Proposal Todo Frontend:
 		- home/scoreboard links in white color instead of blue? (fit better to design?)
 		- scoreboard cant challenge yourself
 		- scoreboard make all names, numbers and challenge buttons in rows (like a table) with fixed offset
-
+		- cant click on waiting for player
+		- scoreboard number in front of rank
 
 
 
