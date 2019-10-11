@@ -58,7 +58,7 @@ GameServer:
 (1.2&3)	GET /api/categories/[ID]			// kategoire mit ID {"id","name", "requiredLevel"} 	<- Jedes valide token
 (1.2&3)	POST /api/categories {name, requiredLevel}	// kategorieuser hinzu, ID wird vergeben<- Adminuser, falls ADMINUSER==0 -> Jeder
 (1.2&3)	PUT /api/categories/[ID] {name, requiredLevel}	// ändert Werte für eine kategorie	<- Adminuser falls ADMINUSER==0 -> Jeder
-(1.2&3)	DELETE /api/users/[ID]				// löscht eine kategorie		<- Adminuser falls ADMINUSER==0 -> Jeder
+(1.2&3)	DELETE /api/categories/[ID]				// löscht eine kategorie		<- Adminuser falls ADMINUSER==0 -> Jeder
 
 
 

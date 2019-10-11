@@ -102,7 +102,7 @@ module.exports = function(app){
         }
         
         const deletedCategory = await maria.query('SELECT * FROM categories WHERE id = ?', [req.params.id]);
-        if(deletedQuestion.length === 0){
+        if(deletedCategory.length === 0){
             res.status(404).send(`category with id ${req.params.id} not found`);
             return;
         }
