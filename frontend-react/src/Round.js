@@ -62,7 +62,6 @@ function Round({ match }) {
     <>
       <h1>Waiting for turn</h1>
       <button onClick={getGame}>refresh</button>
-      <Link to='/'>Start screen</Link>
     </>);
 
 }

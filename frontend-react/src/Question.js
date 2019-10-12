@@ -3,6 +3,8 @@ import './App.css';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+import shuffle from 'shuffle-array'
+
 function Question(props) {
   const id = props.question.questionID;
   const [question, setQuestion] = useState();
@@ -25,7 +27,7 @@ function Question(props) {
           {question[0].text}
         </span>
         <div className="answer-buttons">
-          {question[1].map((answer) => <button className={"answer-button " + (answered === true ? (answer.isCorrect == 1 ? 'correct' : 'incorrect') : '')} key={answer.id} onClick={() => {
+          {shuffle(question[1]).map((answer) => <button className={"answer-button " + (answered === true ? (answer.isCorrect == 1 ? 'correct' : 'incorrect') : '')} key={answer.id} onClick={() => {
             const bdy = JSON.stringify({ "answerID": answer.id })
             fetch(`/api/rounds/${props.roundId}`, {
               headers: new Headers({
