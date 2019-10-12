@@ -4,7 +4,7 @@ const pool = mariadb.createPool({
      user: process.env.DBUSER, 
      password: process.env.DBPASSWORD,
      database: process.env.DBNAME,
-     connectionLimit: 5,
+     connectionLimit: 50,
      multipleStatements: true
 });
 
