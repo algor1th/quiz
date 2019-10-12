@@ -27,7 +27,7 @@ function Question(props) {
     if (answered) {
       setTimeout(() => {
         setAnswered(false);
-        setTime(10);
+        setTime(question[0].answerTime);
         props.roundDone()
       }, 2000);
     }
@@ -46,7 +46,7 @@ function Question(props) {
           setAnswered(true);
         });
     } else if (!time) {
-      setTime(10);
+      setTime(question[0].answerTime);
     } else if (!answered) {
       setTime(time - 1);
     }
