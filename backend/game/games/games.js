@@ -28,6 +28,24 @@ module.exports = function(app){
         res.status(404).send("No opened games found")
     });
 
+    //get a opened game
+    app.get('/api/games/history', async (req, res) => {
+        const token = req.get("authentication");
+        var isAuthenticated = await authentication.isAuthenticated(token);
+        if(!isAuthenticated){
+            res.status(401).send("You did not provide an authorized token with your request")
+            return;
+        }
+        var userID = await authentication.getUserID(token);
+
+        var openedGames = await maria.query('SELECT * FROM games WHERE (userID_1 = ? OR userID_2 = ?) AND isFinished = true',[userID, userID]);
+        if(openedGames.length !== 0){
+            res.send(await fixSerializeGameArray(openedGames, token));    
+            return;
+        }
+        res.send([]);
+    });
+
     //create new game
     app.post('/api/games/current', async (req, res) => {
         const token = req.get("authentication");

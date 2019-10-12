@@ -30,11 +30,11 @@ Proposal Todo Frontend:
 		- scoreboard make all names, numbers and challenge buttons in rows (like a table) with fixed offset
 		- home/scoreboard links in white color instead of blue? (fit better to design?)
 		- Game against loading (missing opponent name)
+		- randomize position of answers in question
+		- time indicator
 
 	Unchecked:
 		- send round when query question?
-		- randomize position of answers in question
-		- time indicator
 
 	Open:
 		- history to show games that are over
