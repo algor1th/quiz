@@ -29,6 +29,10 @@ function Scoreboard(props) {
       props.history.push('/')
     });
   }
+  const s = {
+    backgroundColor: "#ff7a00",
+    color: "white"
+  };
   return (
     <table style={{
       width: '100%',
@@ -45,14 +49,11 @@ function Scoreboard(props) {
         <td>{index + 1}</td>
         <td>{user.name}</td>
         <td>{user.score}</td>
-        <td><button style={
-          {
-            width: 'auto',
-            padding: '20px',
-            backgroundColor: '#211973',
-            color: 'white'
+        <td>
+          {(user.id !== window.user.id) ?
+            <button style={s} onClick={() => challengePlayer(user.id)}>challenge</button> : <button style={s}>you</button>
           }
-        } onClick={() => challengePlayer(user.id)}>challenge</button></td>
+        </td>
       </tr>)}
     </table>
   )
