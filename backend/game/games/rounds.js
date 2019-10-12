@@ -199,7 +199,7 @@ async function handleAnswer(req, res){
                 if(openRound['answerID_1_'+i] === null){
                     const questions = await maria.query('SELECT * FROM answers WHERE id = ? AND questionID = ?', [req.body.answerID, openRound['questionID_'+i]]);
                     const question = (await maria.query('SELECT * FROM questions WHERE id = ?', [openRound['questionID_'+i]]))[0];
-                    if(questions.length === 0){
+                    if(questions.length === 0 && req.body.answerID != -1){
                         res.status(404).send(`invalid answer with id ${req.body.answerID} for question with id ${openRound['questionID_'+i]}`);
                         return;
                     }
@@ -241,7 +241,7 @@ async function handleAnswer(req, res){
                     if(openRound['answerID_2_'+i] === null){
                         const questions = await maria.query('SELECT * FROM answers WHERE id = ? AND questionID = ?', [req.body.answerID, openRound['questionID_'+i]]);
                         const question = (await maria.query('SELECT * FROM questions WHERE id = ?', [openRound['questionID_'+i]]))[0];
-                        if(questions.length === 0){
+                        if(questions.length === 0 && req.body.answerID != -1){
                             res.status(404).send(`invalid answer with id ${req.body.answerID} for question with id ${openRound['questionID_'+i]}`);
                             return;
                         }
