@@ -1,0 +1,2 @@
+\chapter{Deployment}
+The project is split into three components. One server for tracking user accounts, one for the game back-end and one for the front-end. The front-end expects the routes of both back-end server to be on the same domain as the front-end. This can be adjusted, with a complimentary same-origin-policy, or all servers can be put on the same origin via a reverse proxy, we recommend this solution. The back end routes are documented in backend/paths.txt. The front-ends paths can be found in the frontend-react/src/App.js. 
