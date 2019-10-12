@@ -39,14 +39,17 @@ function Game({ match }) {
     } else if (players[0] && players[1]) {
 
         const rounds = game["rounds"];
-        const round = rounds[rounds.length - 1];
+        let isMyTurn = true;
+        if(rounds.length > 0){
+            const round = rounds[rounds.length - 1];
 
-        const myAnswerID = game["userID_1"] === window.user.id ? "answerID_1" : "answerID_2";
+            const myAnswerID = game["userID_1"] === window.user.id ? "answerID_1" : "answerID_2";
 
-        const myTurn = game["userID_1"] === window.user.id ? 0 : 1;
-        const nextRoundIsMyTurn = (rounds.length % 2) === myTurn;
-        const isMyTurn = round['questions'][myAnswerID] === null || (round['questions']['answerID_1'] != null && round['questions']['answerID_2'] != null && nextRoundIsMyTurn);
-
+            const myTurn = game["userID_1"] === window.user.id ? 1 : 0;
+            const nextRoundIsMyTurn = (rounds.length % 2) === myTurn;
+            isMyTurn = !round['questions'][2][myAnswerID] || (round['questions'][2]['answerID_1'] && round['questions'][2]['answerID_2'] && nextRoundIsMyTurn);
+            console.log(round['questions']);
+        }
 
         return (
             <>
