@@ -1,15 +1,35 @@
 import React from 'react';
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 import shuffle from 'shuffle-array'
+
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
 
 function Question(props) {
   const id = props.question.questionID;
   const [question, setQuestion] = useState();
   const [answered, setAnswered] = useState(false);
-  const [time, setTime] = useState(10);
+  const [time, setTime] = useState();
   const loadQuestion = () => {
     fetch(`/api/questions/${id}?containAnswers=true&forRound=${props.roundId}`, {
       headers: new Headers({
@@ -31,25 +51,26 @@ function Question(props) {
       }, 2000);
     }
   }, [answered, props])
-  useEffect(() => {
-    setTimeout(() => {
-      if (time === 0) {
-        fetch(`/api/rounds/${props.roundId}`, {
-          headers: new Headers({
-            'Content-Type': 'application/json',
-            'authentication': window.user.token
-          }),
-          method: 'PUT',
-          body: JSON.stringify({ 'answerID': -1 })
-        })
-          .then((body) => {
-            setAnswered(true);
-          });
-      } else {
-        setTime(time - 1);
-      }
-    }, 1000);
-  }, [time, props.roundId])
+  useInterval(() => {
+
+    if (time === 0) {
+      fetch(`/api/rounds/${props.roundId}`, {
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          'authentication': window.user.token
+        }),
+        method: 'PUT',
+        body: JSON.stringify({ 'answerID': -1 })
+      })
+        .then((body) => {
+          setAnswered(true);
+        });
+    } else if (!time) {
+      setTime(10);
+    } else {
+      setTime(time - 1);
+    }
+  }, 1000)
   console.log(question)
   useEffect(loadQuestion, [id])
   if (question) {
