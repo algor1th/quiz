@@ -14,7 +14,7 @@ function Scoreboard(props) {
       .then((question) => question.json())
       .then((question) => setBoard(question));
   };
-  useInterval(loadUsers, 1000)
+  useEffect(loadUsers, [])
   console.log(board);
   function challengePlayer(playerID) {
     fetch(

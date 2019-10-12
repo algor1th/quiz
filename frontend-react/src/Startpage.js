@@ -18,7 +18,7 @@ function Startpage() {
                 console.log(game)
             });
     }
-    useInterval(loadGames, 1000)
+    useEffect(loadGames, [])
     function newGame(e) {
         e.preventDefault();
         fetch(
