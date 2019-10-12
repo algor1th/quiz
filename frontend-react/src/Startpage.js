@@ -19,6 +19,7 @@ function Startpage() {
             });
     }
     useEffect(loadGames, [])
+    useInterval(loadGames, 1000)
     function newGame(e) {
         e.preventDefault();
         fetch(

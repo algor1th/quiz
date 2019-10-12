@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import useInterval from './use-interval';
 
 function History() {
     const [games, setGames] = useState([]);
@@ -17,7 +18,8 @@ function History() {
                 console.log(game)
             });
     }
-    useEffect(loadGames, [])
+    useEffect(loadGames, []);
+    useInterval(loadGames, 1000);
     return (
         <>
             <h1>Quiz</h1>

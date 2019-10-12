@@ -15,7 +15,7 @@ function Scoreboard(props) {
       .then((question) => setBoard(question));
   };
   useEffect(loadUsers, [])
-  console.log(board);
+  useInterval(loadUsers, 1000)
   function challengePlayer(playerID) {
     fetch(
       `/api/games/current?matchWith=${playerID}`,
