@@ -34,17 +34,20 @@ function Question(props) {
   }, [answered, props])
   useInterval(() => {
     if (time === 0) {
-      fetch(`/api/rounds/${props.roundId}`, {
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          'authentication': window.user.token
-        }),
-        method: 'PUT',
-        body: JSON.stringify({ 'answerID': -1 })
-      })
-        .then((body) => {
-          setAnswered(true);
-        });
+      setAnswered(true)
+      if (!answered) {
+        fetch(`/api/rounds/${props.roundId}`, {
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            'authentication': window.user.token
+          }),
+          method: 'PUT',
+          body: JSON.stringify({ 'answerID': -1 })
+        })
+          .then((body) => {
+            setAnswered(true);
+          });
+      }
     } else if (!time) {
       setTime(question[0].answerTime);
     } else if (!answered) {
