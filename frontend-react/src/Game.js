@@ -48,7 +48,6 @@ function Game({ match }) {
             const myTurn = game["userID_1"] === window.user.id ? 1 : 0;
             const nextRoundIsMyTurn = (rounds.length % 2) === myTurn;
             isMyTurn = !round['questions'][2][myAnswerID] || (round['questions'][2]['answerID_1'] && round['questions'][2]['answerID_2'] && nextRoundIsMyTurn);
-            console.log(round['questions']);
         }
 
         return (
