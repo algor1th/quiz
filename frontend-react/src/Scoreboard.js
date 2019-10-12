@@ -1,10 +1,11 @@
 import React from 'react';
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import useInterval from './use-interval'
 
 function Scoreboard(props) {
   const [board, setBoard] = useState([]);
-  useEffect(() => {
+  useInterval(() => {
     fetch(`/api/users?sortBy=score`, {
       headers: new Headers({
         'authentication': window.user.token
@@ -12,7 +13,7 @@ function Scoreboard(props) {
     })
       .then((question) => question.json())
       .then((question) => setBoard(question));
-  })
+  }, 1000)
   console.log(board);
   function challengePlayer(playerID) {
     fetch(

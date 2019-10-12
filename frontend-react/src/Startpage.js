@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import useInterval from './use-interval'
 
 function Startpage() {
     const [games, setGames] = useState([]);
@@ -17,14 +18,7 @@ function Startpage() {
                 console.log(game)
             });
     }
-    function refresh(time) {
-        loadGames();
-        setTimeout(() => {
-            loadGames();
-        }, time);
-    }
-    refresh(5000)
-    useEffect(loadGames, [])
+    useInterval(loadGames, 1000)
     function newGame(e) {
         e.preventDefault();
         fetch(
