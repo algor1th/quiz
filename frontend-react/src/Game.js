@@ -100,7 +100,7 @@ function Game({ match }) {
                     )
                 })
                 }
-                {
+                {!game.isFinished &&
                     <Link to={`/game/${game.id}/play`}><button>Play</button></Link>
                 }
             </>

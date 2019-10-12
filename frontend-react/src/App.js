@@ -7,6 +7,7 @@ import ChooseCategory from './ChooseCategory';
 import Startpage from './Startpage';
 import Game from './Game'
 import Scoreboard from './Scoreboard';
+import History from './history';
 
 function App() {
   const [user, setUser] = useState();
@@ -31,6 +32,7 @@ function App() {
         <div className="nav">
           <span><Link to="/">Home</Link></span>
           <span><Link to="/scoreboard">scoreboard</Link></span>
+          <span><Link to='/history'>game history</Link></span>
           <span>Player {window.user.name}</span>
         </div>
         <div className="App">
@@ -41,6 +43,7 @@ function App() {
             <Route path='/game/:gId/play' component={Round}></Route>
             <Route path='/game/:gId' component={Game}></Route>
             <Route path='/scoreboard' component={Scoreboard}></Route>
+            <Route path='/history' component={History}></Route>
           </Switch>
         </div>
       </Router>
