@@ -52,7 +52,6 @@ function Question(props) {
     }
   }, [answered, props])
   useInterval(() => {
-
     if (time === 0) {
       fetch(`/api/rounds/${props.roundId}`, {
         headers: new Headers({
@@ -67,7 +66,7 @@ function Question(props) {
         });
     } else if (!time) {
       setTime(10);
-    } else {
+    } else if (!answered) {
       setTime(time - 1);
     }
   }, 1000)
