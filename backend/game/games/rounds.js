@@ -215,7 +215,6 @@ async function handleAnswer(req, res){
 
                     var serializedRound = await serializeRound(updatedRound);
 
-                    console.log(updatedRound['answerID_1_3']+"  "+updatedRound['answerID_2_3']);
                     if(updatedRound['answerID_1_3'] !== null && updatedRound['answerID_2_3'] !== null){
                         var rounds = await maria.query('SELECT * FROM rounds WHERE gameID = ?',[game["id"]]);
                         questionTime.finishRound(updatedRound['id']);

@@ -193,10 +193,10 @@ async function serializeRound(round) {
 
 async function fixSerializeGame(game, casterToken){
 
-    game["userName_1"] = (await authentication.getUserByID(casterToken, game["userID_1"]))["name"];
+    game["userName_1"] = (await authentication.getUserByID(casterToken, Math.abs(game["userID_1"])))["name"];
 
     if(game["userID_2"]){
-        game["userName_2"] = (await authentication.getUserByID(casterToken, game["userID_2"]))["name"];
+        game["userName_2"] = (await authentication.getUserByID(casterToken, Math.abs(game["userID_2"])))["name"];
     }else{
         game["userName_2"] = null;
     }

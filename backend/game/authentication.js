@@ -110,7 +110,7 @@ module.exports = {
 function refreshToken(token){
     return new Promise(function (resolve, reject) {
         request(userServerURL + '/api/authentication/'+token, { json: true }, (err, res, body) => {
-            if(res.statusCode !== 401){
+            if(res && res.statusCode !== 401){
                 var newUser = {};
                 newUser["name"] = body.name;
                 newUser["score"] = body.score;
