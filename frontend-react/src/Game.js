@@ -34,6 +34,17 @@ function Game({ match }) {
     if (!game) {
         return <h1>Game not ready</h1>
     } else if (players[0] && players[1]) {
+
+        var rounds = game["rounds"];
+        var round = rounds[rounds.length-1];
+       
+        var myAnswerID  = game["userID_1"] === window.user.id ? "answerID_1":"answerID_2";
+
+        var myTurn =  game["userID_1"] === window.user.id ? 0:1;
+        var nextRoundIsMyTurn = (rounds.length%2) === myTurn;
+        var isMyTurn = round['questions'][myAnswerID]===null || ( round['questions']['answerID_1']!=null && round['questions']['answerID_2']!=null && nextRoundIsMyTurn);
+
+
         return (
             <>
                 <h1>Game Overview</h1>
@@ -100,7 +111,7 @@ function Game({ match }) {
                     )
                 })
                 }
-                {!game.isFinished &&
+                {!game.isFinished && isMyTurn
                     <Link to={`/game/${game.id}/play`}><button>Play</button></Link>
                 }
             </>
