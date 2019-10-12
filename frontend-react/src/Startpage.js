@@ -17,6 +17,13 @@ function Startpage() {
                 console.log(game)
             });
     }
+    function refresh(time) {
+        loadGames();
+        setTimeout(() => {
+            loadGames();
+        }, time);
+    }
+    refresh(5000)
     useEffect(loadGames, [])
     function newGame(e) {
         e.preventDefault();
