@@ -74,6 +74,7 @@ module.exports = function(app){
     //add question
     app.post('/api/questions', async (req, res) => {
       
+
         const token = req.get("authentication");
         var isAuthorized = await authentication.isAdmin(token);
         if(!isAuthorized){
@@ -81,15 +82,18 @@ module.exports = function(app){
             return;
         }
 
+
         const sanitizeResult = joi.validate(req.body, schemaQuestion);
         if(sanitizeResult.error){
             res.status(400).send(sanitizeResult.error.details[0].message);
             return;
         }
 
-        const firstQuery = await maria.query('INSERT INTO questions (text, categoryID, requiredLevel, score, answerTime) VALUES (?, ?, ?, ?, ?); SELECT LAST_INSERT_ID();', [req.body.text, req.body.categoryID, req.body.requiredLevel, req.body.categoryID.score, req.body.answerTime]);
+
+        const firstQuery = await maria.query('INSERT INTO questions (text, categoryID, requiredLevel, score, answerTime) VALUES (?, ?, ?, ?, ?); SELECT LAST_INSERT_ID();', [req.body.text, req.body.categoryID, req.body.requiredLevel, req.body.score, req.body.answerTime]);
         const newQuestion = await maria.query('SELECT * FROM questions WHERE id = ?', firstQuery[1][0]["LAST_INSERT_ID()"]);
         res.send(newQuestion[0]);  
+
     });
 
     //update question
