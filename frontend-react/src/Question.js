@@ -34,17 +34,7 @@ function Question(props) {
   }, [answered, props])
   useInterval(() => {
     if (time === 0) {
-      fetch(`/api/rounds/${props.roundId}`, {
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          'authentication': window.user.token
-        }),
-        method: 'PUT',
-        body: JSON.stringify({ 'answerID': -1 })
-      })
-        .then((body) => {
-          setAnswered(true);
-        });
+      setAnswered(true);
     } else if (!time) {
       setTime(question[0].answerTime);
     } else if (!answered) {
@@ -62,18 +52,20 @@ function Question(props) {
         <p>you have {time} seconds left to answer</p>
         <div className="answer-buttons">
           {question[1].map((answer) => <button className={"answer-button " + (answered === true ? (answer.isCorrect == 1 ? 'correct' : 'incorrect') : '')} key={answer.id} onClick={() => {
-            const bdy = JSON.stringify({ "answerID": answer.id })
-            fetch(`/api/rounds/${props.roundId}`, {
-              headers: new Headers({
-                'Content-Type': 'application/json',
-                'authentication': window.user.token
-              }),
-              method: 'PUT',
-              body: bdy
-            }).then((body) => body.json())
-              .then((body) => {
-                setAnswered(true);
-              });
+            if (!answered) {
+              const bdy = JSON.stringify({ "answerID": answer.id })
+              fetch(`/api/rounds/${props.roundId}`, {
+                headers: new Headers({
+                  'Content-Type': 'application/json',
+                  'authentication': window.user.token
+                }),
+                method: 'PUT',
+                body: bdy
+              }).then((body) => body.json())
+                .then((body) => {
+                  setAnswered(true);
+                });
+            }
           }}>{answer.text}</button>)}
         </div>
 
