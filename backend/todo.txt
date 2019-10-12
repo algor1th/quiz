@@ -34,15 +34,14 @@ Proposal Todo Frontend:
 	Unchecked:
 		- send round when query question?
 		- randomize position of answers in question
+		- time indicator
 
 	Open:
-		- time indicator
 		- history to show games that are over
 		- Spiel erstellen, wenn schon existiert -> alert mit Fehler
 		- waiting for player do not update automatically (Update mainpage automatically?)
 		- scoreboard cant challenge yourself
 		- "Spieldetail-Fenster" Playbutton nur anzeien wenn ready? Show unclickable "waiting button" or something similar
-		 
 		- show new round after played yourself, not when its created!
 		- round overview show questions and answers not just icons
 	
