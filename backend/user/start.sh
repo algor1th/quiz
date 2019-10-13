@@ -5,4 +5,5 @@ export DBUSER=cysecproj
 export DBHOST=localhost
 export DBPASSWORD=testpassword
 export ADMINUSER=1
+export TOKENDECAYTIME=604800000
 node index.js
