@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import shuffle from 'shuffle-array'
 import useInterval from './use-interval'
+import Progressbar from './progressbar';
 
 function Question(props) {
   const id = props.question.questionID;
@@ -62,7 +63,8 @@ function Question(props) {
         <span className="question-medium">
           {question[0].text}
         </span>
-        <p>you have {time} seconds left to answer</p>
+        <Progressbar fraction={time / question[0].answerTime}></Progressbar>
+
         <div className="answer-buttons">
           {question[1].map((answer) => <button className={"answer-button " + (answered === true ? (answer.isCorrect == 1 ? 'correct' : 'incorrect') : '')} key={answer.id} onClick={() => {
             const bdy = JSON.stringify({ "answerID": answer.id })
@@ -80,7 +82,7 @@ function Question(props) {
           }}>{answer.text}</button>)}
         </div>
 
-      </div>
+      </div >
     );
   } else return (
     <>
