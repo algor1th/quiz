@@ -1,23 +1,23 @@
 \chapter{Back-end structure}
 \section {Files and Folders}
-The backend is devided in user and gameserver. Both servers have a similar structure.
-In the backend folder you find some documentation, which could be usefull to understand the code, but is not the official updated documentation for the project.  Also there is the folder of the game and userserver. In the folder the follwing scripts are located:\\
+The back-end is divided in user and gameserver. Both servers have a similar structure.
+In the back-end folder you find some documentation, which could be useful to understand the code, but is not the official updated documentation for the project.  Also there is the folder of the game and userserver. In the folder the following scripts are located:\\
 - index.js: It defines the staring behaviour and which other .js files are used for paths.\\
 - maria.js: Provides functionality to other scripts, to interact with the Maria DB.\\
 - authentication.js: Provides functionality to other scripts, to authenticate users.\\
-The other scripts provide paths that are used at administrative purpose. The scripts in the subfolders provide paths that are used by the frontend. All paths are documented in the next chapter, so we can scip this here.\\
+The other scripts provide paths that are used at administrative purpose. The scripts in the subfolders provide paths that are used by the front-end. All paths are documented in the next chapter, so we can skip this here.\\
 
 \section {"Objects" and terminology}
-In this section we talk about which "objects" our backend works with. Usually this objects are stored in the corresponding database tables. The backend takes them, apply a received request and encoded them in dictionarys to send them to the frontend, which interprets and display them.\\
+In this section we talk about which "objects" our back-end works with. Usually this objects are stored in the corresponding database tables. The back-end takes them, apply a received request and encoded them in dictionaries to send them to the front-end, which interprets and display them.\\
 
 \subsection{Userserver}
 The userserver works only with users. 
-The authentication system is still missing an authentication method, because we agreed to let this open for later implementation. After authenticating with this method the user will receive a 180Bit cryptographic secure random token. With all later requests the user send this token in a header and the server will verify the token to authenticate and identify the user. The important properties of a user are explained in Section 5.4.
+The authentication system is still missing an authentication method, because we agreed to let this open for later implementation. After authenticating with this method the user will receive a 180Bit cryptographic secure random token. With all later requests the user send this token in a header and the server will verify the token to authenticate and identify the user. The important properties of a user are explained in Chapter 5.4.
 
 \subsection{Gameserver}
 The gameserver usually work with games. A game is created by a user and an other user can join the game. The matchmaking is also open for later implementation and can be implemented in the game.js file. 
 When playing the game rounds will be created. To create a round the creator of the round (alternating, beginning with user2) has to choose one of 3 random categories. After 6 rounds are played the game will be finished and closed. One round consists out of 3 random questions and each question can have a variable amount of answers. The answers can individually be wrong or correct. Also multiple and all answers could be correct.\\
-Its important that for each category there exists at least 3 questions and that there are at least 3 categories. Else the server will crash when trying to play, as we consider this not as a program error, but an error of the administrator. All important properties of the objects are explained in Section 5.4.
+Its important that for each category there exists at least 3 questions and that there are at least 3 categories. Else the server will crash when trying to play, as we consider this not as a program error, but an error of the administrator. All important properties of the objects are explained in Chapter 5.4.
 
 \newpage
 \section {Paths}
@@ -146,9 +146,9 @@ Only exception is the path /api/authentication which everybody can call without 
 
 
 \section {Admin interface}
-The admin interface is out of scope of the agreed scope. It is developed in Unity3D, as I (Andreas Hanuja) am very incorporated in Unity. Also for the admin interface a built solution, which you have to install, is more practicable then for the fron-tend user solution.\\
+The admin interface is out of scope of the agreed scope. It is developed in Unity3D, as I (Andreas Hanuja) am very incorporated in Unity. Also for the admin interface a built solution, which you have to install, is more practicable then for the front-end user solution.\\
 
-\subsection{Setup and generall usage}
+\subsection{Setup and general usage}
 On Windows you can just launch the included .exe file in the MBC\_Build folder. On Android you can install and launch the provided .apk file, if you have unknown sources enabled on your phone. \\
 After staring the application the first time, you have to configure the credentials. 
 Click on configure credentials and enter the admin token and the full server addresses, including ports. For local network eg. "http://192.168.0.42:3000". Then click "Save changes" to apply your settings. The indicators at the bottom left will show if a connection is possible.\\
@@ -177,7 +177,7 @@ A category consists out of a name and a level.\\
 A question consists out of a question text, an integer, which indicates how much points the question is worth. A level which affects who can play this question. A player can get this question if his playerLevel is $\leq$ the questionlevel and playerLevel $\leq$ categoryLevel. Also a question contains the time in seconds, which the user have to answer the question.\\
 The answers are attached to specific questions and can be either correct or wrong. They also contain a text which can be changed.
 
-\subsection{Further work}
+\subsection{Future work}
 In the admin UI currently the possibility to cleanup the database is missing. If you eg. delete a question without deleting its answers before, they stay in the database without getting used. You could edit them manually with the back-end paths to recover them, but a button which finds unused data and deletes it would be a cool idea. You can simply add it to the main menu, by instantiating the button prefab into the main Menu.\\
 Implementing the logic to find and remove the unused data will be not so easy, look in chapter 5.3.2 for details which paths can be used.\\
 
