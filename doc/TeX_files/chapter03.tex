@@ -1,0 +1,8 @@
+\chapter{Front-end structure}
+We created several components that manage the api calls for different parts of the application. They can be found in different routes, which are registered in App.js. The paths can be found in the frontend-react/src/App.js. \\
+Some design elements that apply globally are in index.css, while some more component specific design tags are set inside of the components.\\
+
+ The nav bar is found in App.js, the overview of a game is shown in Game.js. Playing a round is split up into two components. One component loads the list of questions (Round.js) while another is loading the questions and sending the answers (Question.js). When a question is answered the round is informed via a callback.\\
+ The start page (Startpage.js) presents the user a button to start matchmaking and a list of all ongoing games.\\
+ The score board (Scoreboard.js) shows a sorted view of all users, with buttons to challenge them to a match.\\
+ history.js displays all finished games.

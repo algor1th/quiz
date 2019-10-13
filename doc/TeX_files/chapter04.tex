@@ -1,0 +1,187 @@
+\chapter{Back-end structure}
+\section {Files and Folders}
+The backend is devided in user and gameserver. Both servers have a similar structure.
+In the backend folder you find some documentation, which could be usefull to understand the code, but is not the official updated documentation for the project.  Also there is the folder of the game and userserver. In the folder the follwing scripts are located:\\
+- index.js: It defines the staring behaviour and which other .js files are used for paths.\\
+- maria.js: Provides functionality to other scripts, to interact with the Maria DB.\\
+- authentication.js: Provides functionality to other scripts, to authenticate users.\\
+The other scripts provide paths that are used at administrative purpose. The scripts in the subfolders provide paths that are used by the frontend. All paths are documented in the next chapter, so we can scip this here.\\
+
+\section {"Objects" and terminology}
+In this section we talk about which "objects" our backend works with. Usually this objects are stored in the corresponding database tables. The backend takes them, apply a received request and encoded them in dictionarys to send them to the frontend, which interprets and display them.\\
+
+\subsection{Userserver}
+The userserver works only with users. 
+The authentication system is still missing an authentication method, because we agreed to let this open for later implementation. After authenticating with this method the user will receive a 180Bit cryptographic secure random token. With all later requests the user send this token in a header and the server will verify the token to authenticate and identify the user. The important properties of a user are explained in Section 5.4.
+
+\subsection{Gameserver}
+The gameserver usually work with games. A game is created by a user and an other user can join the game. The matchmaking is also open for later implementation and can be implemented in the game.js file. 
+When playing the game rounds will be created. To create a round the creator of the round (alternating, beginning with user2) has to choose one of 3 random categories. After 6 rounds are played the game will be finished and closed. One round consists out of 3 random questions and each question can have a variable amount of answers. The answers can individually be wrong or correct. Also multiple and all answers could be correct.\\
+Its important that for each category there exists at least 3 questions and that there are at least 3 categories. Else the server will crash when trying to play, as we consider this not as a program error, but an error of the administrator. All important properties of the objects are explained in Section 5.4.
+
+\newpage
+\section {Paths}
+Information about the properties is given in Section 5.4.\\
+[xyz] := replace xyz with parameter.
+body: name, score := Encode body in json with the properties name, score.\\
+
+\subsection{Userserver}
+\noindent Manage users:
+\begin{small}
+\\ \hspace*{-1cm} \begin{tabular}{|p{1.5cm}| p{4.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    type & path & body & description \\ \hline
+    GET & /api/users & & Array of all users \\ \hline
+    GET & /api/users/?sortBy=id & & Array of all users, primary sorted by id  \\ \hline
+    GET & /api/users/?sortBy=name & & Array of all users, primary sorted by usernames  \\ \hline
+    GET & /api/users/?sortBy=score & & Array of all users, primary sorted by score  \\ \hline 
+    GET & /api/users/?sortBy=level & & Array of all users, primary sorted by level  \\ \hline
+    GET & /api/users/[ID] & & Get a specific user  \\ \hline
+    POST & /api/users & name,\newline score,\newline level & Create an user  \\ \hline
+    PUT & /api/users/[ID] & name,\newline score,\newline level & Edit an user  \\ \hline
+    DELETE & /api/users/[ID] & & Delete an user  \\ \hline
+   \end{tabular}
+\end{small}\\\\\\
+\noindent Authentication:
+\begin{small}
+\\ \hspace*{-1cm} \begin{tabular}{|p{1.5cm}| p{4.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    type & path & body & description \\ \hline
+    POST & /api/authentication & userID & Generates and shows the authentication token of a user. Resets the decay time. (placeholder, as all users can perform this)\\ \hline
+    DELETE & /api/authentication/[ID] && Revokes the authentication token of a user. \\ \hline
+    GET & /api/authentication/[token] && Returns the user of a valid token (for testing). \\ \hline
+   \end{tabular}
+\end{small}\\\\\\
+\noindent Others:
+\begin{small}
+\\ \hspace*{-1cm} \begin{tabular}{|p{1.5cm}| p{4.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    type & path & body & description \\ \hline
+    GET & /api/ping && Returns "pong" or "pong admin" if an admintoken was used.\\ \hline
+   \end{tabular}
+\end{small}\\\\\\
+\subsection{Gameserver}
+\noindent Manage questions:
+\begin{small}
+\\ \hspace*{-1cm} \begin{tabular}{|p{1.5cm}| p{4.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    type & path & body & description \\ \hline
+    GET & /api/questions & & Array of all questions \\ \hline
+    GET & /api/questions/\newline?containAnswers=true & & Array of all questions containing coresponding answers  \\ \hline
+    GET & /api/questions/[ID] & & Get a specific question  \\ \hline
+    GET & /api/questions/[ID]\newline?forRound=[RoundID] & & Get a specific question, use extra parameter for backend to manage timeouts. \\ \hline
+    GET & /api/questions/[ID]\newline?containAnswers=true & & Get a specific question with it's answers \\ \hline
+
+    
+    POST & /api/questions & text,\newline categoryID,\newline requiredLevel,\newline score,\newline answerTime & Create a question  \\ \hline
+    PUT & /api/questions/[ID] & text,\newline categoryID,\newline requiredLevel,\newline score,\newline answerTime & Edit a question  \\ \hline
+    DELETE & /api/questions/[ID] & & Delete a question  \\ \hline
+   \end{tabular}
+\end{small}\\\\\\
+\noindent Manage answers:
+\begin{small}
+\\ \hspace*{-1cm} \begin{tabular}{|p{1.5cm}| p{4.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    type & path & body & description \\ \hline
+    GET & /api/answers & & Array of all answers \\ \hline
+    GET & /api/answers/[ID] & & Get a specific answers  \\ \hline
+    POST & /api/answers & text,\newline questionID,\newline isCorrect & Create a new answer  \\ \hline
+    PUT & /api/answers/[ID] &text,\newline questionID,\newline isCorrect & Edit an answer  \\ \hline
+    DELETE & /api/answers/[ID] & & Delete an answer  \\ \hline
+   \end{tabular}
+\end{small}\\\\\\
+\noindent Manage categories:
+\begin{small}
+\\ \hspace*{-1cm} \begin{tabular}{|p{1.5cm}| p{4.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    type & path & body & description \\ \hline
+    GET & /api/categories & & Array of all categories \\ \hline
+    GET & /api/categories/[ID] & & Get a specific category  \\ \hline
+    POST & /api/categories & name,\newline requiredLevel & Create a new category  \\ \hline
+    PUT & /api/categories/[ID] &name,\newline requiredLevel & Edit a category  \\ \hline
+    DELETE & /api/categories/[ID] & & Delete a category  \\ \hline
+   \end{tabular}
+\end{small}\\\\\\
+\noindent Manage games:
+\begin{small}
+\\ \hspace*{-1cm} \begin{tabular}{|p{1.5cm}| p{4.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    type & path & body & description \\ \hline
+    GET & /api/games & & Array of all games \\ \hline
+    GET & /api/games/[ID] & & Get a specific game  \\ \hline
+    GET & /api/games/[ID]\newline?containsFullHistory=true & & Get a specific game and all rounds with all details for the game  \\ \hline
+    GET & /api/games/current & & Get all opened games for the current user  \\ \hline
+    GET & /api/games/history & & Get all closed games for the current user  \\ \hline
+    POST & /api/games/current & & automatches it with matchmaking and creates new game if necessary \\ \hline
+    POST & /api/games/current\newline?matchWith=[otherP.ID] & & matches with specified player, creates new game if necessary \\ \hline
+    DELETE & /api/games & & Deletes all rounds and games. USE ONLY FOR TESTING! \\ \hline
+   \end{tabular}
+\end{small}\\\\\\
+\noindent Manage rounds:
+\begin{small}
+\\ \hspace*{-1cm} \begin{tabular}{|p{1.5cm}| p{4.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    type & path & body & description \\ \hline
+    GET & /api/rounds/[ID] & & Get a specific round  \\ \hline
+    GET & /api/rounds/\newline?forGame=[GameID] & & Get an open round for a specified open game. If all rounds are closed and the correct user requests (alternating) a selection of categories is sent back  \\ \hline
+    PUT & /api/rounds/[roundID] & answerID & Sends an answer to a round. If the user has timeouted the question you can send -1 \\ \hline
+    PUT & /api/rounds/[gameID] & categoryID & Sends a category to the game and creates a new round in the new category\\ \hline
+    
+       \end{tabular}
+\end{small}\\\\\\
+\noindent Others:
+\begin{small}
+\\ \hspace*{-1cm} \begin{tabular}{|p{1.5cm}| p{4.5cm} | p{2.5cm} | p{6cm} |}
+    \hline
+    type & path & body & description \\ \hline
+    DELETE & /api/authentication/token] & & Deletes a token from the gameserver cache. It will query it from the userserver again, when requested  \\ \hline
+    GET & /api/ping & & Answers with pong \\ \hline
+
+
+       \end{tabular}
+\end{small}\\\\\\
+All paths have a specific authentication rule. In general the token, which corresponds to the user, that is corresponding to the userID, which is chosen as admin user, has all privileges. All other paths are restricted to only users, that has to call the path to play the game. If something fails a respond with an error code will contain a small error description.\\
+Only exception is the path /api/authentication which everybody can call without a valid token and which will tell you the token of a selected user. This has to be changed in authenticationAPI.js as soon as a kind of authentication is implemented. Currently it is necessary that everybody can call this, to avoid a chicken egg problem, considering the admin token.
+
+
+
+\section {Admin interface}
+The admin interface is out of scope of the agreed scope. It is developed in Unity3D, as I (Andreas Hanuja) am very incorporated in Unity. Also for the admin interface a built solution, which you have to install, is more practicable then for the fron-tend user solution.\\
+
+\subsection{Setup and generall usage}
+On Windows you can just launch the included .exe file in the MBC\_Build folder. On Android you can install and launch the provided .apk file, if you have unknown sources enabled on your phone. \\
+After staring the application the first time, you have to configure the credentials. 
+Click on configure credentials and enter the admin token and the full server addresses, including ports. For local network eg. "http://192.168.0.42:3000". Then click "Save changes" to apply your settings. The indicators at the bottom left will show if a connection is possible.\\
+For the general navigation you can always press on the MBC logo to return to he main menu. Only if the needed server connection is provided you can enter the administrate menus.
+If you enter these menus you have a scrollview in the blue area of the screen. You can scroll onto it if you swipe your screen without touching a button or if you hold and drag the small scrollbar at the right.
+
+\subsection{Important rules}
+- You can not undo delete actions, so pay attention what you are deleting.\\
+- If you delete something usually related data is not deleted. This means on the one hand, that if you delete a category by accident, you do not loose all questions and answers of this category, they are only not usable currently. On the other hand the data is still present in the database, so if you want keep your database clean always delete related data before delete data.\\
+- There have to be at least 3 categories
+- Each category always have to have at least 3 questions for each existing min. level!
+- Each question always have to have at least 1 answer.
+- Usernames should not contain [, ], ", {, }
+
+\subsection{Usage and functionality}
+For administrating users press "administrate users" in the main menu. You can scroll and inspect users in this submenu. The UI uses the back-end path GET api/users here. You can edit a specific user by clicking the edit icon, or you can add a new user with the button at the bottom of the scrollview.\\
+The username has not to be unique, but you should keep them unique to provide a good user experience. Also you should not change the name of a user, without informing him.\\
+The score are the current points of the user.\\
+The level is an integer which represents the skilllevel of the user. A user will always just get questions and categories with a skilllevel $\leq$ his own level.\\
+
+By clicking on administrate games, you get an overview over all played and active games. The UI uses GET api/games to get all games including the names of all players. Then it will query additional information for each individual game, which could consume much bandwidth and could overload the server in the future, when many many games are played.\\
+The truncate button will delete all games and rounds forever, so just use for testing and with care.\\
+
+By clicking on administrate questions, you get an overview over all categories and questions. With the small scrollbutton, besides the category, you can change the current displayed category. On the last page you also get additional options, like adding a new category. Use an edit button to edit an element.\\
+A category consists out of a name and a level.\\
+A question consists out of a question text, an integer, which indicates how much points the question is worth. A level which affects who can play this question. A player can get this question if his playerLevel is $\leq$ the questionlevel and playerLevel $\leq$ categoryLevel. Also a question contains the time in seconds, which the user have to answer the question.\\
+The answers are attached to specific questions and can be either correct or wrong. They also contain a text which can be changed.
+
+\subsection{Further work}
+In the admin UI currently the possibility to cleanup the database is missing. If you eg. delete a question without deleting its answers before, they stay in the database without getting used. You could edit them manually with the back-end paths to recover them, but a button which finds unused data and deletes it would be a cool idea. You can simply add it to the main menu, by instantiating the button prefab into the main Menu.\\
+Implementing the logic to find and remove the unused data will be not so easy, look in chapter 5.3.2 for details which paths can be used.\\
+
+As mentioned above the authentication and the matchmaking are missing in the back-end.\\
+The authentication can has to be integrated in our authentication system, to control if a user gets his token. The matchmaking system has to be connected to the game creation in game.js.\\
+
+An other thing that is open, is the exact algorithm for determine how many points a user get for winning a game. Our currently very simple algorithm can be changed in the function doScoring of rounds.js in the gameserver.

@@ -1,2 +1,11 @@
-\chapter{Deployment}
-The project is split into three components. One server for tracking user accounts, one for the game back-end and one for the front-end. The front-end expects the routes of both back-end server to be on the same domain as the front-end. This can be adjusted, with a complimentary same-origin-policy, or all servers can be put on the same origin via a reverse proxy, we recommend this solution. The back end routes are documented in backend/paths.txt. The front-ends paths can be found in the frontend-react/src/App.js. 
+\chapter{Project Structure and development}
+The most intuitive seperation of work is the split in back-end and front-end.\\
+
+The back-end consitst out of a database and two servers. One server for tracking user accounts (refered as userserver), and one for the quiz back-end (refered as gameserver).
+Both Servers use the framework express and provide a REST API implemented in Node.js. We decided us for Javascript, as REST APIs are a typical usecase for it's usage.
+Out of the scope of the project we made an admin UI in C\# using Unity3D, which we built for Android and Windows and which is also deployable on Linux and IOS. This part was the work of Andreas Hanuja.\\
+
+The front-end is programmed using the react framework. This part was the work of Lenny Händler.\\\\
+
+On both parts we helped each other with testing, finding and fixing bugs, application design and UI design. But in general we split the implementation and documentation work strictly to our scopes.
+

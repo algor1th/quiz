@@ -1,8 +1,30 @@
-\chapter{Front-end structure}
-The front-end is programmed using the react framework. We created several components that manage the api calls for different parts of the application. They can be found in different routes, which are registered in App.js\\
-Some design elements that apply globally are in index.css, while some more component specific design tags are set inside of the components.\\
+\chapter{Deployment}
+The front-end expects the routes of both back-end server to be on the same domain as the front-end. This can be adjusted, with a complimentary same-origin-policy, or all servers can be put on the same origin via a reverse proxy, we recommend this solution. \\
 
- The nav bar is found in App.js, the overview of a game is shown in Game.js. Playing a round is split up into two components. One component loads the list of questions (Round.js) while another is loading the questions and sending the answers (Question.js). When a question is answered the round is informed via a callback.\\
- The start page (Startpage.js) presents the user a button to start matchmaking and a list of all ongoing games.\\
- The score board (Scoreboard.js) shows a sorted view of all users, with buttons to challenge them to a match.\\
- history.js displays all finished games.
+To deploy the back-end you first have to setup the database. for this purpose we have a dump of our database delivered in the back-end folder. Our configuration was:\\
+- DBNAME=CYSECPROJECT\\
+- DBUSER=root\\
+- DBHOST=localhost\\
+- DBPASSWORD=testpassword\\
+If you change this configuration you also have to reconfigure the servers.
+After setup the database you can start the servers by executing the start.bat on windows or the start.sh. in the subfolders game/user.
+If you want change some configuration, edit the startfile bevore executing it. You find a list of the propertys at the end of this chapter.\\
+If starting the servers result in errors, please double check if all node modules are installed.
+
+\begin{tabular}{| l | l |}
+    \hline
+    property & description \\ \hline
+    PORT & Default port of the server. \\ \hline
+    GAMESERVER & Full address of the gameserver. \\ \hline
+    DBNAME & Configured name of the database. \\ \hline
+    DBUSER & Configured user of the database. \\ \hline
+    DBHOST & Host of the database.\hline\\
+    & Host it on localhost is recommended. \\ \hline
+    DBPASSWORD & Configured password of the database. \\ \hline
+    ADMINUSER & ID of the Adminuser. Check twice if valid! \\
+    & If invalid all users have admin access. \\ \hline
+    TOKENDECAYTIME & Time for auth. tokens to decay.\\
+    & As they can also get revoked a big value \\
+    & is recommended. \\ \hline
+\end{tabular}
+
