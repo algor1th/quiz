@@ -5,4 +5,5 @@ Some design elements that apply globally are in index.css, while some more compo
  The nav bar is found in App.js, the overview of a game is shown in Game.js. Playing a round is split up into two components. One component loads the list of questions (Round.js) while another is loading the questions and sending the answers (Question.js). When a question is answered the round is informed via a callback.\\
  The start page (Startpage.js) presents the user a button to start matchmaking and a list of all ongoing games.\\
  The score board (Scoreboard.js) shows a sorted view of all users, with buttons to challenge them to a match.\\
- history.js displays all finished games.
+ history.js displays all finished games.\\
+ The temporary login feature via a browser propt is located in app.js and stores the user information in the global variable window.user. To replace this with a suitable login system, replace the please login string with the preferred method of authentication and store the user information in the same variable, it is used by all other components to authenticate with the server.
